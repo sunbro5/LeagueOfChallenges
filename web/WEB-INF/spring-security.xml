@@ -17,12 +17,11 @@
        <bean id="userService" class="com.astora.web.service.LoginService"/>
 
        <security:http access-decision-manager-ref="accessDecisionManager">
-              <security:intercept-url pattern="/**" access="ADMIN"/>
-              <security:form-login default-target-url="/home" />
-              <!--login-page="/admin/login"-->
-                      <!--authentication-failure-url="/admin/denied"-->
-                      <!--username-parameter="username"-->
-                      <!--password-parameter="password"-->
+              <security:intercept-url pattern="/userInfo**" access="ADMIN"/>
+              <security:form-login default-target-url="/home" login-page="/login"
+                      authentication-failure-url="/denied"
+                      username-parameter="username"
+                      password-parameter="password"/>
               <!--<security:logout logout-success-url="/admin/logout" />-->
        </security:http>
 
