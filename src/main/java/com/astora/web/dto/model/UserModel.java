@@ -18,7 +18,7 @@ public class UserModel implements UserDetails {
 
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> auth = new ArrayList<SimpleGrantedAuthority>();
-        auth.add(new SimpleGrantedAuthority("ADMIN"));
+        auth.add(new SimpleGrantedAuthority("admin"));
         return auth;
     }
 
