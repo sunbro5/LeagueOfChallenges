@@ -7,6 +7,8 @@
        http://www.springframework.org/schema/security
        http://www.springframework.org/schema/security/spring-security.xsd">
 
+       <bean id="webexpressionHandler" class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler" />
+
        <bean id="roleVoter" class="org.springframework.security.access.vote.RoleVoter">
               <property name="rolePrefix" value=""></property>
        </bean>
@@ -14,7 +16,7 @@
               <constructor-arg name="decisionVoters" ref="roleVoter"/>
        </bean>
 
-       <bean id="userService" class="com.astora.web.service.LoginService"/>
+       <bean id="userService" class="com.astora.web.service.impl.LoginServiceImpl"/>
 
        <security:http access-decision-manager-ref="accessDecisionManager">
               <security:intercept-url pattern="/userInfo**" access="admin"/>
@@ -26,7 +28,7 @@
        </security:http>
 
        <security:authentication-manager>
-              <security:authentication-provider user-service-ref="userService">
+              <security:authentication-provider user-service-ref="loginService">
               </security:authentication-provider>
        </security:authentication-manager>
 

@@ -1,6 +1,6 @@
 package com.astora.web.service;
 
-import com.astora.web.model.Role;
+import com.astora.web.dao.model.Role;
 
 import java.util.List;
 

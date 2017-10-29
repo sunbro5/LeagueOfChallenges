@@ -2,10 +2,11 @@
 <beans:beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xmlns:beans="http://www.springframework.org/schema/beans"
              xmlns:tx="http://www.springframework.org/schema/tx"
+             xmlns:context="http://www.springframework.org/schema/context"
              xsi:schemaLocation="http://www.springframework.org/schema/beans
                                  http://www.springframework.org/schema/beans/spring-beans.xsd
                                  http://www.springframework.org/schema/tx
-                                 http://www.springframework.org/schema/tx/spring-tx.xsd">
+                                 http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
     <beans:bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
         <beans:property name="driverClassName" value="com.mysql.jdbc.Driver"/>
@@ -18,19 +19,19 @@
         <beans:property name="dataSource" ref="dataSource"/>
         <beans:property name="annotatedClasses">
             <beans:list>
-                <beans:value>com.astora.web.model.Avatar</beans:value>
-                <beans:value>com.astora.web.model.Challenge</beans:value>
-                <beans:value>com.astora.web.model.ChallengeResult</beans:value>
-                <beans:value>com.astora.web.model.Friend</beans:value>
-                <beans:value>com.astora.web.model.Game</beans:value>
-                <beans:value>com.astora.web.model.GameParam</beans:value>
-                <beans:value>com.astora.web.model.League</beans:value>
-                <beans:value>com.astora.web.model.Message</beans:value>
-                <beans:value>com.astora.web.model.Report</beans:value>
-                <beans:value>com.astora.web.model.Role</beans:value>
-                <beans:value>com.astora.web.model.Team</beans:value>
-                <beans:value>com.astora.web.model.TeamUser</beans:value>
-                <beans:value>com.astora.web.model.User</beans:value>
+                <beans:value>com.astora.web.dao.model.Avatar</beans:value>
+                <beans:value>com.astora.web.dao.model.Challenge</beans:value>
+                <beans:value>com.astora.web.dao.model.ChallengeResult</beans:value>
+                <beans:value>com.astora.web.dao.model.Friend</beans:value>
+                <beans:value>com.astora.web.dao.model.Game</beans:value>
+                <beans:value>com.astora.web.dao.model.GameParam</beans:value>
+                <beans:value>com.astora.web.dao.model.League</beans:value>
+                <beans:value>com.astora.web.dao.model.Message</beans:value>
+                <beans:value>com.astora.web.dao.model.Report</beans:value>
+                <beans:value>com.astora.web.dao.model.Role</beans:value>
+                <beans:value>com.astora.web.dao.model.Team</beans:value>
+                <beans:value>com.astora.web.dao.model.TeamUser</beans:value>
+                <beans:value>com.astora.web.dao.model.User</beans:value>
             </beans:list>
         </beans:property>
         <beans:property name="hibernateProperties">
@@ -48,12 +49,12 @@
         <beans:property name="sessionFactory" ref="sessionFactory"/>
     </beans:bean>
 
-    <beans:bean id="roleDao" class="com.astora.web.dao.impl.RoleDaoImpl">
-        <beans:property name="sessionFactory" ref="sessionFactory"/>
-    </beans:bean>
+    <context:component-scan base-package="com.astora.web.service"/>
+    <context:component-scan base-package="com.astora.web.dao"/>
 
-    <beans:bean id="roleService" class="com.astora.web.service.impl.RoleServiceImpl">
-        <beans:property name="roleDao" ref="roleDao"/>
+    <beans:bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <beans:property name="basename" value="classpath:messages_cz" />
+        <beans:property name="defaultEncoding" value="UTF-8"/>
     </beans:bean>
 
 </beans:beans>

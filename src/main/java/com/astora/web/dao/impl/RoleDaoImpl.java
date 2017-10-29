@@ -1,16 +1,17 @@
 package com.astora.web.dao.impl;
 
 import com.astora.web.dao.RoleDao;
-import com.astora.web.model.Role;
+import com.astora.web.dao.model.Role;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
+
 import java.util.List;
 
-@Repository
+@Repository("RoleDao")
 public class RoleDaoImpl implements RoleDao {
 
     private SessionFactory sessionFactory;

@@ -10,7 +10,7 @@
 		                         http://www.springframework.org/schema/context
 		                         http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <context:component-scan base-package="com.astora.web"/>
+    <context:component-scan base-package="com.astora.web.controller"/>
     <mvc:annotation-driven/>
 
     <!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/jsp directory. -->

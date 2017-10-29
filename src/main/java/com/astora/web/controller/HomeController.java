@@ -1,6 +1,6 @@
 package com.astora.web.controller;
 
-import com.astora.web.model.Role;
+import com.astora.web.dao.model.Role;
 import com.astora.web.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

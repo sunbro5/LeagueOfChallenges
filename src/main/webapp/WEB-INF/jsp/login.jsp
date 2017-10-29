@@ -1,4 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -56,36 +58,33 @@
 						<a href="index.html"><i class="halflings-icon home"></i></a>
 						<a href="#"><i class="halflings-icon cog"></i></a>
 					</div>
-					<h2>Login to your account</h2>
+					<h2><spring:message code="login.form.title.label"/></h2>
 					<c:url var="loginUrl" value="/j_spring_security_check"></c:url>
 					<form class="form-horizontal" action="${loginUrl}" method="POST">
 						<fieldset/>
 							
 							<div class="input-prepend" title="Username">
 								<span class="add-on"><i class="halflings-icon user"></i></span>
-								<input class="input-large span10" name="username" id="username" type="text" placeholder="type username"/>
+								<input class="input-large span10" name="username" id="username" type="text" placeholder="<spring:message code="login.form.username.label"/>"/>
 							</div>
 							<div class="clearfix"></div>
 
 							<div class="input-prepend" title="Password">
 								<span class="add-on"><i class="halflings-icon lock"></i></span>
-								<input class="input-large span10" name="password" id="password" type="password" placeholder="type password"/>
+								<input class="input-large span10" name="password" id="password" type="password" placeholder="<spring:message code="login.form.password.label"/>"/>
 							</div>
 							<div class="clearfix"></div>
 							
-							<label class="remember" for="remember"><input type="checkbox" id="remember" disabled />Remember me</label>
+							<label class="remember" for="remember"><input type="checkbox" id="remember" disabled /><spring:message code="login.form.remember.label"/></label>
 
 
 							<div class="button-login">	
-								<button type="submit" class="btn btn-primary">Login</button>
+								<button type="submit" class="btn btn-primary"><spring:message code="login.form.button.label"/></button>
 							</div>
 							<div class="clearfix"></div>
 					</form>
 					<hr>
-					<h3>Forgot Password?</h3>
-					<p>
-						No problem, <a href="#">click here</a> to get a new password.
-					</p>	
+					<h3><spring:message code="login.form.forgotPassword.label"/> </h3>
 				</div><!--/span-->
 			</div><!--/row-->
 			

@@ -1,4 +1,4 @@
-package com.astora.web.model;
+package com.astora.web.dao.model;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;

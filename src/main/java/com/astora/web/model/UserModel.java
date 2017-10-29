@@ -1,4 +1,4 @@
-package com.astora.web.dto.model;
+package com.astora.web.model;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
