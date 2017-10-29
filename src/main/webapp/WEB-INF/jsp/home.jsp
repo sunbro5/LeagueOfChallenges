@@ -6,7 +6,22 @@
   <!-- start: Meta -->
   <meta charset="utf-8">
   <title>Bootstrap Metro Dashboard by Dennis Ji for ARM demo</title>
-  <meta name="description" content="Bootstrap Metro Dashboard">
+    <a href="/createTest">Create test</a><br>
+    <a href="/updateTest">Update test</a><br>
+    <a href="/findByIdTest">Find by id test</a><br>
+    <a href="/findAllTest">Find all test</a><br>
+    <a href="/deleteTest">Delete test</a><br>
+    <br>
+    <br>
+    ${created}
+    ${updated}
+    ${deleted}
+    ${role}
+    <c:forEach items="${roleList}" var="role">
+        ${role}<br>
+    </c:forEach>
+
+    <meta name="description" content="Bootstrap Metro Dashboard">
   <meta name="author" content="Dennis Ji">
   <meta name="keyword" content="Metro, Metro UI, Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
   <!-- end: Meta -->

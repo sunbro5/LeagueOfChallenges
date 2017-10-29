@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:tx="http://www.springframework.org/schema/tx"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+                                 http://www.springframework.org/schema/beans/spring-beans.xsd
+                                 http://www.springframework.org/schema/tx
+                                 http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <beans:bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <beans:property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <beans:property name="url" value="jdbc:mysql://localhost:3306/LeagueOfChallenges"/>
+        <beans:property name="username" value="astora"/>
+        <beans:property name="password" value="praiseTheSun123"/>
+    </beans:bean>
+
+    <beans:bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <beans:property name="dataSource" ref="dataSource"/>
+        <beans:property name="annotatedClasses">
+            <beans:list>
+                <beans:value>com.astora.web.model.Avatar</beans:value>
+                <beans:value>com.astora.web.model.Challenge</beans:value>
+                <beans:value>com.astora.web.model.ChallengeResult</beans:value>
+                <beans:value>com.astora.web.model.Friend</beans:value>
+                <beans:value>com.astora.web.model.Game</beans:value>
+                <beans:value>com.astora.web.model.GameParam</beans:value>
+                <beans:value>com.astora.web.model.League</beans:value>
+                <beans:value>com.astora.web.model.Message</beans:value>
+                <beans:value>com.astora.web.model.Report</beans:value>
+                <beans:value>com.astora.web.model.Role</beans:value>
+                <beans:value>com.astora.web.model.Team</beans:value>
+                <beans:value>com.astora.web.model.TeamUser</beans:value>
+                <beans:value>com.astora.web.model.User</beans:value>
+            </beans:list>
+        </beans:property>
+        <beans:property name="hibernateProperties">
+            <beans:props>
+                <beans:prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</beans:prop>
+                <beans:prop key="hibernate.show_sql">true</beans:prop>
+            </beans:props>
+        </beans:property>
+    </beans:bean>
+
+    <tx:annotation-driven/>
+
+    <!-- Bean definitions for autowiring. -->
+    <beans:bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+        <beans:property name="sessionFactory" ref="sessionFactory"/>
+    </beans:bean>
+
+    <beans:bean id="roleDao" class="com.astora.web.dao.impl.RoleDaoImpl">
+        <beans:property name="sessionFactory" ref="sessionFactory"/>
+    </beans:bean>
+
+    <beans:bean id="roleService" class="com.astora.web.service.impl.RoleServiceImpl">
+        <beans:property name="roleDao" ref="roleDao"/>
+    </beans:bean>
+
+</beans:beans>
