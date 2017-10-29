@@ -1,9 +1,10 @@
 package com.astora.web.dao.model;
 
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -13,8 +14,8 @@ import javax.persistence.Table;
 @Table(name = "team_user", schema = "mydb", catalog = "")
 public class TeamUser {
     private int teamUserId;
-    private int teamTeamId;
-    private int userUserId;
+    private Team teamByTeamTeamId;
+    private User userByUserUserId;
 
     @Id
     @Column(name = "team_user_id")
@@ -26,26 +27,6 @@ public class TeamUser {
         this.teamUserId = teamUserId;
     }
 
-    @Basic
-    @Column(name = "team_team_id")
-    public int getTeamTeamId() {
-        return teamTeamId;
-    }
-
-    public void setTeamTeamId(int teamTeamId) {
-        this.teamTeamId = teamTeamId;
-    }
-
-    @Basic
-    @Column(name = "user_user_id")
-    public int getUserUserId() {
-        return userUserId;
-    }
-
-    public void setUserUserId(int userUserId) {
-        this.userUserId = userUserId;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -54,17 +35,32 @@ public class TeamUser {
         TeamUser teamUser = (TeamUser) o;
 
         if (teamUserId != teamUser.teamUserId) return false;
-        if (teamTeamId != teamUser.teamTeamId) return false;
-        if (userUserId != teamUser.userUserId) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = teamUserId;
-        result = 31 * result + teamTeamId;
-        result = 31 * result + userUserId;
-        return result;
+        return teamUserId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "team_team_id", referencedColumnName = "team_id", nullable = false)
+    public Team getTeamByTeamTeamId() {
+        return teamByTeamTeamId;
+    }
+
+    public void setTeamByTeamTeamId(Team teamByTeamTeamId) {
+        this.teamByTeamTeamId = teamByTeamTeamId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "user_user_id", referencedColumnName = "user_id", nullable = false)
+    public User getUserByUserUserId() {
+        return userByUserUserId;
+    }
+
+    public void setUserByUserUserId(User userByUserUserId) {
+        this.userByUserUserId = userByUserUserId;
     }
 }

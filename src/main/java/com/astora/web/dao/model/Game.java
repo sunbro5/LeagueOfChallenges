@@ -4,6 +4,8 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import java.util.Collection;
 
 /**
  * Created by to068466 on 29.10.2017.
@@ -13,6 +15,8 @@ public class Game {
     private int gameId;
     private String gameName;
     private String gameDescription;
+    private Collection<GameParam> gameParamsByGameId;
+    private Collection<League> leaguesByGameId;
 
     @Id
     @Column(name = "game_id")
@@ -65,5 +69,23 @@ public class Game {
         result = 31 * result + (gameName != null ? gameName.hashCode() : 0);
         result = 31 * result + (gameDescription != null ? gameDescription.hashCode() : 0);
         return result;
+    }
+
+    @OneToMany(mappedBy = "gameByGameGameId")
+    public Collection<GameParam> getGameParamsByGameId() {
+        return gameParamsByGameId;
+    }
+
+    public void setGameParamsByGameId(Collection<GameParam> gameParamsByGameId) {
+        this.gameParamsByGameId = gameParamsByGameId;
+    }
+
+    @OneToMany(mappedBy = "gameByGameGameId")
+    public Collection<League> getLeaguesByGameId() {
+        return leaguesByGameId;
+    }
+
+    public void setLeaguesByGameId(Collection<League> leaguesByGameId) {
+        this.leaguesByGameId = leaguesByGameId;
     }
 }

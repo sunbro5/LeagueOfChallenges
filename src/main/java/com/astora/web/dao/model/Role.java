@@ -4,13 +4,19 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import java.sql.Timestamp;
+import java.util.Collection;
 
+/**
+ * Created by to068466 on 29.10.2017.
+ */
 @Entity
 public class Role {
     private int roleId;
     private Timestamp created;
     private String name;
+    private Collection<User> usersByRoleId;
 
     @Id
     @Column(name = "role_id")
@@ -62,5 +68,14 @@ public class Role {
         result = 31 * result + (created != null ? created.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
         return result;
+    }
+
+    @OneToMany(mappedBy = "roleByRoleRoleId")
+    public Collection<User> getUsersByRoleId() {
+        return usersByRoleId;
+    }
+
+    public void setUsersByRoleId(Collection<User> usersByRoleId) {
+        this.usersByRoleId = usersByRoleId;
     }
 }

@@ -4,7 +4,11 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import java.sql.Timestamp;
+import java.util.Collection;
 
 /**
  * Created by to068466 on 29.10.2017.
@@ -15,8 +19,12 @@ public class Team {
     private Timestamp created;
     private String name;
     private String description;
-    private int leagueLeaguId;
     private Integer rating;
+    private Collection<Challenge> challengesByTeamId;
+    private Collection<Challenge> challengesByTeamId_0;
+    private Collection<ChallengeResult> challengeResultsByTeamId;
+    private League leagueByLeagueLeaguId;
+    private Collection<TeamUser> teamUsersByTeamId;
 
     @Id
     @Column(name = "team_id")
@@ -59,16 +67,6 @@ public class Team {
     }
 
     @Basic
-    @Column(name = "League_leagu_id")
-    public int getLeagueLeaguId() {
-        return leagueLeaguId;
-    }
-
-    public void setLeagueLeaguId(int leagueLeaguId) {
-        this.leagueLeaguId = leagueLeaguId;
-    }
-
-    @Basic
     @Column(name = "rating")
     public Integer getRating() {
         return rating;
@@ -86,7 +84,6 @@ public class Team {
         Team team = (Team) o;
 
         if (teamId != team.teamId) return false;
-        if (leagueLeaguId != team.leagueLeaguId) return false;
         if (created != null ? !created.equals(team.created) : team.created != null) return false;
         if (name != null ? !name.equals(team.name) : team.name != null) return false;
         if (description != null ? !description.equals(team.description) : team.description != null) return false;
@@ -101,8 +98,53 @@ public class Team {
         result = 31 * result + (created != null ? created.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + leagueLeaguId;
         result = 31 * result + (rating != null ? rating.hashCode() : 0);
         return result;
+    }
+
+    @OneToMany(mappedBy = "teamByChallengerTeamId")
+    public Collection<Challenge> getChallengesByTeamId() {
+        return challengesByTeamId;
+    }
+
+    public void setChallengesByTeamId(Collection<Challenge> challengesByTeamId) {
+        this.challengesByTeamId = challengesByTeamId;
+    }
+
+    @OneToMany(mappedBy = "teamByOponnentTeamId")
+    public Collection<Challenge> getChallengesByTeamId_0() {
+        return challengesByTeamId_0;
+    }
+
+    public void setChallengesByTeamId_0(Collection<Challenge> challengesByTeamId_0) {
+        this.challengesByTeamId_0 = challengesByTeamId_0;
+    }
+
+    @OneToMany(mappedBy = "teamByWinnerTeamId")
+    public Collection<ChallengeResult> getChallengeResultsByTeamId() {
+        return challengeResultsByTeamId;
+    }
+
+    public void setChallengeResultsByTeamId(Collection<ChallengeResult> challengeResultsByTeamId) {
+        this.challengeResultsByTeamId = challengeResultsByTeamId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "League_leagu_id", referencedColumnName = "leagu_id", nullable = false)
+    public League getLeagueByLeagueLeaguId() {
+        return leagueByLeagueLeaguId;
+    }
+
+    public void setLeagueByLeagueLeaguId(League leagueByLeagueLeaguId) {
+        this.leagueByLeagueLeaguId = leagueByLeagueLeaguId;
+    }
+
+    @OneToMany(mappedBy = "teamByTeamTeamId")
+    public Collection<TeamUser> getTeamUsersByTeamId() {
+        return teamUsersByTeamId;
+    }
+
+    public void setTeamUsersByTeamId(Collection<TeamUser> teamUsersByTeamId) {
+        this.teamUsersByTeamId = teamUsersByTeamId;
     }
 }

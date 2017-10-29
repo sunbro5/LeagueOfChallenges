@@ -4,7 +4,11 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import java.sql.Timestamp;
+import java.util.Collection;
 
 /**
  * Created by to068466 on 29.10.2017.
@@ -19,8 +23,15 @@ public class User {
     private String email;
     private String password;
     private Timestamp lastLogin;
-    private int avatarsAvatarId;
-    private int roleRoleId;
+    private Collection<Friend> friendsByUserId;
+    private Collection<Friend> friendsByUserId_0;
+    private Collection<Message> messagesByUserId;
+    private Collection<Message> messagesByUserId_0;
+    private Collection<Report> reportsByUserId;
+    private Collection<Report> reportsByUserId_0;
+    private Collection<TeamUser> teamUsersByUserId;
+    private Avatar avatarByAvatarsAvatarId;
+    private Role roleByRoleRoleId;
 
     @Id
     @Column(name = "user_id")
@@ -102,26 +113,6 @@ public class User {
         this.lastLogin = lastLogin;
     }
 
-    @Basic
-    @Column(name = "Avatars_avatar_id")
-    public int getAvatarsAvatarId() {
-        return avatarsAvatarId;
-    }
-
-    public void setAvatarsAvatarId(int avatarsAvatarId) {
-        this.avatarsAvatarId = avatarsAvatarId;
-    }
-
-    @Basic
-    @Column(name = "Role_role_id")
-    public int getRoleRoleId() {
-        return roleRoleId;
-    }
-
-    public void setRoleRoleId(int roleRoleId) {
-        this.roleRoleId = roleRoleId;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -130,8 +121,6 @@ public class User {
         User user = (User) o;
 
         if (userId != user.userId) return false;
-        if (avatarsAvatarId != user.avatarsAvatarId) return false;
-        if (roleRoleId != user.roleRoleId) return false;
         if (created != null ? !created.equals(user.created) : user.created != null) return false;
         if (firstName != null ? !firstName.equals(user.firstName) : user.firstName != null) return false;
         if (lastName != null ? !lastName.equals(user.lastName) : user.lastName != null) return false;
@@ -153,8 +142,89 @@ public class User {
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + (lastLogin != null ? lastLogin.hashCode() : 0);
-        result = 31 * result + avatarsAvatarId;
-        result = 31 * result + roleRoleId;
         return result;
+    }
+
+    @OneToMany(mappedBy = "userByUserFriendId")
+    public Collection<Friend> getFriendsByUserId() {
+        return friendsByUserId;
+    }
+
+    public void setFriendsByUserId(Collection<Friend> friendsByUserId) {
+        this.friendsByUserId = friendsByUserId;
+    }
+
+    @OneToMany(mappedBy = "userByUserId")
+    public Collection<Friend> getFriendsByUserId_0() {
+        return friendsByUserId_0;
+    }
+
+    public void setFriendsByUserId_0(Collection<Friend> friendsByUserId_0) {
+        this.friendsByUserId_0 = friendsByUserId_0;
+    }
+
+    @OneToMany(mappedBy = "userByFromUserId")
+    public Collection<Message> getMessagesByUserId() {
+        return messagesByUserId;
+    }
+
+    public void setMessagesByUserId(Collection<Message> messagesByUserId) {
+        this.messagesByUserId = messagesByUserId;
+    }
+
+    @OneToMany(mappedBy = "userByToUserId")
+    public Collection<Message> getMessagesByUserId_0() {
+        return messagesByUserId_0;
+    }
+
+    public void setMessagesByUserId_0(Collection<Message> messagesByUserId_0) {
+        this.messagesByUserId_0 = messagesByUserId_0;
+    }
+
+    @OneToMany(mappedBy = "userByReportingUserId")
+    public Collection<Report> getReportsByUserId() {
+        return reportsByUserId;
+    }
+
+    public void setReportsByUserId(Collection<Report> reportsByUserId) {
+        this.reportsByUserId = reportsByUserId;
+    }
+
+    @OneToMany(mappedBy = "userByReportedUserId")
+    public Collection<Report> getReportsByUserId_0() {
+        return reportsByUserId_0;
+    }
+
+    public void setReportsByUserId_0(Collection<Report> reportsByUserId_0) {
+        this.reportsByUserId_0 = reportsByUserId_0;
+    }
+
+    @OneToMany(mappedBy = "userByUserUserId")
+    public Collection<TeamUser> getTeamUsersByUserId() {
+        return teamUsersByUserId;
+    }
+
+    public void setTeamUsersByUserId(Collection<TeamUser> teamUsersByUserId) {
+        this.teamUsersByUserId = teamUsersByUserId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "Avatars_avatar_id", referencedColumnName = "avatar_id", nullable = false)
+    public Avatar getAvatarByAvatarsAvatarId() {
+        return avatarByAvatarsAvatarId;
+    }
+
+    public void setAvatarByAvatarsAvatarId(Avatar avatarByAvatarsAvatarId) {
+        this.avatarByAvatarsAvatarId = avatarByAvatarsAvatarId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "Role_role_id", referencedColumnName = "role_id", nullable = false)
+    public Role getRoleByRoleRoleId() {
+        return roleByRoleRoleId;
+    }
+
+    public void setRoleByRoleRoleId(Role roleByRoleRoleId) {
+        this.roleByRoleRoleId = roleByRoleRoleId;
     }
 }

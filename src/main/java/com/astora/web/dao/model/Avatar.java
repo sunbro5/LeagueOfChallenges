@@ -4,8 +4,10 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import java.sql.Timestamp;
 import java.util.Arrays;
+import java.util.Collection;
 
 /**
  * Created by to068466 on 29.10.2017.
@@ -16,6 +18,7 @@ public class Avatar {
     private Timestamp created;
     private byte[] avatarImage;
     private String avatarName;
+    private Collection<User> usersByAvatarId;
 
     @Id
     @Column(name = "avatar_id")
@@ -79,5 +82,14 @@ public class Avatar {
         result = 31 * result + Arrays.hashCode(avatarImage);
         result = 31 * result + (avatarName != null ? avatarName.hashCode() : 0);
         return result;
+    }
+
+    @OneToMany(mappedBy = "avatarByAvatarsAvatarId")
+    public Collection<User> getUsersByAvatarId() {
+        return usersByAvatarId;
+    }
+
+    public void setUsersByAvatarId(Collection<User> usersByAvatarId) {
+        this.usersByAvatarId = usersByAvatarId;
     }
 }

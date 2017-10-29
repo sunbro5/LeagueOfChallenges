@@ -4,7 +4,11 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import java.sql.Timestamp;
+import java.util.Collection;
 
 /**
  * Created by to068466 on 29.10.2017.
@@ -12,12 +16,13 @@ import java.sql.Timestamp;
 @Entity
 public class Challenge {
     private int challengeId;
-    private int challengerTeamId;
-    private Integer oponnentTeamId;
     private String coords;
     private Timestamp challengeStart;
     private Timestamp challengeEnd;
     private String text;
+    private Team teamByChallengerTeamId;
+    private Team teamByOponnentTeamId;
+    private Collection<ChallengeResult> challengeResultsByChallengeId;
 
     @Id
     @Column(name = "challenge_id")
@@ -27,26 +32,6 @@ public class Challenge {
 
     public void setChallengeId(int challengeId) {
         this.challengeId = challengeId;
-    }
-
-    @Basic
-    @Column(name = "challenger_team_id")
-    public int getChallengerTeamId() {
-        return challengerTeamId;
-    }
-
-    public void setChallengerTeamId(int challengerTeamId) {
-        this.challengerTeamId = challengerTeamId;
-    }
-
-    @Basic
-    @Column(name = "oponnent_team_id")
-    public Integer getOponnentTeamId() {
-        return oponnentTeamId;
-    }
-
-    public void setOponnentTeamId(Integer oponnentTeamId) {
-        this.oponnentTeamId = oponnentTeamId;
     }
 
     @Basic
@@ -97,9 +82,6 @@ public class Challenge {
         Challenge challenge = (Challenge) o;
 
         if (challengeId != challenge.challengeId) return false;
-        if (challengerTeamId != challenge.challengerTeamId) return false;
-        if (oponnentTeamId != null ? !oponnentTeamId.equals(challenge.oponnentTeamId) : challenge.oponnentTeamId != null)
-            return false;
         if (coords != null ? !coords.equals(challenge.coords) : challenge.coords != null) return false;
         if (challengeStart != null ? !challengeStart.equals(challenge.challengeStart) : challenge.challengeStart != null)
             return false;
@@ -113,12 +95,39 @@ public class Challenge {
     @Override
     public int hashCode() {
         int result = challengeId;
-        result = 31 * result + challengerTeamId;
-        result = 31 * result + (oponnentTeamId != null ? oponnentTeamId.hashCode() : 0);
         result = 31 * result + (coords != null ? coords.hashCode() : 0);
         result = 31 * result + (challengeStart != null ? challengeStart.hashCode() : 0);
         result = 31 * result + (challengeEnd != null ? challengeEnd.hashCode() : 0);
         result = 31 * result + (text != null ? text.hashCode() : 0);
         return result;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "challenger_team_id", referencedColumnName = "team_id", nullable = false)
+    public Team getTeamByChallengerTeamId() {
+        return teamByChallengerTeamId;
+    }
+
+    public void setTeamByChallengerTeamId(Team teamByChallengerTeamId) {
+        this.teamByChallengerTeamId = teamByChallengerTeamId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "oponnent_team_id", referencedColumnName = "team_id")
+    public Team getTeamByOponnentTeamId() {
+        return teamByOponnentTeamId;
+    }
+
+    public void setTeamByOponnentTeamId(Team teamByOponnentTeamId) {
+        this.teamByOponnentTeamId = teamByOponnentTeamId;
+    }
+
+    @OneToMany(mappedBy = "challengeByChallengesChallengeId")
+    public Collection<ChallengeResult> getChallengeResultsByChallengeId() {
+        return challengeResultsByChallengeId;
+    }
+
+    public void setChallengeResultsByChallengeId(Collection<ChallengeResult> challengeResultsByChallengeId) {
+        this.challengeResultsByChallengeId = challengeResultsByChallengeId;
     }
 }
