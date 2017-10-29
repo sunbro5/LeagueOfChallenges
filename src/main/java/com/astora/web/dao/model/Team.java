@@ -6,12 +6,16 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.sql.Timestamp;
 
+/**
+ * Created by to068466 on 29.10.2017.
+ */
 @Entity
 public class Team {
     private int teamId;
     private Timestamp created;
     private String name;
     private String description;
+    private int leagueLeaguId;
     private Integer rating;
 
     @Id
@@ -55,6 +59,16 @@ public class Team {
     }
 
     @Basic
+    @Column(name = "League_leagu_id")
+    public int getLeagueLeaguId() {
+        return leagueLeaguId;
+    }
+
+    public void setLeagueLeaguId(int leagueLeaguId) {
+        this.leagueLeaguId = leagueLeaguId;
+    }
+
+    @Basic
     @Column(name = "rating")
     public Integer getRating() {
         return rating;
@@ -72,6 +86,7 @@ public class Team {
         Team team = (Team) o;
 
         if (teamId != team.teamId) return false;
+        if (leagueLeaguId != team.leagueLeaguId) return false;
         if (created != null ? !created.equals(team.created) : team.created != null) return false;
         if (name != null ? !name.equals(team.name) : team.name != null) return false;
         if (description != null ? !description.equals(team.description) : team.description != null) return false;
@@ -86,6 +101,7 @@ public class Team {
         result = 31 * result + (created != null ? created.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + leagueLeaguId;
         result = 31 * result + (rating != null ? rating.hashCode() : 0);
         return result;
     }

@@ -7,6 +7,9 @@ import javax.persistence.Id;
 import java.sql.Timestamp;
 import java.util.Arrays;
 
+/**
+ * Created by to068466 on 29.10.2017.
+ */
 @Entity
 public class Avatar {
     private int avatarId;

@@ -6,9 +6,14 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.sql.Timestamp;
 
+/**
+ * Created by to068466 on 29.10.2017.
+ */
 @Entity
 public class Challenge {
     private int challengeId;
+    private int challengerTeamId;
+    private Integer oponnentTeamId;
     private String coords;
     private Timestamp challengeStart;
     private Timestamp challengeEnd;
@@ -22,6 +27,26 @@ public class Challenge {
 
     public void setChallengeId(int challengeId) {
         this.challengeId = challengeId;
+    }
+
+    @Basic
+    @Column(name = "challenger_team_id")
+    public int getChallengerTeamId() {
+        return challengerTeamId;
+    }
+
+    public void setChallengerTeamId(int challengerTeamId) {
+        this.challengerTeamId = challengerTeamId;
+    }
+
+    @Basic
+    @Column(name = "oponnent_team_id")
+    public Integer getOponnentTeamId() {
+        return oponnentTeamId;
+    }
+
+    public void setOponnentTeamId(Integer oponnentTeamId) {
+        this.oponnentTeamId = oponnentTeamId;
     }
 
     @Basic
@@ -72,6 +97,9 @@ public class Challenge {
         Challenge challenge = (Challenge) o;
 
         if (challengeId != challenge.challengeId) return false;
+        if (challengerTeamId != challenge.challengerTeamId) return false;
+        if (oponnentTeamId != null ? !oponnentTeamId.equals(challenge.oponnentTeamId) : challenge.oponnentTeamId != null)
+            return false;
         if (coords != null ? !coords.equals(challenge.coords) : challenge.coords != null) return false;
         if (challengeStart != null ? !challengeStart.equals(challenge.challengeStart) : challenge.challengeStart != null)
             return false;
@@ -85,6 +113,8 @@ public class Challenge {
     @Override
     public int hashCode() {
         int result = challengeId;
+        result = 31 * result + challengerTeamId;
+        result = 31 * result + (oponnentTeamId != null ? oponnentTeamId.hashCode() : 0);
         result = 31 * result + (coords != null ? coords.hashCode() : 0);
         result = 31 * result + (challengeStart != null ? challengeStart.hashCode() : 0);
         result = 31 * result + (challengeEnd != null ? challengeEnd.hashCode() : 0);

@@ -5,11 +5,15 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+/**
+ * Created by to068466 on 29.10.2017.
+ */
 @Entity
 public class League {
     private int leaguId;
     private String leagueName;
     private String leagueDescription;
+    private int gameGameId;
 
     @Id
     @Column(name = "leagu_id")
@@ -41,6 +45,16 @@ public class League {
         this.leagueDescription = leagueDescription;
     }
 
+    @Basic
+    @Column(name = "Game_game_id")
+    public int getGameGameId() {
+        return gameGameId;
+    }
+
+    public void setGameGameId(int gameGameId) {
+        this.gameGameId = gameGameId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -49,6 +63,7 @@ public class League {
         League league = (League) o;
 
         if (leaguId != league.leaguId) return false;
+        if (gameGameId != league.gameGameId) return false;
         if (leagueName != null ? !leagueName.equals(league.leagueName) : league.leagueName != null) return false;
         if (leagueDescription != null ? !leagueDescription.equals(league.leagueDescription) : league.leagueDescription != null)
             return false;
@@ -61,6 +76,7 @@ public class League {
         int result = leaguId;
         result = 31 * result + (leagueName != null ? leagueName.hashCode() : 0);
         result = 31 * result + (leagueDescription != null ? leagueDescription.hashCode() : 0);
+        result = 31 * result + gameGameId;
         return result;
     }
 }

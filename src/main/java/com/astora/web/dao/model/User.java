@@ -6,6 +6,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.sql.Timestamp;
 
+/**
+ * Created by to068466 on 29.10.2017.
+ */
 @Entity
 public class User {
     private int userId;
@@ -16,6 +19,8 @@ public class User {
     private String email;
     private String password;
     private Timestamp lastLogin;
+    private int avatarsAvatarId;
+    private int roleRoleId;
 
     @Id
     @Column(name = "user_id")
@@ -97,6 +102,26 @@ public class User {
         this.lastLogin = lastLogin;
     }
 
+    @Basic
+    @Column(name = "Avatars_avatar_id")
+    public int getAvatarsAvatarId() {
+        return avatarsAvatarId;
+    }
+
+    public void setAvatarsAvatarId(int avatarsAvatarId) {
+        this.avatarsAvatarId = avatarsAvatarId;
+    }
+
+    @Basic
+    @Column(name = "Role_role_id")
+    public int getRoleRoleId() {
+        return roleRoleId;
+    }
+
+    public void setRoleRoleId(int roleRoleId) {
+        this.roleRoleId = roleRoleId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -105,6 +130,8 @@ public class User {
         User user = (User) o;
 
         if (userId != user.userId) return false;
+        if (avatarsAvatarId != user.avatarsAvatarId) return false;
+        if (roleRoleId != user.roleRoleId) return false;
         if (created != null ? !created.equals(user.created) : user.created != null) return false;
         if (firstName != null ? !firstName.equals(user.firstName) : user.firstName != null) return false;
         if (lastName != null ? !lastName.equals(user.lastName) : user.lastName != null) return false;
@@ -126,6 +153,8 @@ public class User {
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + (lastLogin != null ? lastLogin.hashCode() : 0);
+        result = 31 * result + avatarsAvatarId;
+        result = 31 * result + roleRoleId;
         return result;
     }
 }

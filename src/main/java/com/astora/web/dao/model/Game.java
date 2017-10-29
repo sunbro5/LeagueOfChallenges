@@ -5,6 +5,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+/**
+ * Created by to068466 on 29.10.2017.
+ */
 @Entity
 public class Game {
     private int gameId;

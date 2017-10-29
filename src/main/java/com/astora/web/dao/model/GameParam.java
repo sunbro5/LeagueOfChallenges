@@ -7,6 +7,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.sql.Timestamp;
 
+/**
+ * Created by to068466 on 29.10.2017.
+ */
 @Entity
 @Table(name = "game_param", schema = "mydb", catalog = "")
 public class GameParam {
@@ -14,6 +17,7 @@ public class GameParam {
     private String name;
     private Timestamp created;
     private String value;
+    private int gameGameId;
 
     @Id
     @Column(name = "game_param_id")
@@ -55,6 +59,16 @@ public class GameParam {
         this.value = value;
     }
 
+    @Basic
+    @Column(name = "Game_game_id")
+    public int getGameGameId() {
+        return gameGameId;
+    }
+
+    public void setGameGameId(int gameGameId) {
+        this.gameGameId = gameGameId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -63,6 +77,7 @@ public class GameParam {
         GameParam gameParam = (GameParam) o;
 
         if (gameParamId != gameParam.gameParamId) return false;
+        if (gameGameId != gameParam.gameGameId) return false;
         if (name != null ? !name.equals(gameParam.name) : gameParam.name != null) return false;
         if (created != null ? !created.equals(gameParam.created) : gameParam.created != null) return false;
         if (value != null ? !value.equals(gameParam.value) : gameParam.value != null) return false;
@@ -76,6 +91,7 @@ public class GameParam {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (created != null ? created.hashCode() : 0);
         result = 31 * result + (value != null ? value.hashCode() : 0);
+        result = 31 * result + gameGameId;
         return result;
     }
 }

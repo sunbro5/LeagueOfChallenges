@@ -6,12 +6,17 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.sql.Timestamp;
 
+/**
+ * Created by to068466 on 29.10.2017.
+ */
 @Entity
 public class Message {
     private int messageId;
     private Timestamp created;
     private String text;
     private String subject;
+    private int fromUserId;
+    private int toUserId;
 
     @Id
     @Column(name = "message_id")
@@ -53,6 +58,26 @@ public class Message {
         this.subject = subject;
     }
 
+    @Basic
+    @Column(name = "from_user_id")
+    public int getFromUserId() {
+        return fromUserId;
+    }
+
+    public void setFromUserId(int fromUserId) {
+        this.fromUserId = fromUserId;
+    }
+
+    @Basic
+    @Column(name = "to_user_id")
+    public int getToUserId() {
+        return toUserId;
+    }
+
+    public void setToUserId(int toUserId) {
+        this.toUserId = toUserId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -61,6 +86,8 @@ public class Message {
         Message message = (Message) o;
 
         if (messageId != message.messageId) return false;
+        if (fromUserId != message.fromUserId) return false;
+        if (toUserId != message.toUserId) return false;
         if (created != null ? !created.equals(message.created) : message.created != null) return false;
         if (text != null ? !text.equals(message.text) : message.text != null) return false;
         if (subject != null ? !subject.equals(message.subject) : message.subject != null) return false;
@@ -74,6 +101,8 @@ public class Message {
         result = 31 * result + (created != null ? created.hashCode() : 0);
         result = 31 * result + (text != null ? text.hashCode() : 0);
         result = 31 * result + (subject != null ? subject.hashCode() : 0);
+        result = 31 * result + fromUserId;
+        result = 31 * result + toUserId;
         return result;
     }
 }
