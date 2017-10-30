@@ -59,6 +59,9 @@
 						<a href="#"><i class="halflings-icon cog"></i></a>
 					</div>
 					<h2><spring:message code="login.form.title.label"/></h2>
+					<c:if test="${not empty loginMessage}">
+						<p>${loginMessage}</p>
+					</c:if>
 					<c:url var="loginUrl" value="/j_spring_security_check"></c:url>
 					<form class="form-horizontal" action="${loginUrl}" method="POST">
 						<fieldset/>

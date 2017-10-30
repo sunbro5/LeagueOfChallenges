@@ -23,7 +23,13 @@ public class LoginController {
 
     @RequestMapping("/denied")
     public ModelAndView loginDenied(Map<String,Object> model){
-        model.put("accessDenied", true);
+        model.put("loginMessage", "Access Denied !!");
+        return renderLogin(model);
+    }
+
+    @RequestMapping("/logout")
+    public ModelAndView logout(Map<String,Object> model){
+        model.put("loginMessage", "Logout Successful");
         return renderLogin(model);
     }
 
