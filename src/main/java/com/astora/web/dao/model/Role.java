@@ -1,10 +1,6 @@
 package com.astora.web.dao.model;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Collection;
 
@@ -13,6 +9,7 @@ import java.util.Collection;
  */
 @Entity
 public class Role {
+
     private int roleId;
     private Timestamp created;
     private String name;
@@ -77,5 +74,15 @@ public class Role {
 
     public void setUsersByRoleId(Collection<User> usersByRoleId) {
         this.usersByRoleId = usersByRoleId;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Role{" +
+                "roleId=" + roleId +
+                ", created=" + created +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

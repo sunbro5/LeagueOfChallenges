@@ -7,12 +7,12 @@ INSERT INTO leagueofchallenges.avatar VALUES(1, '1970-01-01 00:00:01', 'avatar_i
 INSERT INTO leagueofchallenges.avatar VALUES(2, '2038-01-19 03:14:07', 'avatar_img_2', 'avatar_name_2');
 
 TRUNCATE TABLE leagueofchallenges.role;
-INSERT INTO leagueofchallenges.role VALUES(1, '1970-01-01 00:00:01', 'uzivatel');
+INSERT INTO leagueofchallenges.role VALUES(1, '1970-01-01 00:00:01', 'user');
 INSERT INTO leagueofchallenges.role VALUES(2, '2038-01-19 03:14:07', 'admin');
 
 TRUNCATE TABLE leagueofchallenges.user;
 INSERT INTO leagueofchallenges.user VALUES(1, '1970-01-01 00:00:01', 'Tomas', 'Bartosek', 'AsylumDemon', 'AsylumDemon@praise.sun', 'tomas123', '1970-01-01 01:01:01', '1', '1');
-INSERT INTO leagueofchallenges.user VALUES(2, '2038-01-19 03:14:07', 'Jan', 'Mares', 'BellGargoyle', 'BellGargoyle@praise.sun', 'jan123', '1970-02-02 02:02:02', '2', '2');
+INSERT INTO leagueofchallenges.user VALUES(2, '2038-01-19 03:14:07', 'Jan', 'Mares', 'BellGargoyle', 'BellGargoyle@praise.sun', 'jan123', '1970-02-02 02:02:02', '2', '1');
 
 TRUNCATE TABLE leagueofchallenges.report;
 INSERT INTO leagueofchallenges.report VALUES(1, '1970-01-01 00:00:01', 'report_reason_1', 'report_text_1', '1', '2');

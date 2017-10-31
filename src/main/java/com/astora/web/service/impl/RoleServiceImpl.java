@@ -37,7 +37,8 @@ public class RoleServiceImpl implements RoleService {
 
     @Transactional
     public List<Role> findAll() {
-        return roleDao.findAll();
+        List<Role> roles = roleDao.findAll();
+        return roles;
     }
 
     @Transactional

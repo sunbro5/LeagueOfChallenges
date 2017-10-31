@@ -15,10 +15,13 @@ public class UserModel implements UserDetails {
 
     private String username;
     private String password;
+    private List<String> authorities;
 
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> auth = new ArrayList<SimpleGrantedAuthority>();
-        auth.add(new SimpleGrantedAuthority("admin"));
+        for(String authority: authorities){
+            auth.add(new SimpleGrantedAuthority(authority));
+        }
         return auth;
     }
 
@@ -52,5 +55,9 @@ public class UserModel implements UserDetails {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void setAuthorities(List<String> authorities) {
+        this.authorities = authorities;
     }
 }

@@ -1,13 +1,17 @@
 package com.astora.web.controller;
 
+import com.astora.web.dao.UserDao;
 import com.astora.web.dao.model.Role;
+import com.astora.web.dao.model.User;
 import com.astora.web.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpSession;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,12 +23,18 @@ public class HomeController {
     private RoleService roleService;
 
     @Autowired
+    private UserDao userDao;
+
+    @Autowired
     public void setRoleService(RoleService roleService) {
         this.roleService = roleService;
     }
 
     @RequestMapping("/")
-    public ModelAndView printHello(Map<String, Object> map) throws Exception {
+    public ModelAndView renderHome(HttpSession session, Map<String, Object> map) throws Exception {
+        String value = (String) session.getAttribute("text");
+        List<User> list = userDao.findAll();
+        Role role = list.get(0).getRoleByRoleRoleId();
         return new ModelAndView("home", map);
     }
 
@@ -59,7 +69,8 @@ public class HomeController {
 
     @RequestMapping("/findAllTest")
     public ModelAndView findAllTest(Map<String, Object> map) {
-        map.put("roleList", "Roles successfully found " + roleService.findAll());
+        //List<User> mapa = user.findAll();
+        map.put("roleList", "Roles successfully found " + roleService.findAll().toString());
 
         return new ModelAndView("home", map);
     }

@@ -1,12 +1,6 @@
 package com.astora.web.dao.model;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Collection;
 
@@ -32,6 +26,8 @@ public class User {
     private Collection<TeamUser> teamUsersByUserId;
     private Avatar avatarByAvatarsAvatarId;
     private Role roleByRoleRoleId;
+
+    public static final String COLUMN_NICKNAME = "nickname";
 
     @Id
     @Column(name = "user_id")
@@ -74,7 +70,7 @@ public class User {
     }
 
     @Basic
-    @Column(name = "nickname")
+    @Column(name = COLUMN_NICKNAME)
     public String getNickname() {
         return nickname;
     }

@@ -20,11 +20,11 @@
 
        <security:http access-decision-manager-ref="accessDecisionManager">
               <security:intercept-url pattern="/userInfo**" access="admin"/>
-              <security:form-login default-target-url="/home" login-page="/login"
+              <security:form-login default-target-url="/" login-page="/login"
                       authentication-failure-url="/denied"
                       username-parameter="username"
                       password-parameter="password"/>
-              <!--<security:logout logout-success-url="/admin/logout" />-->
+              <security:logout logout-success-url="/logout" />
        </security:http>
 
        <security:authentication-manager>
