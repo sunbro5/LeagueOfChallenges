@@ -9,9 +9,12 @@ import java.util.Collection;
 import java.util.List;
 
 /**
+ * Be aware !!!! this class is used for spring security or getting sensitive values
+ * Don´t you dare send this to model !!!
+ *
  * @author <a href="mailto:maresjan694@gmail.com">Jan Mares</a>, 16.10.2017
  */
-public class UserModel implements UserDetails {
+public class UserSecuredModel implements UserDetails {
 
     private String username;
     private String password;

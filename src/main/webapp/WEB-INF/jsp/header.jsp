@@ -106,7 +106,7 @@
                         <!-- start: User Dropdown -->
                         <li class="dropdown">
                             <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                                <i class="halflings-icon white user"></i> Dennis Ji
+                                <i class="halflings-icon white user"></i> ${userName}
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">

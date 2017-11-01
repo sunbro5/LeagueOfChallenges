@@ -2,7 +2,7 @@ package com.astora.web.service.impl;
 
 import com.astora.web.dao.UserDao;
 import com.astora.web.dao.model.User;
-import com.astora.web.model.UserModel;
+import com.astora.web.model.UserSecuredModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,7 +23,7 @@ import java.util.List;
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userDao.getUserByUsername(username);
-        UserModel userModel = new  UserModel();
+        UserSecuredModel userModel = new UserSecuredModel();
         userModel.setPassword(user.getPassword());
         userModel.setUsername(user.getNickname());
         List<String> authorities = new ArrayList<String>();

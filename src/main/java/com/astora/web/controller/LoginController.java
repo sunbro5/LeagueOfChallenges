@@ -14,8 +14,7 @@ import java.util.Map;
 public class LoginController {
 
     @RequestMapping("/login")
-    public ModelAndView loginUser(HttpSession session, Map<String,Object> model){
-        session.setAttribute("text","tralala");
+    public ModelAndView loginUser(Map<String,Object> model){
         return renderLogin(model);
     }
 
