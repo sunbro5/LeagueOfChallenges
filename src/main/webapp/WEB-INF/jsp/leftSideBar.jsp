@@ -1,7 +1,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <!-- start: Left SideBar -->
 <c:url value="/login" var="loginUrl"/>
 <c:url value="/showMap" var="showMapUrl"/>
+<c:url value="/registration" var="registrationUrl"/>
 <div id="sidebar-left" class="span2">
   <div class="nav-collapse sidebar-nav">
     <ul class="nav nav-tabs nav-stacked main-menu">
@@ -18,7 +21,7 @@
           <li><a class="submenu" href="submenu3.html"><i class="icon-file-alt"></i><span class="hidden-tablet"> Sub Menu 3</span></a></li>
         </ul>
       </li>
-      <li><a href="form.html"><i class="icon-edit"></i><span class="hidden-tablet"> Forms</span></a></li>
+      <li><a href="${registrationUrl}"><i class="icon-edit"></i><span class="hidden-tablet"> <spring:message code="page.menu.registration.label"/></span></a></li>
       <li><a href="chart.html"><i class="icon-list-alt"></i><span class="hidden-tablet"> Charts</span></a></li>
       <li><a href="typography.html"><i class="icon-font"></i><span class="hidden-tablet"> Typography</span></a></li>
       <li><a href="gallery.html"><i class="icon-picture"></i><span class="hidden-tablet"> Gallery</span></a></li>

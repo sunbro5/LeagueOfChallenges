@@ -23,15 +23,15 @@ public class EntityDaoImpl<T> implements EntityDao<T> {
     }
 
     @Transactional
-    public void create(T role) {
+    public void create(T object) {
         Session session = this.sessionFactory.getCurrentSession();
-        session.persist(role);
+        session.persist(object);
     }
 
     @Transactional
-    public void update(T role) {
+    public void update(T object) {
         Session session = this.sessionFactory.getCurrentSession();
-        session.update(role);
+        session.update(object);
     }
 
     @Transactional
@@ -50,9 +50,9 @@ public class EntityDaoImpl<T> implements EntityDao<T> {
     @Transactional
     public void delete(int id) {
         Session session = this.sessionFactory.getCurrentSession();
-        T role = (T) session.load(type, id);
-        if (role != null) {
-            session.delete(role);
+        T object = (T) session.load(type, id);
+        if (object != null) {
+            session.delete(object);
         }
     }
 }

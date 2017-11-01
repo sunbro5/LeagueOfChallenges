@@ -56,5 +56,16 @@
         <beans:property name="basename" value="classpath:messages_cz" />
         <beans:property name="defaultEncoding" value="UTF-8"/>
     </beans:bean>
+    <beans:bean id="javaMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <beans:property name="host" value="smtp.gmail.com"/>
+        <beans:property name="port" value="587"/>
+        <beans:property name="username" value="ligavyzev@gmail.com"/>
+        <beans:property name="password" value=""/>
+        <beans:property name="javaMailProperties">
+            <beans:props>
+                <beans:prop key="mail.transport.protocol" ></beans:prop>
+            </beans:props>
+        </beans:property>
+    </beans:bean>
 
 </beans:beans>

@@ -25,6 +25,7 @@
                       username-parameter="username"
                       password-parameter="password"/>
               <security:logout logout-success-url="/logout" />
+              <security:remember-me user-service-ref="loginService" key="uniqueAndSecret" />
        </security:http>
 
        <security:authentication-manager>

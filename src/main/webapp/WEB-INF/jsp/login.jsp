@@ -7,7 +7,7 @@
 	
 	<!-- start: Meta -->
 	<meta charset="utf-8">
-	<title>Bootstrap Metro Dashboard by Dennis Ji for ARM demo</title>
+	<title><spring:message code ="page.title"/></title>
 	<meta name="description" content="Bootstrap Metro Dashboard">
 	<meta name="author" content="Dennis Ji">
 	<meta name="keyword" content="Metro, Metro UI, Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
@@ -55,8 +55,8 @@
 			<div class="row-fluid">
 				<div class="login-box">
 					<div class="icons">
-						<a href="index.html"><i class="halflings-icon home"></i></a>
-						<a href="#"><i class="halflings-icon cog"></i></a>
+						<c:url value="/" var="homeUrl"/>
+						<a href="${homeUrl}"><i class="halflings-icon home"></i></a>
 					</div>
 					<h2><spring:message code="login.form.title.label"/></h2>
 					<c:if test="${not empty loginMessage}">
@@ -78,7 +78,7 @@
 							</div>
 							<div class="clearfix"></div>
 							
-							<label class="remember" for="remember"><input type="checkbox" id="remember" disabled /><spring:message code="login.form.remember.label"/></label>
+							<label class="remember" for="remember"><input name="remember-me" type="checkbox" id="remember" /><spring:message code="login.form.remember.label"/></label>
 
 
 							<div class="button-login">	
