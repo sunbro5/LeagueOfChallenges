@@ -51,8 +51,16 @@ INSERT INTO leagueofchallenges.team_user VALUES(2, 2, 2);
 
 -- TODO add created to challenge table
 TRUNCATE TABLE leagueofchallenges.challenge;
-INSERT INTO leagueofchallenges.challenge VALUES(1, 1, 2, '49.902238;16.439289', '1970-01-01 00:00:01', '2038-01-19 03:14:07', 'challenge_text_1');
-INSERT INTO leagueofchallenges.challenge VALUES(2, 2, 1, '49.904753;16.445780', '1970-01-01 00:00:01', '2038-01-19 03:14:07', 'challenge_text_2');
+INSERT INTO leagueofchallenges.challenge VALUES(1, 1, 2, '1970-01-01 00:00:01', '2038-01-19 03:14:07', 'challenge_text_1', '49.902238', '16.439289');
+INSERT INTO leagueofchallenges.challenge VALUES(2, 2, 1, '1970-01-01 00:00:01', '2038-01-19 03:14:07', 'challenge_text_2', '49.904753', '16.445780');
+INSERT INTO leagueofchallenges.challenge VALUES(3, 2, 1, '1970-01-01 00:00:01', '2038-01-19 03:14:07', 'challenge_text_2', '49.904028', '16.445855');
+INSERT INTO leagueofchallenges.challenge VALUES(4, 2, 1, '1970-01-01 00:00:01', '2038-01-19 03:14:07', 'challenge_text_2', '49.904809', '16.440984');
+INSERT INTO leagueofchallenges.challenge VALUES(5, 2, 1, '1970-01-01 00:00:01', '2038-01-19 03:14:07', 'challenge_text_2', '49.903233', '16.446971');
+INSERT INTO leagueofchallenges.challenge VALUES(6, 2, 1, '1970-01-01 00:00:01', '2038-01-19 03:14:07', 'challenge_text_2', '50.039279', '15.767583');
+INSERT INTO leagueofchallenges.challenge VALUES(7, 2, 1, '1970-01-01 00:00:01', '2038-01-19 03:14:07', 'challenge_text_2', '50.040165', '15.768265');
+INSERT INTO leagueofchallenges.challenge VALUES(8, 2, 1, '1970-01-01 00:00:01', '2038-01-19 03:14:07', 'challenge_text_2', '50.036581', '15.770325');
+INSERT INTO leagueofchallenges.challenge VALUES(9, 2, 1, '1970-01-01 00:00:01', '2038-01-19 03:14:07', 'challenge_text_2', '50.033852', '15.767514');
+INSERT INTO leagueofchallenges.challenge VALUES(10, 2, 1, '1970-01-01 00:00:01', '2038-01-19 03:14:07', 'challenge_text_2', '50.034611', '15.770003');
 
 -- TODO move created to upper column in challenge_result table
 TRUNCATE TABLE leagueofchallenges.challenge_result;

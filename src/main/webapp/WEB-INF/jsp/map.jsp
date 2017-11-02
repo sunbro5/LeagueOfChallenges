@@ -1,6 +1,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%@ page contentType="text/html" pageEncoding="UTF-8" %>
+
+<%--@elvariable id="challenge" type="com.astora.web.dao.model.Challenge"--%>
+<%--@elvariable id="challenges" type="java.util.List<com.astora.web.dao.model.Challenge>"--%>
+
 <html lang="en">
 <head>
 
@@ -58,28 +62,32 @@
 <jsp:include page="header.jsp"/>
 <div class="container-fluid-full">
     <div class="row-fluid">
-
         <jsp:include page="leftSideBar.jsp"/>
 
-        <noscript>
-            <div class="alert alert-block span10">
-                <h4 class="alert-heading">Warning!</h4>
-                <p>You need to have <a href="http://en.wikipedia.org/wiki/JavaScript" target="_blank">JavaScript</a> enabled to use this site.</p>
-            </div>
-        </noscript>
-
+        <!--  Note: This example requires that you consent to location sharing when
+        // prompted by your browser. If you see the error "The Geolocation service
+        // failed.", it means you probably did not give permission for the browser to
+        // locate you. -->
         <!-- start: Content -->
         <div id="content" class="span10">
-
-
             <div id="map"></div>
             <script>
-                // Note: This example requires that you consent to location sharing when
-                // prompted by your browser. If you see the error "The Geolocation service
-                // failed.", it means you probably did not give permission for the browser to
-                // locate you.
+                var challenges = [
+                    <c:forEach items="${challenges}" var="challenge" varStatus="status">
+                    [
+                        '${challenge.teamByChallengerTeamId.name}', // Name - [i][0]
+                        '${challenge.text}', // Text - [i][1]
+                        '${challenge.challengeStart}',
+                        '${challenge.challengeEnd}',
+                        '${challenge.coordsLat}',
+                        '${challenge.coordsLng}'
+                    ]
+                    <c:if test="${!status.last}">
+                    ,
+                    </c:if>
+                    </c:forEach>
+                ];
 
-                var map, infoWindow;
                 function initMap() {
                     map = new google.maps.Map(document.getElementById('map'), {
                         center: {lat: -34.397, lng: 150.644},
@@ -107,14 +115,6 @@
                             infoWindow.setContent('Your location.');
                             infoWindow.open(map);
 
-                            var locations = [
-                                ['Bondi Beach', 49.902238, 16.439289, 4],
-                                ['Coogee Beach', 49.904028, 16.445855, 5],
-                                ['Cronulla Beach', 49.904809, 16.440984, 3],
-                                ['Hra: Sachy', 49.904753, 16.445780, 2],
-                                ['Maroubra Beach', 49.903233, 16.446971, 1]
-                            ];
-
                             var yourAvatarIcon = {
                                 url: "/resources/img/map/anonym.png", // url
                                 scaledSize: new google.maps.Size(50, 50), // scaled size
@@ -123,9 +123,9 @@
                             };
 
                             var markerAvatar = new google.maps.Marker({
-                                 position: new google.maps.LatLng(pos.lat, pos.lng),
+                                position: new google.maps.LatLng(pos.lat, pos.lng),
                                 map: map,
-                                icon:yourAvatarIcon
+                                icon: yourAvatarIcon
                             });
                             var infowindow = new google.maps.InfoWindow;
 
@@ -136,30 +136,29 @@
                             var marker, i;
 
                             var image21 = new Image();
-                            image21.src ="/resources/img/map/anonym.png";
+                            image21.src = "/resources/img/map/anonym.png";
 
-                           // var image = document.getElementById('mujImg').src;
+                            // var image = document.getElementById('mujImg').src;
 
                             var icon = {
                                 url: "/resources/img/map/chess.png", // url
                                 scaledSize: new google.maps.Size(50, 50), // scaled size
-                                origin: new google.maps.Point(0,0), // origin
+                                origin: new google.maps.Point(0, 0), // origin
                                 anchor: new google.maps.Point(0, 0) // anchor
                             };
 
 
-
-                            for (i = 0; i < locations.length; i++) {
+                            for (i = 0; i < challenges.length; i++) {
                                 marker = new google.maps.Marker({
-                                    position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+                                    position: new google.maps.LatLng(challenges[i][4], challenges[i][5]),
                                     map: map,
-                                    icon:icon
+                                    icon: icon
                                 });
 
 // to je kdyz kliknes na nekoho obrazek na mape tak vyskakovaci okynko
-                                google.maps.event.addListener(marker, 'click', (function(marker, i) {
-                                    return function() {
-                                        infowindow.setContent(locations[i][0] + "<br />" + "Uzivatel: Capra Demon" + "<br />" + "Liga: Bronze" + "<br />" +
+                                google.maps.event.addListener(marker, 'click', (function (marker, i) {
+                                    return function () {
+                                        infowindow.setContent(challenges[i][0] + "<br />" + "Uzivatel: Capra Demon" + "<br />" + "Liga: Bronze" + "<br />" +
                                                 "<a href='/findAll'>Prejit na vyzvu</a>");
                                         infowindow.open(map, marker);
                                     }
@@ -167,7 +166,7 @@
                             }
 
 
-                        }, function() {
+                        }, function () {
                             handleLocationError(true, infoWindow, map.getCenter());
                         });
                     } else {
@@ -184,27 +183,13 @@
                     infoWindow.open(map);
                 }
 
-
-
             </script>
             <script async defer
                     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDM3hLUh10lPdC4qzzQ24HMuVldsSja0yk&callback=initMap">
             </script>
             <!--AIzaSyAgmM1VPSmo3QtkT4cOyZ_UR_uaDfUhH8Q -->
             <!--geolocation key AIzaSyDM3hLUh10lPdC4qzzQ24HMuVldsSja0yk -->
-            acs
-            <c:out value = "${position}"/>
-            ab
-
-
-
-
-
-
-
-
         </div><!--/.fluid-container-->
-
         <!-- end: Content -->
     </div><!--/#content.span10-->
 </div><!--/fluid-row-->

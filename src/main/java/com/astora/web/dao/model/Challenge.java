@@ -16,13 +16,14 @@ import java.util.Collection;
 @Entity
 public class Challenge {
     private int challengeId;
-    private String coords;
     private Timestamp challengeStart;
     private Timestamp challengeEnd;
     private String text;
     private Team teamByChallengerTeamId;
     private Team teamByOponnentTeamId;
     private Collection<ChallengeResult> challengeResultsByChallengeId;
+    private String coordsLat;
+    private String coordsLng;
 
     @Id
     @Column(name = "challenge_id")
@@ -32,16 +33,6 @@ public class Challenge {
 
     public void setChallengeId(int challengeId) {
         this.challengeId = challengeId;
-    }
-
-    @Basic
-    @Column(name = "Coords")
-    public String getCoords() {
-        return coords;
-    }
-
-    public void setCoords(String coords) {
-        this.coords = coords;
     }
 
     @Basic
@@ -74,6 +65,26 @@ public class Challenge {
         this.text = text;
     }
 
+    @Basic
+    @Column(name = "coordsLat")
+    public String getCoordsLat() {
+        return coordsLat;
+    }
+
+    public void setCoordsLat(String coordsLat) {
+        this.coordsLat = coordsLat;
+    }
+
+    @Basic
+    @Column(name = "coordsLng")
+    public String getCoordsLng() {
+        return coordsLng;
+    }
+
+    public void setCoordsLng(String coordsLng) {
+        this.coordsLng = coordsLng;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -82,7 +93,8 @@ public class Challenge {
         Challenge challenge = (Challenge) o;
 
         if (challengeId != challenge.challengeId) return false;
-        if (coords != null ? !coords.equals(challenge.coords) : challenge.coords != null) return false;
+        if (coordsLat != null ? !coordsLat.equals(challenge.coordsLat) : challenge.coordsLat != null) return false;
+        if (coordsLng != null ? !coordsLng.equals(challenge.coordsLng) : challenge.coordsLng != null) return false;
         if (challengeStart != null ? !challengeStart.equals(challenge.challengeStart) : challenge.challengeStart != null)
             return false;
         if (challengeEnd != null ? !challengeEnd.equals(challenge.challengeEnd) : challenge.challengeEnd != null)
@@ -95,7 +107,8 @@ public class Challenge {
     @Override
     public int hashCode() {
         int result = challengeId;
-        result = 31 * result + (coords != null ? coords.hashCode() : 0);
+        result = 31 * result + (coordsLat != null ? coordsLat.hashCode() : 0);
+        result = 31 * result + (coordsLng != null ? coordsLng.hashCode() : 0);
         result = 31 * result + (challengeStart != null ? challengeStart.hashCode() : 0);
         result = 31 * result + (challengeEnd != null ? challengeEnd.hashCode() : 0);
         result = 31 * result + (text != null ? text.hashCode() : 0);
