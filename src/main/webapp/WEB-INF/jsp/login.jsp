@@ -65,7 +65,7 @@
 					<c:url var="loginUrl" value="/j_spring_security_check"></c:url>
 					<form class="form-horizontal" action="${loginUrl}" method="POST">
 						<fieldset/>
-							
+						<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 							<div class="input-prepend" title="Username">
 								<span class="add-on"><i class="halflings-icon user"></i></span>
 								<input class="input-large span10" name="username" id="username" type="text" placeholder="<spring:message code="login.form.username.label"/>"/>

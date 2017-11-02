@@ -1,5 +1,8 @@
 package com.astora.web.model;
 
+
+//import org.hibernate.validator.constraints.NotEmpty;
+
 /**
  * @author <a href="mailto:mares.jan@o2.cz">Jan Mares</a>, 1.11.2017
  */
@@ -7,6 +10,7 @@ public class RegistrationModel {
 
     public static final String MODEL_NAME = "RegistrationModel";
 
+    //@NotEmpty(message = "Empty")
     private String firstName;
     private String lastName;
     private String nickname;

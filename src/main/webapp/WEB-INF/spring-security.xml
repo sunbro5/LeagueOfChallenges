@@ -7,30 +7,38 @@
        http://www.springframework.org/schema/security
        http://www.springframework.org/schema/security/spring-security.xsd">
 
-       <bean id="webexpressionHandler" class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler" />
+    <bean id="webexpressionHandler"
+          class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler"/>
 
-       <bean id="roleVoter" class="org.springframework.security.access.vote.RoleVoter">
-              <property name="rolePrefix" value=""></property>
-       </bean>
-       <bean id="accessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
-              <constructor-arg name="decisionVoters" ref="roleVoter"/>
-       </bean>
+    <bean id="roleVoter" class="org.springframework.security.access.vote.RoleVoter">
+        <property name="rolePrefix" value=""></property>
+    </bean>
+    <bean id="accessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
+        <constructor-arg>
+            <list>
+                <bean class="org.springframework.security.web.access.expression.WebExpressionVoter"/>
+                <bean class="org.springframework.security.access.vote.RoleVoter"/>
+                <bean class="org.springframework.security.access.vote.AuthenticatedVoter"/>
+            </list>
+        </constructor-arg>
+    </bean>
 
-       <bean id="userService" class="com.astora.web.service.impl.LoginServiceImpl"/>
+    <bean id="userService" class="com.astora.web.service.impl.LoginServiceImpl"/>
 
-       <security:http access-decision-manager-ref="accessDecisionManager">
-              <security:intercept-url pattern="/userInfo**" access="admin"/>
-              <security:form-login default-target-url="/" login-page="/login"
-                      authentication-failure-url="/denied"
-                      username-parameter="username"
-                      password-parameter="password"/>
-              <security:logout logout-success-url="/logout" />
-              <security:remember-me user-service-ref="loginService" key="uniqueAndSecret" />
-       </security:http>
+    <security:http access-decision-manager-ref="accessDecisionManager">
+        <security:intercept-url pattern="/userInfo**" access="admin"/>
+        <security:form-login default-target-url="/" login-page="/loginSuccessful"
+                             login-processing-url="/j_spring_security_check"
+                             authentication-failure-url="/denied"
+                             username-parameter="username"
+                             password-parameter="password"/>
+        <security:logout logout-success-url="/logout"/>
+        <security:remember-me user-service-ref="loginService" key="uniqueAndSecret"/>
+    </security:http>
 
-       <security:authentication-manager>
-              <security:authentication-provider user-service-ref="loginService">
-              </security:authentication-provider>
-       </security:authentication-manager>
+    <security:authentication-manager>
+        <security:authentication-provider user-service-ref="loginService">
+        </security:authentication-provider>
+    </security:authentication-manager>
 
 </beans>

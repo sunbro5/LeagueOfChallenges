@@ -63,6 +63,7 @@
             <p>${registrationMessage}</p>
             <c:url value="/createUser" var="createUserUrl"/>
             <form:form modelAttribute="RegistrationModel" action="${createUserUrl}">
+                <form:errors path="*" cssClass="error"/>
                 <div class="form-group">
                     <p><spring:message code ="registration.form.firstName.label"/></p>
                     <form:input cssClass="form-control" path="firstName"/>

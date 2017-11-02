@@ -2,10 +2,12 @@ package com.astora.web.controller;
 
 import com.astora.web.model.RegistrationModel;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.util.Map;
 
 /**
@@ -21,9 +23,9 @@ public class UserRegistrationController {
     }
 
     @RequestMapping("/createUser")
-    public ModelAndView registerUser(@ModelAttribute RegistrationModel registerModel, Map<String, Object> model){
-        if(registerModel.getPassword() == null || !registerModel.getPassword().equals(registerModel.getPasswordConfirm()) ){
-            return new ModelAndView("redirect:registration",model);
+    public ModelAndView registerUser(@Valid @ModelAttribute RegistrationModel registerModel, Map<String, Object> model, BindingResult result){
+        if(result.hasErrors()){
+            return new ModelAndView("registration",model);
         }
         return new ModelAndView("redirect:login",model);
     }
