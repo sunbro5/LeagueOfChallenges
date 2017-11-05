@@ -27,7 +27,6 @@ public class User {
     private Avatar avatarByAvatarsAvatarId;
     private Role roleByRoleRoleId;
 
-    public static final String COLUMN_NICKNAME = "nickname";
 
     @Id
     @Column(name = "user_id")
@@ -40,7 +39,7 @@ public class User {
     }
 
     @Basic
-    @Column(name = "created")
+    @Column(name = "created", insertable = false)
     public Timestamp getCreated() {
         return created;
     }
@@ -70,7 +69,7 @@ public class User {
     }
 
     @Basic
-    @Column(name = COLUMN_NICKNAME)
+    @Column(name = "nickname")
     public String getNickname() {
         return nickname;
     }
@@ -204,7 +203,7 @@ public class User {
         this.teamUsersByUserId = teamUsersByUserId;
     }
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "Avatars_avatar_id", referencedColumnName = "avatar_id", nullable = false)
     public Avatar getAvatarByAvatarsAvatarId() {
         return avatarByAvatarsAvatarId;
@@ -214,7 +213,7 @@ public class User {
         this.avatarByAvatarsAvatarId = avatarByAvatarsAvatarId;
     }
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "Role_role_id", referencedColumnName = "role_id", nullable = false)
     public Role getRoleByRoleRoleId() {
         return roleByRoleRoleId;

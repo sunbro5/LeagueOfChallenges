@@ -3003,3 +3003,7 @@ ul.messagesList li span.date {
 .navbar .brand{
 	font-size: 35px;
 }
+
+.error {
+	color: #8B0000;
+}

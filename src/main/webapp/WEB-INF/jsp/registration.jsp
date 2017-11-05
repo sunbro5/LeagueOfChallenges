@@ -8,11 +8,12 @@
 
     <!-- start: Meta -->
     <meta charset="utf-8">
-    <title><spring:message code ="page.title"/></title>
+    <title><spring:message code="page.title"/></title>
 
     <meta name="description" content="Bootstrap Metro Dashboard">
     <meta name="author" content="Dennis Ji">
-    <meta name="keyword" content="Metro, Metro UI, Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+    <meta name="keyword"
+          content="Metro, Metro UI, Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
     <!-- end: Meta -->
 
     <!-- start: Mobile Specific -->
@@ -24,7 +25,8 @@
     <link href="<c:url value="resources/css/bootstrap-responsive.min.css"/>" rel="stylesheet">
     <link id="base-style" href="<c:url value="resources/css/style.css"/>" rel="stylesheet">
     <link id="base-style-responsive" href="<c:url value="resources/css/style-responsive.css"/>" rel="stylesheet">
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&subset=latin,cyrillic-ext,latin-ext' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&subset=latin,cyrillic-ext,latin-ext'
+          rel='stylesheet' type='text/css'>
     <!-- end: CSS -->
 
 
@@ -53,40 +55,47 @@
             <div class="alert alert-block span10">
                 <h4 class="alert-heading">Warning!</h4>
 
-                <p>You need to have <a href="http://en.wikipedia.org/wiki/JavaScript" target="_blank">JavaScript</a> enabled to use this site.</p>
+                <p>You need to have <a href="http://en.wikipedia.org/wiki/JavaScript" target="_blank">JavaScript</a>
+                    enabled to use this site.</p>
             </div>
         </noscript>
 
         <!-- start: Content -->
         <div id="content" class="span10 text-center">
-            <h2><spring:message code ="registration.form.title.label"/></h2>
+            <h2><spring:message code="registration.form.title.label"/></h2>
+
             <p>${registrationMessage}</p>
             <c:url value="/createUser" var="createUserUrl"/>
-            <form:form modelAttribute="RegistrationModel" action="${createUserUrl}">
-                <form:errors path="*" cssClass="error"/>
+            <form:form modelAttribute="registrationModel" action="${createUserUrl}">
                 <div class="form-group">
-                    <p><spring:message code ="registration.form.firstName.label"/></p>
+                    <p><spring:message code="registration.form.firstName.label"/></p>
                     <form:input cssClass="form-control" path="firstName"/>
+                    <form:errors path="firstName" element="p" cssClass="error"/>
                 </div>
                 <div class="form-group">
-                    <p><spring:message code ="registration.form.lastName.label"/></p>
+                    <p><spring:message code="registration.form.lastName.label"/></p>
                     <form:input cssClass="form-control" path="lastName"/>
+                    <p><form:errors path="lastName" cssClass="error"/></p>
                 </div>
                 <div class="form-group">
-                    <p><spring:message code ="registration.form.username.label"/></p>
+                    <p><spring:message code="registration.form.username.label"/></p>
                     <form:input cssClass="form-control" path="nickname"/>
+                    <p><form:errors path="nickname" cssClass="error"/></p>
                 </div>
                 <div class="form-group">
-                    <p><spring:message code ="registration.form.email.label"/></p>
+                    <p><spring:message code="registration.form.email.label"/></p>
                     <form:input cssClass="form-control" path="email"/>
+                    <p><form:errors path="email" cssClass="error"/></p>
                 </div>
                 <div class="form-group">
-                    <p><spring:message code ="registration.form.password.label"/></p>
+                    <p><spring:message code="registration.form.password.label"/></p>
                     <form:password cssClass="form-control" path="password"/>
+                    <p><form:errors path="password" cssClass="error"/></p>
                 </div>
                 <div class="form-group">
-                    <p><spring:message code ="registration.form.passwordConfirm.label"/></p>
+                    <p><spring:message code="registration.form.passwordConfirm.label"/></p>
                     <form:password cssClass="form-control" path="passwordConfirm"/>
+                    <p><form:errors path="passwordConfirm" cssClass="error"/></p>
                 </div>
                 <input type="submit" value="Submit" class="btn btn-default">
             </form:form>
@@ -127,7 +136,9 @@
 <footer>
 
     <p>
-        <span style="text-align:left;float:left">&copy; 2013 <a href="http://themifycloud.com/downloads/janux-free-responsive-admin-dashboard-template/" alt="Bootstrap_Metro_Dashboard">JANUX Responsive Dashboard</a></span>
+        <span style="text-align:left;float:left">&copy; 2013 <a
+                href="http://themifycloud.com/downloads/janux-free-responsive-admin-dashboard-template/"
+                alt="Bootstrap_Metro_Dashboard">JANUX Responsive Dashboard</a></span>
 
     </p>
 

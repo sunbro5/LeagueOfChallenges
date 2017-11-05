@@ -52,13 +52,13 @@ DROP TABLE IF EXISTS `LeagueOfChallenges`.`User` ;
 
 CREATE TABLE IF NOT EXISTS `LeagueOfChallenges`.`User` (
   `user_id` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'played games budem brat jako count z nakej tabulky',
-  `created` DATETIME NOT NULL,
+  `created` DATETIME NOT NULL default CURRENT_TIMESTAMP,
   `firstName` VARCHAR(45) NULL,
   `lastName` VARCHAR(45) NULL,
   `nickname` VARCHAR(45) NOT NULL,
   `email` VARCHAR(45) NOT NULL,
   `password` VARCHAR(255) NOT NULL,
-  `last_login` DATETIME NOT NULL,
+  `last_login` DATETIME,
   `Avatars_avatar_id` INT UNSIGNED NOT NULL,
   `Role_role_id` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`user_id`),

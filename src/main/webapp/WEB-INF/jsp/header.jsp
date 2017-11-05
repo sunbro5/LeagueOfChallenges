@@ -116,7 +116,7 @@
                                     <span>Account Settings</span>
                                 </li>
                                 <li><a href="#"><i class="halflings-icon user"></i> Profile</a></li>
-                                <li><a href="<c:url value="/j_spring_security_logout" />"><i class="halflings-icon off"></i> Logout</a></li>
+                                <li><a href="<c:url value="/logout" />"><i class="halflings-icon off"></i> Logout</a></li>
                             </ul>
                         </li>
 

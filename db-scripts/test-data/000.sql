@@ -5,10 +5,11 @@ SET FOREIGN_KEY_CHECKS = 0;
 TRUNCATE TABLE leagueofchallenges.avatar;
 INSERT INTO leagueofchallenges.avatar VALUES(1, '1970-01-01 00:00:01', 'avatar_img_1', 'avatar_name_1');
 INSERT INTO leagueofchallenges.avatar VALUES(2, '2038-01-19 03:14:07', 'avatar_img_2', 'avatar_name_2');
+INSERT INTO leagueofchallenges.avatar VALUES(2, '2038-01-19 03:14:07', 'avatar_img_2', 'avatar_1');
 
 TRUNCATE TABLE leagueofchallenges.role;
-INSERT INTO leagueofchallenges.role VALUES(1, '1970-01-01 00:00:01', 'user');
-INSERT INTO leagueofchallenges.role VALUES(2, '2038-01-19 03:14:07', 'admin');
+INSERT INTO leagueofchallenges.role VALUES(1, '1970-01-01 00:00:01', 'USER');
+INSERT INTO leagueofchallenges.role VALUES(2, '2038-01-19 03:14:07', 'ADMIN');
 
 TRUNCATE TABLE leagueofchallenges.user;
 INSERT INTO leagueofchallenges.user VALUES(1, '1970-01-01 00:00:01', 'Tomas', 'Bartosek', 'AsylumDemon', 'AsylumDemon@praise.sun', 'tomas123', '1970-01-01 01:01:01', '1', '1');

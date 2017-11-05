@@ -13,17 +13,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Repository("userDaoImpl")
+@Repository("userDao")
+@Transactional
 public class UserDaoImpl extends EntityDaoImpl<User> implements UserDao{
 
     public UserDaoImpl(){
         super(User.class);
     }
 
-    @Transactional
     public User getUserByUsername(String username){
-        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(User.class);
-        criteria.add(Restrictions.eq(User.COLUMN_NICKNAME,username));
-        return (User) criteria.uniqueResult();
+        return getByUniqueColumnValue("nickname",username);
     }
 }

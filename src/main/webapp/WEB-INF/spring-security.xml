@@ -26,7 +26,7 @@
     <bean id="userService" class="com.astora.web.service.impl.LoginServiceImpl"/>
 
     <security:http access-decision-manager-ref="accessDecisionManager">
-        <security:intercept-url pattern="/userInfo**" access="admin"/>
+        <security:intercept-url pattern="/userInfo**" access="hasAnyRole()"/>
         <security:form-login default-target-url="/" login-page="/loginSuccessful"
                              login-processing-url="/j_spring_security_check"
                              authentication-failure-url="/denied"
