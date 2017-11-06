@@ -2,13 +2,8 @@ package com.astora.web.dao.impl;
 
 import com.astora.web.dao.ChallengeDao;
 import com.astora.web.dao.model.Challenge;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
-import javax.transaction.Transactional;
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository("challengeDao")
 @Transactional

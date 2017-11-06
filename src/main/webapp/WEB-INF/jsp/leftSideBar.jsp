@@ -4,6 +4,7 @@
 <!-- start: Left SideBar -->
 <c:url value="/login" var="loginUrl"/>
 <c:url value="/showMap" var="showMapUrl"/>
+<c:url value="/createChallenge" var="createChallengeUrl"/>
 <c:url value="/registration" var="registrationUrl"/>
 <c:url value="/friends" var="friendsUrl"/>
 <div id="sidebar-left" class="span2">
@@ -13,7 +14,7 @@
       <li><a href="messages.html"><i class="icon-envelope"></i><span class="hidden-tablet"> Messages</span></a></li>
       <li><a href="tasks.html"><i class="icon-tasks"></i><span class="hidden-tablet"> Tasks</span></a></li>
       <li><a href="${showMapUrl}"><i class="icon-eye-open"></i><span class="hidden-tablet">Mapa</span></a></li>
-      <li><a href="widgets.html"><i class="icon-dashboard"></i><span class="hidden-tablet"> Widgets</span></a></li>
+      <li><a href="${createChallengeUrl}"><i class="icon-dashboard"></i><span class="hidden-tablet">Vytvor challenge</span></a></li>
       <li>
         <a class="dropmenu" href="#"><i class="icon-folder-close-alt"></i><span class="hidden-tablet"> Dropdown</span><span class="label label-important"> 3 </span></a>
         <ul>

@@ -1,7 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%@ page contentType="text/html" pageEncoding="UTF-8" %>
 
 <%--@elvariable id="challenge" type="com.astora.web.dto.ChallengeDto"--%>
 <%--@elvariable id="challenges" type="java.util.List<com.astora.web.dto.ChallengeDto>"--%>
@@ -71,132 +70,8 @@
         // locate you. -->
         <!-- start: Content -->
         <div id="content" class="span10">
-            <div id="map"></div>
-            <script>
-                var challenges = [
-                    <c:forEach items="${challenges}" var="challenge" varStatus="status">
-                    [
-                        '${challenge.challengerTeamName}', // Name - [i][0]
-                        '${challenge.text}', // Text - [i][1]
-                        '${challenge.challengeStart}',
-                        '${challenge.challengeEnd}',
-                        '${challenge.coordsLat}',
-                        '${challenge.coordsLng}',
-                        '${challenge.oponnentTeamId}',
-                        '${challenge.challengerTeamId}',
-                        '${challenge.challengeId}',
-                        '${challenge.gameName}'
-                    ]
-                    <c:if test="${!status.last}">
-                    ,
-                    </c:if>
-                    </c:forEach>
-                ];
+            Zdarek, jedu
 
-                function initMap() {
-                    map = new google.maps.Map(document.getElementById('map'), {
-                        center: {lat: -34.397, lng: 150.644},
-                        zoom: 16
-                    });
-                    infoWindow = new google.maps.InfoWindow;
-
-                    // Try HTML5 geolocation.
-                    if (navigator.geolocation) {
-                        navigator.geolocation.getCurrentPosition(function(position) {
-                            var pos = {
-                                lat: position.coords.latitude,
-                                lng: position.coords.longitude
-                            };
-                            sessionStorage.setItem('position',pos);
-
-                            var a = document.createElement('a');
-                            var linkText = document.createTextNode("my title text");
-                            a.appendChild(linkText);
-                            a.title = "my title texta";
-                            a.href = "/hibernate?location=" + pos;
-                            document.body.appendChild(a);
-
-                            infoWindow.setPosition(pos);
-                            infoWindow.setContent('Your location.');
-                            infoWindow.open(map);
-
-                            var yourAvatarIcon = {
-                                url: "/resources/img/map/anonym.png", // url
-                                scaledSize: new google.maps.Size(50, 50), // scaled size
-                                origin: new google.maps.Point(0,0), // origin
-                                anchor: new google.maps.Point(0, 0) // anchor
-                            };
-
-                            var markerAvatar = new google.maps.Marker({
-                                position: new google.maps.LatLng(pos.lat, pos.lng),
-                                map: map,
-                                icon: yourAvatarIcon
-                            });
-                            var infowindow = new google.maps.InfoWindow;
-
-
-                            map.setCenter(pos);
-
-                            var marker, i;
-
-                            var image21 = new Image();
-                            image21.src = "/resources/img/map/anonym.png";
-
-
-
-                            // jednotlivy vyzvy
-                            for (i = 0; i < challenges.length; i++) {
-
-                                // game icon
-                                var icon = {
-                                    url: "/resources/img/map/" + challenges[i][9] + ".png", // url
-                                    scaledSize: new google.maps.Size(50, 50), // scaled size
-                                    origin: new google.maps.Point(0, 0), // origin
-                                    anchor: new google.maps.Point(0, 0) // anchor
-                                };
-
-                                marker = new google.maps.Marker({
-                                    position: new google.maps.LatLng(challenges[i][4], challenges[i][5]),
-                                    map: map,
-                                    icon: icon
-                                });
-
-                                // Vyskakovaci okno vyzvy(markeru), kdyz na ni klikneme.
-                                google.maps.event.addListener(marker, 'click', (function (marker, i) {
-                                    return function () {
-                                        var linkToChallenge = "<b><a href='/challenge?challengeId=" + challenges[i][8] + "'><spring:message code="map.linkToChallenge"/></a></b>";
-                                        infowindow.setContent(
-                                                '<b><spring:message code="map.team"/></b> ' + challenges[i][0] + "<br/>" +
-                                                '<b><spring:message code="map.startTime"/></b> ' + challenges[i][2] + "<br/>" +
-                                                '<b><spring:message code="map.endTime"/></b> ' + challenges[i][3] + "<br/>" +
-                                                challenges[i][1] + "<br/>" + linkToChallenge
-                                        );
-                                        infowindow.open(map, marker);
-                                    }
-                                })(marker, i));
-                            }
-                        }, function () {
-                            // Geolocation is not available
-                            handleLocationError(true, infoWindow, map.getCenter());
-                        });
-                    } else {
-                        // Browser doesn't support Geolocation
-                        handleLocationError(false, infoWindow, map.getCenter());
-                    }
-                }
-
-                function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-                    infoWindow.setPosition(pos);
-                    infoWindow.setContent(browserHasGeolocation ?
-                            'Error: The Geolocation service failed.' :
-                            'Error: Your browser doesn\'t support geolocation.');
-                    infoWindow.open(map);
-                }
-
-            </script>
-            <script async defer
-                    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDM3hLUh10lPdC4qzzQ24HMuVldsSja0yk&callback=initMap">
-            </script>
             <!--AIzaSyAgmM1VPSmo3QtkT4cOyZ_UR_uaDfUhH8Q -->
             <!--geolocation key AIzaSyDM3hLUh10lPdC4qzzQ24HMuVldsSja0yk -->
         </div><!--/.fluid-container-->
