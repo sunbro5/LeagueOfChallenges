@@ -97,7 +97,7 @@ DROP TABLE IF EXISTS `LeagueOfChallenges`.`Friend` ;
 
 CREATE TABLE IF NOT EXISTS `LeagueOfChallenges`.`Friend` (
   `friend_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `created` DATETIME NOT NULL,
+  `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `user_friend_id` INT UNSIGNED NOT NULL,
   `user_id` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`friend_id`),

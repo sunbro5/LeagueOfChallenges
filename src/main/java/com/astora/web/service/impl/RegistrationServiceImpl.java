@@ -35,7 +35,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private AvatarDao avatarDao;
 
     public void createUser(RegistrationModel registration) throws ServiceException {
-        User alreadyCreated = userDao.getUserByUsername(registration.getNickname());
+        User alreadyCreated = userDao.getUserByNickname(registration.getNickname());
         if (alreadyCreated != null) {
             throw new UserAlreadyExistsException("User name: " + registration.getNickname() + "already exists.");
         }

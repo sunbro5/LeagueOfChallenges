@@ -5,6 +5,7 @@
 <c:url value="/login" var="loginUrl"/>
 <c:url value="/showMap" var="showMapUrl"/>
 <c:url value="/registration" var="registrationUrl"/>
+<c:url value="/friends" var="friendsUrl"/>
 <div id="sidebar-left" class="span2">
   <div class="nav-collapse sidebar-nav">
     <ul class="nav nav-tabs nav-stacked main-menu">
@@ -22,7 +23,7 @@
         </ul>
       </li>
       <li><a href="${registrationUrl}"><i class="icon-edit"></i><span class="hidden-tablet"> <spring:message code="page.menu.registration.label"/></span></a></li>
-      <li><a href="chart.html"><i class="icon-list-alt"></i><span class="hidden-tablet"> Charts</span></a></li>
+      <li><a href="${friendsUrl}"><i class="halflings-icon white user"></i><span class="hidden-tablet"> <spring:message code="page.menu.friends.label"/></span></a></li>
       <li><a href="typography.html"><i class="icon-font"></i><span class="hidden-tablet"> Typography</span></a></li>
       <li><a href="gallery.html"><i class="icon-picture"></i><span class="hidden-tablet"> Gallery</span></a></li>
       <li><a href="table.html"><i class="icon-align-justify"></i><span class="hidden-tablet"> Tables</span></a></li>

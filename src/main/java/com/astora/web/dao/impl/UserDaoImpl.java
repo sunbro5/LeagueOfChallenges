@@ -21,7 +21,11 @@ public class UserDaoImpl extends EntityDaoImpl<User> implements UserDao{
         super(User.class);
     }
 
-    public User getUserByUsername(String username){
-        return getByUniqueColumnValue("nickname",username);
+    public User getUserByNickname(String nickname){
+        return getByUniqueColumnValue("nickname",nickname);
+    }
+
+    public List<User> getUserLikeNickname(String nickname){
+        return getListLikeColumnValue("nickname",nickname);
     }
 }

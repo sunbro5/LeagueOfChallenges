@@ -16,4 +16,18 @@ public class BaseUserController {
         }
         return model;
     }
+
+    /**
+     * Sensitive data from UserSecuredModel, be careful where you put them !!
+     * @param authentication
+     * @return
+     */
+    public int getUserId (Authentication authentication){
+        if(authentication != null && authentication.isAuthenticated()){
+            UserSecuredModel userSecuredModel = (UserSecuredModel) authentication.getPrincipal();
+            return userSecuredModel.getUserId();
+        }
+        return 0;
+    }
+
 }

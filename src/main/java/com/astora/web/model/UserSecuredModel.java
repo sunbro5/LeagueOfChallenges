@@ -16,6 +16,7 @@ import java.util.List;
  */
 public class UserSecuredModel implements UserDetails {
 
+    private int userId;
     private String username;
     private String password;
     private List<String> authorities;
@@ -62,5 +63,13 @@ public class UserSecuredModel implements UserDetails {
 
     public void setAuthorities(List<String> authorities) {
         this.authorities = authorities;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 }

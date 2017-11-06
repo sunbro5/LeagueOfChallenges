@@ -22,10 +22,11 @@ import java.util.List;
     private UserDao userDao;
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userDao.getUserByUsername(username);
+        User user = userDao.getUserByNickname(username);
         UserSecuredModel userModel = new UserSecuredModel();
         userModel.setPassword(user.getPassword());
         userModel.setUsername(user.getNickname());
+        userModel.setUserId(user.getUserId());
         List<String> authorities = new ArrayList<String>();
         authorities.add(user.getRoleByRoleRoleId().getName());
         userModel.setAuthorities(authorities);

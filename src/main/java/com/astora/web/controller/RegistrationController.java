@@ -7,10 +7,9 @@ import com.astora.web.model.validator.RegisterModelValidator;
 import com.astora.web.service.RegistrationService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
-import org.springframework.validation.Validator;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -25,9 +24,9 @@ import java.util.Map;
  * @author <a href="mailto:maresjan694@gmail.cz">Jan Mares</a>, 1.11.2017
  */
 @Controller()
-public class UserRegistrationController {
+public class RegistrationController extends BaseUserController {
 
-    private final Logger logger = Logger.getLogger(UserRegistrationController.class);
+    private final Logger logger = Logger.getLogger(RegistrationController.class);
 
     @Autowired
     private RegisterModelValidator registerModelValidator;
@@ -42,30 +41,31 @@ public class UserRegistrationController {
 
 
     @RequestMapping("/registration")
-    public ModelAndView showRegistration(Map<String, Object> model) {
-        return renderRegisterPage(model);
+    public ModelAndView showRegistration(Authentication authentication) {
+        return renderRegisterPage(authentication);
     }
 
-    private ModelAndView renderRegisterPage(Map<String, Object> model) {
+    private ModelAndView renderRegisterPage(Authentication authentication) {
+        Map<String, Object> model = init(authentication);
         return new ModelAndView("registration", model);
     }
 
 
     @RequestMapping("/createUser")
-    public ModelAndView registerUser(@ModelAttribute("registrationModel") @Validated RegistrationModel registerModel, BindingResult result, Map<String, Object> model) {
+    public ModelAndView registerUser(@ModelAttribute("registrationModel") @Validated RegistrationModel registerModel, BindingResult result, Authentication authentication) {
         if (result.hasErrors()) {
-            return renderRegisterPage(model);
+            return renderRegisterPage(authentication);
         }
         try {
             registrationService.createUser(registerModel);
         } catch (UserAlreadyExistsException e) {
             result.rejectValue("nickname", "registration.form.error.user.alreadyExists");
-            return renderRegisterPage(model);
+            return renderRegisterPage(authentication);
         } catch (ServiceException e) {
             logger.error("Service exception while creating new user " + registerModel, e);
-            return renderRegisterPage(model);
+            return renderRegisterPage(authentication);
         }
-        return new ModelAndView("redirect:login", model);
+        return new ModelAndView("redirect:login");
     }
 
 
