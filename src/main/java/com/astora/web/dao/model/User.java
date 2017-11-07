@@ -140,7 +140,7 @@ public class User {
         return result;
     }
 
-    @OneToMany(mappedBy = "userByUserFriendId")
+    @OneToMany(mappedBy = "userByUserId")
     public Collection<Friend> getFriendsByUserId() {
         return friendsByUserId;
     }
@@ -149,7 +149,7 @@ public class User {
         this.friendsByUserId = friendsByUserId;
     }
 
-    @OneToMany(mappedBy = "userByUserId")
+    @OneToMany(mappedBy = "userByUserFriendId")
     public Collection<Friend> getFriendsByUserId_0() {
         return friendsByUserId_0;
     }

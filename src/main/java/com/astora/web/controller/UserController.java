@@ -2,6 +2,7 @@ package com.astora.web.controller;
 
 import com.astora.web.dto.FriendInfo;
 import com.astora.web.service.UserService;
+import com.astora.web.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -19,8 +20,8 @@ import java.util.Map;
 @Controller
 public class UserController extends BaseUserController {
 
-    //Autowired
-    private UserService userService;
+    @Autowired
+    private UserServiceImpl userService;
 
     @RequestMapping("/friends")
     public ModelAndView showFriends(Authentication authentication){
@@ -32,9 +33,9 @@ public class UserController extends BaseUserController {
         int id = getUserId(authentication);
         List<FriendInfo> list = null;
         if(id != 0){
-            //list = userService.getFriendList(id);
+            list = userService.getFriendList(id);
         }
-        //model.put("userFriendList",list);
+        model.put("userFriendList",list);
         return new ModelAndView("friends",model);
     }
 

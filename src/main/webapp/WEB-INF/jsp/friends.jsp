@@ -71,10 +71,10 @@
                         <tr>
                             <th><spring:message code="friends.list.tableHead.nickname"/></th>
                             <th>someInfo</th>
-                            <th>someInfo/th>
+                            <th>someInfo</th>
                         </tr>
                         </thead>
-                        <c:forEach items="userFriendList" var="userFriend">
+                        <c:forEach items="${userFriendList}" var="userFriend">
                             <tr>
                                 <th>${userFriend.nickname}</th>
                                 <th>someInfo</th>
