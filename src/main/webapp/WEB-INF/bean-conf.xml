@@ -51,6 +51,7 @@
 
     <context:component-scan base-package="com.astora.web.service"/>
     <context:component-scan base-package="com.astora.web.dao"/>
+    <context:component-scan base-package="com.astora.web.session"/>
 
     <beans:bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
         <beans:property name="basename" value="classpath:messages_cz" />

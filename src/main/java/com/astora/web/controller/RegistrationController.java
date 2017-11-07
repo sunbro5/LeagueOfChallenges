@@ -24,9 +24,9 @@ import java.util.Map;
  * @author <a href="mailto:maresjan694@gmail.cz">Jan Mares</a>, 1.11.2017
  */
 @Controller()
-public class RegistrationController extends BaseUserController {
+public class RegistrationController extends BaseUserPage {
 
-    private final Logger logger = Logger.getLogger(RegistrationController.class);
+    private static final Logger logger = Logger.getLogger(RegistrationController.class);
 
     @Autowired
     private RegisterModelValidator registerModelValidator;
@@ -41,29 +41,29 @@ public class RegistrationController extends BaseUserController {
 
 
     @RequestMapping("/registration")
-    public ModelAndView showRegistration(Authentication authentication) {
-        return renderRegisterPage(authentication);
+    public ModelAndView showRegistration() {
+        return renderRegisterPage(init());
     }
 
-    private ModelAndView renderRegisterPage(Authentication authentication) {
-        Map<String, Object> model = init(authentication);
+    private ModelAndView renderRegisterPage(Map<String, Object> model) {
         return new ModelAndView("registration", model);
     }
 
 
     @RequestMapping("/createUser")
-    public ModelAndView registerUser(@ModelAttribute("registrationModel") @Validated RegistrationModel registerModel, BindingResult result, Authentication authentication) {
+    public ModelAndView registerUser(@ModelAttribute("registrationModel") @Validated RegistrationModel registerModel, BindingResult result) {
+        Map<String, Object> model = init();
         if (result.hasErrors()) {
-            return renderRegisterPage(authentication);
+            return renderRegisterPage(model);
         }
         try {
             registrationService.createUser(registerModel);
         } catch (UserAlreadyExistsException e) {
             result.rejectValue("nickname", "registration.form.error.user.alreadyExists");
-            return renderRegisterPage(authentication);
+            return renderRegisterPage(model);
         } catch (ServiceException e) {
             logger.error("Service exception while creating new user " + registerModel, e);
-            return renderRegisterPage(authentication);
+            return renderRegisterPage(model);
         }
         return new ModelAndView("redirect:login");
     }

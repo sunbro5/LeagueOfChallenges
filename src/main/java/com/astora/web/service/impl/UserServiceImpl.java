@@ -17,7 +17,7 @@ import java.util.List;
 
 @Service("userService")
 @Transactional
-public class UserServiceImpl {
+public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserDao userDao;
@@ -45,14 +45,14 @@ public class UserServiceImpl {
         return nicknameList;
     }
 
-    public boolean createFriend(String actualNickname, String friendNickname) throws ServiceException {
-        User user = userDao.getUserByNickname(actualNickname);
+    public boolean createFriend(int userId, String friendNickname) throws ServiceException {
+        User user = userDao.findById(userId);
         User userFriend = userDao.getUserByNickname(friendNickname);
         if (userFriend == null) {
             return false;
         }
         if (user == null) {
-            throw new ServiceException("Cant load user with nickname: " + actualNickname);
+            throw new ServiceException("Cant load user with id: " + userId);
         }
         Friend friend = new Friend();
         friend.setUserByUserId(user);

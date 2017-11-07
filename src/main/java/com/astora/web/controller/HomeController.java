@@ -19,7 +19,7 @@ import java.util.Map;
  * @author <a href="mailto:maresjan694@gmail.com">Jan Mares</a>, 16.10.2017
  */
 @Controller
-public class HomeController extends BaseUserController {
+public class HomeController extends BaseUserPage {
 
     private RoleService roleService;
 
@@ -32,8 +32,8 @@ public class HomeController extends BaseUserController {
     }
 
     @RequestMapping("/")
-    public ModelAndView renderHome(Authentication authentication) throws Exception {
-        Map<String, Object> map = init(authentication);
+    public ModelAndView renderHome() throws Exception {
+        Map<String, Object> map = init();
         List<User> list = userDao.findAll();
         Role role = list.get(0).getRoleByRoleRoleId();
         return new ModelAndView("home", map);

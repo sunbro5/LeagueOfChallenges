@@ -97,7 +97,7 @@
                     <form:password cssClass="form-control" path="passwordConfirm"/>
                     <p><form:errors path="passwordConfirm" cssClass="error"/></p>
                 </div>
-                <input type="submit" value="Submit" class="btn btn-default">
+                <input type="submit" value="<spring:message code="registration.form.confirmButton.label"/>" class="btn btn-default">
             </form:form>
         </div>
         <!--/.fluid-container-->

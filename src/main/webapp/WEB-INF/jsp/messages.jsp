@@ -62,53 +62,6 @@
 
         <!-- start: Content -->
         <div id="content" class="span10 text-center">
-            <h1><spring:message code="friends.page.title.label"/></h1>
-
-            <div class="row-fluid">
-                <div class="span6">
-                    <h2><spring:message code="friends.list.title.label"/></h2>
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th><spring:message code="friends.list.tableHead.nickname"/></th>
-                        </tr>
-                        </thead>
-                        <c:forEach items="${userFriendList}" var="userFriend">
-                            <tr>
-                                <th>${userFriend.nickname}</th>
-                            </tr>
-                        </c:forEach>
-                    </table>
-                </div>
-                <div class="span6">
-                    <h2><spring:message code="friends.search.title.label"/></h2>
-                    <c:url value="/findFriendUser" var="findFriendUserUrl"/>
-                    <form action="${findFriendUserUrl}" method="get">
-                        <div class="form-group">
-                            <input type="text" name="nickname"/>
-                        </div>
-                        <input type="submit" value="<spring:message code="friends.search.confirmButton.label"/>" class="btn btn-default"/>
-                    </form>
-                    <c:if test="${not empty foundUsersList}">
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th><spring:message code="friends.list.tableHead.nickname"/></th>
-                            </tr>
-                            </thead>
-                            <c:forEach items="${foundUsersList}" var="foundUser">
-                                <tr>
-                                    <th>${foundUser}</th>
-                                    <c:url value="/createFriend" var="createFriendUrl">
-                                        <c:param name="nickname" value="${foundUser}"/>
-                                    </c:url>
-                                    <th><a href="${createFriendUrl}"><spring:message code="friends.list.createFriend.link"/></a></th>
-                                </tr>
-                            </c:forEach>
-                        </table>
-                    </c:if>
-                </div>
-            </div>
 
         </div>
         <!--/.fluid-container-->
