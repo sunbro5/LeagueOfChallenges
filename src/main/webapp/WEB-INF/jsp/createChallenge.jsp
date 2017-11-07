@@ -1,10 +1,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%@ page contentType="text/html" pageEncoding="UTF-8" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
-<%--@elvariable id="challenge" type="com.astora.web.dto.ChallengeDto"--%>
-<%--@elvariable id="challenges" type="java.util.List<com.astora.web.dto.ChallengeDto>"--%>
+<%@ page contentType="text/html" pageEncoding="UTF-8" %>
 
 <html lang="en">
 <head>
@@ -63,42 +62,43 @@
 <jsp:include page="header.jsp"/>
 <div class="container-fluid-full">
     <div class="row-fluid">
-        <jsp:include page="leftSideBar.jsp"/>
+<jsp:include page="leftSideBar.jsp"/>
 
-        <!--  Note: This example requires that you consent to location sharing when
-        // prompted by your browser. If you see the error "The Geolocation service
-        // failed.", it means you probably did not give permission for the browser to
-        // locate you. -->
-        <!-- start: Content -->
+
+
         <div id="content" class="span10">
+
+            <c:url value="/createChallengeForm" var="createChallengeFormUrl"/>
+            <form:form modelAttribute="createChallengeModel" action="${createChallengeFormUrl}">
+                <div class="form-group">
+                    <p>start</p>
+                    <%--<form:input  type="datetime-local" cssClass="form-control" path="challengeStart"/>--%>
+                </div>
+                <div class="form-group">
+                    <p>end</p>
+                        <%--<form:input type="datetime-local" cssClass="form-control" path="challengeEnd"/>--%>
+                </div>
+                <div class="form-group">
+                    <p>LAT</p>
+                    KLIKNI NA MAPU PRO SOURADNICE
+                    <form:input cssClass="form-control" path="coordsLat"  id="Lat" readonly="true"/>
+                </div>
+                <div class="form-group">
+                    <p>LNG</p>
+                    KLIKNI NA MAPU PRO SOURADNICE
+                    <form:input cssClass="form-control" path="coordsLng"  id="Lng" readonly="true" />
+                </div>
+
+                <input type="submit" value="Submit" class="btn btn-default">
+            </form:form>
+
             <div id="map"></div>
             <script>
-                var challenges = [
-                    <c:forEach items="${challenges}" var="challenge" varStatus="status">
-                    [
-                        '${challenge.challengerTeamName}', // Name - [i][0]
-                        '${challenge.text}', // Text - [i][1]
-                        '${challenge.challengeStart}',
-                        '${challenge.challengeEnd}',
-                        '${challenge.coordsLat}',
-                        '${challenge.coordsLng}',
-                        '${challenge.oponnentTeamId}',
-                        '${challenge.challengerTeamId}',
-                        '${challenge.challengeId}',
-                        '${challenge.gameName}'
-                    ]
-                    <c:if test="${!status.last}">
-                    ,
-                    </c:if>
-                    </c:forEach>
-                ];
-
                 function initMap() {
                     map = new google.maps.Map(document.getElementById('map'), {
                         center: {lat: -34.397, lng: 150.644},
                         zoom: 16
                     });
-                    infoWindow = new google.maps.InfoWindow;
 
                     // Try HTML5 geolocation.
                     if (navigator.geolocation) {
@@ -107,74 +107,16 @@
                                 lat: position.coords.latitude,
                                 lng: position.coords.longitude
                             };
-                            sessionStorage.setItem('position',pos);
-
-                            var a = document.createElement('a');
-                            var linkText = document.createTextNode("my title text");
-                            a.appendChild(linkText);
-                            a.title = "my title texta";
-                            a.href = "/hibernate?location=" + pos;
-                            document.body.appendChild(a);
-
-                            infoWindow.setPosition(pos);
-                            infoWindow.setContent('Your location.');
-                            infoWindow.open(map);
-
-                            var yourAvatarIcon = {
-                                url: "/resources/img/map/anonym.png", // url
-                                scaledSize: new google.maps.Size(50, 50), // scaled size
-                                origin: new google.maps.Point(0,0), // origin
-                                anchor: new google.maps.Point(0, 0) // anchor
-                            };
-
-                            var markerAvatar = new google.maps.Marker({
-                                position: new google.maps.LatLng(pos.lat, pos.lng),
-                                map: map,
-                                icon: yourAvatarIcon
-                            });
-                            var infowindow = new google.maps.InfoWindow;
-
 
                             map.setCenter(pos);
 
-                            var marker, i;
+                            google.maps.event.addListener(map, "click", function(event) {
+                                var lat = event.latLng.lat();
+                                var lng = event.latLng.lng();
+                                 document.getElementById('Lat').value = lat;
+                                 document.getElementById('Lng').value = lng;
+                            });
 
-                            var image21 = new Image();
-                            image21.src = "/resources/img/map/anonym.png";
-
-
-
-                            // jednotlivy vyzvy
-                            for (i = 0; i < challenges.length; i++) {
-
-                                // game icon
-                                var icon = {
-                                    url: "/resources/img/map/" + challenges[i][9] + ".png", // url
-                                    scaledSize: new google.maps.Size(50, 50), // scaled size
-                                    origin: new google.maps.Point(0, 0), // origin
-                                    anchor: new google.maps.Point(0, 0) // anchor
-                                };
-
-                                marker = new google.maps.Marker({
-                                    position: new google.maps.LatLng(challenges[i][4], challenges[i][5]),
-                                    map: map,
-                                    icon: icon
-                                });
-
-                                // Vyskakovaci okno vyzvy(markeru), kdyz na ni klikneme.
-                                google.maps.event.addListener(marker, 'click', (function (marker, i) {
-                                    return function () {
-                                        var linkToChallenge = "<b><a href='/challenge?challengeId=" + challenges[i][8] + "'><spring:message code="map.linkToChallenge"/></a></b>";
-                                        infowindow.setContent(
-                                                '<b><spring:message code="map.team"/></b> ' + challenges[i][0] + "<br/>" +
-                                                '<b><spring:message code="map.startTime"/></b> ' + challenges[i][2] + "<br/>" +
-                                                '<b><spring:message code="map.endTime"/></b> ' + challenges[i][3] + "<br/>" +
-                                                challenges[i][1] + "<br/>" + linkToChallenge
-                                        );
-                                        infowindow.open(map, marker);
-                                    }
-                                })(marker, i));
-                            }
                         }, function () {
                             // Geolocation is not available
                             handleLocationError(true, infoWindow, map.getCenter());
@@ -193,16 +135,34 @@
                     infoWindow.open(map);
                 }
 
+                function PopupCenter(url, title, w, h) {
+                    // Fixes dual-screen position                         Most browsers      Firefox
+                    var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : screen.left;
+                    var dualScreenTop = window.screenTop != undefined ? window.screenTop : screen.top;
+
+                    var width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
+                    var height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+
+                    var left = ((width / 2) - (w / 2)) + dualScreenLeft;
+                    var top = ((height / 2) - (h / 2)) + dualScreenTop;
+                    var newWindow = window.open(url, title, 'scrollbars=yes, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
+
+                    // Puts focus on the newWindow
+                    if (window.focus) {
+                        newWindow.focus();
+                    }
+                }
+
+
             </script>
             <script async defer
                     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDM3hLUh10lPdC4qzzQ24HMuVldsSja0yk&callback=initMap">
             </script>
-            <!--AIzaSyAgmM1VPSmo3QtkT4cOyZ_UR_uaDfUhH8Q -->
-            <!--geolocation key AIzaSyDM3hLUh10lPdC4qzzQ24HMuVldsSja0yk -->
-        </div><!--/.fluid-container-->
-        <!-- end: Content -->
-    </div><!--/#content.span10-->
-</div><!--/fluid-row-->
+
+        </div>
+
+    </div>
+</div>
 
 <div class="modal hide fade" id="myModal">
     <div class="modal-header">

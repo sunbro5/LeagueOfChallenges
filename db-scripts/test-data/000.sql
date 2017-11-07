@@ -5,7 +5,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 TRUNCATE TABLE leagueofchallenges.avatar;
 INSERT INTO leagueofchallenges.avatar VALUES(1, '1970-01-01 00:00:01', 'avatar_img_1', 'avatar_name_1');
 INSERT INTO leagueofchallenges.avatar VALUES(2, '2038-01-19 03:14:07', 'avatar_img_2', 'avatar_name_2');
-INSERT INTO leagueofchallenges.avatar VALUES(2, '2038-01-19 03:14:07', 'avatar_img_2', 'avatar_1');
+INSERT INTO leagueofchallenges.avatar VALUES(3, '2038-01-19 03:14:07', 'avatar_img_2', 'avatar_1');
 
 TRUNCATE TABLE leagueofchallenges.role;
 INSERT INTO leagueofchallenges.role VALUES(1, '1970-01-01 00:00:01', 'USER');
@@ -33,8 +33,8 @@ INSERT INTO leagueofchallenges.game_param VALUES(2, 'game_param_name_2', '2038-0
 
 -- TODO add created to game table
 TRUNCATE TABLE leagueofchallenges.game;
-INSERT INTO leagueofchallenges.game VALUES(1, 'Sachy', 'game_description_1');
-INSERT INTO leagueofchallenges.game VALUES(2, 'Fotbal', 'game_description_2');
+INSERT INTO leagueofchallenges.game VALUES(1, 'chess', 'game_description_1');
+INSERT INTO leagueofchallenges.game VALUES(2, 'football', 'game_description_2');
 
 -- TODO add created to league table
 -- TODO add some column that says if its gold, bronze, diamond or whatever league
