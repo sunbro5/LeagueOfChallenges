@@ -1,10 +1,9 @@
 package com.astora.web.controller;
 
-import com.astora.web.dto.FriendInfo;
+import com.astora.web.dto.FriendInfoDto;
 import com.astora.web.exception.FriendAlreadyExistsException;
 import com.astora.web.exception.ServiceException;
 import com.astora.web.service.UserService;
-import com.astora.web.service.impl.UserServiceImpl;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -34,7 +33,7 @@ public class UserController extends BaseUserPage {
 
     public ModelAndView renderFriends(Map<String, Object> model){
         int id = getUserId();
-        List<FriendInfo> list = null;
+        List<FriendInfoDto> list = null;
         if(id != 0){
             list = userService.getFriendList(id);
         }

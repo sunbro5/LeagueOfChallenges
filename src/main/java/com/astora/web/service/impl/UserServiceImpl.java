@@ -1,10 +1,13 @@
 package com.astora.web.service.impl;
 
 import com.astora.web.dao.FriendDao;
+import com.astora.web.dao.MessageDao;
 import com.astora.web.dao.UserDao;
 import com.astora.web.dao.model.Friend;
+import com.astora.web.dao.model.Message;
 import com.astora.web.dao.model.User;
-import com.astora.web.dto.FriendInfo;
+import com.astora.web.dto.FriendInfoDto;
+import com.astora.web.dto.UserInboxMessageDto;
 import com.astora.web.exception.FriendAlreadyExistsException;
 import com.astora.web.exception.ServiceException;
 import com.astora.web.exception.UserDoesntExists;
@@ -26,11 +29,11 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private FriendDao friendDao;
 
-    public List<FriendInfo> getFriendList(int userId) {
+    public List<FriendInfoDto> getFriendList(int userId) {
         User user = userDao.findById(userId);
-        List<FriendInfo> list = new ArrayList<FriendInfo>();
+        List<FriendInfoDto> list = new ArrayList<FriendInfoDto>();
         for (Friend friend : user.getFriendsByUserId()) {
-            FriendInfo friendInfo = new FriendInfo();
+            FriendInfoDto friendInfo = new FriendInfoDto();
             friendInfo.setNickname(friend.getUserByUserFriendId().getNickname());
             list.add(friendInfo);
         }
@@ -64,6 +67,19 @@ public class UserServiceImpl implements UserService {
         friend.setUserByUserId(user);
         friend.setUserByUserFriendId(userFriend);
         friendDao.create(friend);
+    }
+
+    public List<UserInboxMessageDto> getUserMessages(int userId) throws ServiceException {
+        List<UserInboxMessageDto> messages = new ArrayList<UserInboxMessageDto>();
+        User user = userDao.findById(userId);
+        if (user == null) {
+            throw new ServiceException("Cant load user with id: " + userId);
+        }
+        for (Message message : user.getMessagesByUserId()){
+            messages.add(new UserInboxMessageDto(message));
+        }
+        //TODO SORT MESSAGES BY TIME !!!!
+        return messages;
     }
 
 
