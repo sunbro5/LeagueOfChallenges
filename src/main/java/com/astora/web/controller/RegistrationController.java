@@ -65,6 +65,7 @@ public class RegistrationController extends BaseUserPage {
             logger.error("Service exception while creating new user " + registerModel, e);
             return renderRegisterPage(model);
         }
+        userSessionManager.putUserInfo("message.user.successfullyCreated");
         return new ModelAndView("redirect:login");
     }
 

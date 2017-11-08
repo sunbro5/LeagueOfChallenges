@@ -12,12 +12,16 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <a href="mailto:mares.jan@o2.cz">Jan Mares</a>, 7.11.2017
  */
 @Component("userSessionManager")
 public class UserSessionManagerImpl implements UserSessionManager {
+
+    private static final String USER_INFO_MESSAGE = "user_info_message";
 
     private final Logger logger = Logger.getLogger(UserSessionManagerImpl.class);
 
@@ -43,6 +47,30 @@ public class UserSessionManagerImpl implements UserSessionManager {
         }
         return 0;
     }
+
+    @SuppressWarnings("unchecked")
+    public void putUserInfo(String info){
+        List<String> list = null;
+        Object object = getSessionAttribute(USER_INFO_MESSAGE);
+        if(object == null || !(object instanceof ArrayList)){
+            list = new ArrayList<String>();
+            list.add(info);
+            setSessionAttribute(USER_INFO_MESSAGE, list);
+        } else {
+            // wtf iam doing ???? its 3:AM i should sleep
+            list = (List<String>) getSessionAttribute(USER_INFO_MESSAGE);
+            list.add(info);
+            setSessionAttribute(USER_INFO_MESSAGE,list);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<String> getUserInfo(){
+        List<String> list = (List<String>) getSessionAttribute(USER_INFO_MESSAGE);
+        setSessionAttribute(USER_INFO_MESSAGE,new ArrayList<String>());
+        return list;
+    }
+
 
     public void setSessionAttribute(String name, Object object) {
         HttpSession session = getHttpSession();

@@ -1,6 +1,7 @@
 package com.astora.web.controller;
 
 import com.astora.web.dto.FriendInfo;
+import com.astora.web.exception.FriendAlreadyExistsException;
 import com.astora.web.exception.ServiceException;
 import com.astora.web.service.UserService;
 import com.astora.web.service.impl.UserServiceImpl;
@@ -51,14 +52,17 @@ public class UserController extends BaseUserPage {
 
     @RequestMapping("/createFriend")
     public ModelAndView createFriend(@RequestParam("nickname") String nickname){
-        Map<String, Object> model = init();
-        boolean friendAdded = false;
         try {
-            friendAdded = userService.createFriend(getUserId(),nickname);
+            userService.createFriend(getUserId(),nickname);
+        } catch (FriendAlreadyExistsException e) {
+            userSessionManager.putUserInfo("message.friend.alreadyExists");
+            return renderFriends(init());
         } catch (ServiceException e) {
             logger.error(e);
+            return renderFriends(init());
         }
-        return renderFriends(model);
+        userSessionManager.putUserInfo("message.friend.successfullyCreated");
+        return renderFriends(init());
     }
 
 }

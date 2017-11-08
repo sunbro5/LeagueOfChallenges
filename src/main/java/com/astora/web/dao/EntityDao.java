@@ -16,5 +16,5 @@ public interface EntityDao<T> {
 
     T getByUniqueColumnValue(String columnName, Object value);
 
-    List<T> getListLikeColumnValue(String columnName, Object value);
+    List<T> getListLikeColumnValue(String columnName, String value);
 }

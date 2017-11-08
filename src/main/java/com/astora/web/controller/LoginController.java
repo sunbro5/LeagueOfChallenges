@@ -9,11 +9,11 @@ import java.util.Map;
  * @author <a href="mailto:mares.jan@o2.cz">Jan Mares</a>, 16.10.2017
  */
 @Controller
-public class LoginController {
+public class LoginController extends BaseUserPage{
 
     @RequestMapping("/login")
-    public ModelAndView loginUser(Map<String,Object> model){
-        return renderLogin(model);
+    public ModelAndView loginUser(){
+        return renderLogin(init());
     }
 
     public ModelAndView renderLogin(Map<String,Object> model){
@@ -22,13 +22,13 @@ public class LoginController {
 
     @RequestMapping("/denied")
     public ModelAndView loginDenied(Map<String,Object> model){
-        model.put("loginMessage", "Access Denied !!");
-        return renderLogin(model);
+        userSessionManager.putUserInfo("message.login.denied");
+        return renderLogin(init());
     }
 
     @RequestMapping("/logout")
     public ModelAndView logout(Map<String,Object> model){
-        model.put("loginMessage", "Logout Successful");
+        userSessionManager.putUserInfo("message.login.successful");
         return renderLogin(model);
     }
 

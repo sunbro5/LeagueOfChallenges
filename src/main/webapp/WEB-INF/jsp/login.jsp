@@ -59,9 +59,7 @@
 						<a href="${homeUrl}"><i class="halflings-icon home"></i></a>
 					</div>
 					<h2><spring:message code="login.form.title.label"/></h2>
-					<c:if test="${not empty loginMessage}">
-						<p>${loginMessage}</p>
-					</c:if>
+					<jsp:include page="infoMessage.jsp"/>
 					<c:url var="loginUrl" value="/j_spring_security_check"></c:url>
 					<form class="form-horizontal" action="${loginUrl}" method="POST">
 						<fieldset/>

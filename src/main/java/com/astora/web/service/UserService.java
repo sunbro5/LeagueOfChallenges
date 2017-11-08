@@ -14,5 +14,5 @@ public interface UserService {
 
     List<String> getUsersNicknameLike(String nickname);
 
-    boolean createFriend(int userId, String friendNickname) throws ServiceException;
+    void createFriend(int userId, String friendNickname) throws ServiceException;
 }

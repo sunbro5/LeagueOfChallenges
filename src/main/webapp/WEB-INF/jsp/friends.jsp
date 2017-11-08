@@ -63,7 +63,7 @@
         <!-- start: Content -->
         <div id="content" class="span10 text-center">
             <h1><spring:message code="friends.page.title.label"/></h1>
-
+            <jsp:include page="infoMessage.jsp"/>
             <div class="row-fluid">
                 <div class="span6">
                     <h2><spring:message code="friends.list.title.label"/></h2>

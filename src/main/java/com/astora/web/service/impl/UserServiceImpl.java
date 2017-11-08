@@ -5,6 +5,7 @@ import com.astora.web.dao.UserDao;
 import com.astora.web.dao.model.Friend;
 import com.astora.web.dao.model.User;
 import com.astora.web.dto.FriendInfo;
+import com.astora.web.exception.FriendAlreadyExistsException;
 import com.astora.web.exception.ServiceException;
 import com.astora.web.exception.UserDoesntExists;
 import com.astora.web.service.UserService;
@@ -45,20 +46,24 @@ public class UserServiceImpl implements UserService {
         return nicknameList;
     }
 
-    public boolean createFriend(int userId, String friendNickname) throws ServiceException {
+    public void createFriend(int userId, String friendNickname) throws ServiceException {
         User user = userDao.findById(userId);
         User userFriend = userDao.getUserByNickname(friendNickname);
         if (userFriend == null) {
-            return false;
+            throw new UserDoesntExists("User with nickname" + friendNickname + "does not exists");
         }
         if (user == null) {
             throw new ServiceException("Cant load user with id: " + userId);
+        }
+        for (Friend friend : user.getFriendsByUserId()) {
+            if (friend.getUserByUserFriendId().getNickname().equals(friendNickname)) {
+                throw new FriendAlreadyExistsException("Friend with nickname:" + friendNickname + "already exists");
+            }
         }
         Friend friend = new Friend();
         friend.setUserByUserId(user);
         friend.setUserByUserFriendId(userFriend);
         friendDao.create(friend);
-        return true;
     }
 
 

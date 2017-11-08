@@ -4,6 +4,7 @@ import com.astora.web.dao.EntityDao;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,9 +61,9 @@ public class EntityDaoImpl<T> implements EntityDao<T> {
         return (T) criteria.uniqueResult();
     }
 
-    public List<T> getListLikeColumnValue(String columnName, Object value){
+    public List<T> getListLikeColumnValue(String columnName, String value){
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(type);
-        criteria.add(Restrictions.like(columnName, value));
+        criteria.add(Restrictions.like(columnName, value, MatchMode.ANYWHERE));
         return criteria.list();
     }
 }
