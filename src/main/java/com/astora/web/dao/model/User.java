@@ -19,8 +19,8 @@ public class User {
     private Timestamp lastLogin;
     private Collection<Friend> friendsByUserId;
     private Collection<Friend> friendsByUserId_0;
-    private Collection<Message> messagesByUserId;
-    private Collection<Message> messagesByUserId_0;
+    private Collection<Message> messagesOutbox;
+    private Collection<Message> messagesInbox;
     private Collection<Report> reportsByUserId;
     private Collection<Report> reportsByUserId_0;
     private Collection<TeamUser> teamUsersByUserId;
@@ -159,21 +159,21 @@ public class User {
     }
 
     @OneToMany(mappedBy = "userByFromUserId")
-    public Collection<Message> getMessagesByUserId() {
-        return messagesByUserId;
+    public Collection<Message> getMessagesOutbox() {
+        return messagesOutbox;
     }
 
-    public void setMessagesByUserId(Collection<Message> messagesByUserId) {
-        this.messagesByUserId = messagesByUserId;
+    public void setMessagesOutbox(Collection<Message> messagesOutbox) {
+        this.messagesOutbox = messagesOutbox;
     }
 
     @OneToMany(mappedBy = "userByToUserId")
-    public Collection<Message> getMessagesByUserId_0() {
-        return messagesByUserId_0;
+    public Collection<Message> getMessagesInbox() {
+        return messagesInbox;
     }
 
-    public void setMessagesByUserId_0(Collection<Message> messagesByUserId_0) {
-        this.messagesByUserId_0 = messagesByUserId_0;
+    public void setMessagesInbox(Collection<Message> messagesInbox) {
+        this.messagesInbox = messagesInbox;
     }
 
     @OneToMany(mappedBy = "userByReportingUserId")

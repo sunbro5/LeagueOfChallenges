@@ -51,7 +51,7 @@ public class RegistrationController extends BaseUserPage {
 
 
     @RequestMapping("/createUser")
-    public ModelAndView registerUser(@ModelAttribute("registrationModel") @Validated RegistrationModel registerModel, BindingResult result) {
+    public ModelAndView registerUser(@ModelAttribute(RegistrationModel.MODEL_NAME) @Validated RegistrationModel registerModel, BindingResult result) {
         Map<String, Object> model = init();
         if (result.hasErrors()) {
             return renderRegisterPage(model);

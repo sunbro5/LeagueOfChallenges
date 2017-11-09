@@ -70,7 +70,7 @@
                     <ul class="messagesList">
                         <c:forEach items="${userInboxMessageList}" var="userInboxMessage">
                             <li>
-                                <span class="from"><span class="glyphicons star"><i></i></span> ${userInboxMessage.fromNickname} <span class="glyphicons paperclip"><i></i></span></span><span class="title">${userInboxMessage.text}</span><span class="date">${userInboxMessage.sendDate}</span>
+                                <span class="from"><span class="glyphicons star"><i></i></span> ${userInboxMessage.fromNickname} </span><span class="title">${userInboxMessage.textPreview}</span><span class="date">${userInboxMessage.sendDate}</span>
                             </li>
                         </c:forEach>
                     </ul>
@@ -105,35 +105,6 @@
                             <p>
                                 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
                             </p>
-                        </div>
-
-                        <div class="attachments">
-                            <ul>
-                                <li>
-                                    <span class="label label-important">zip</span> <b>bootstrap.zip</b> <i>(2,5MB)</i>
-									<span class="quickMenu">
-										<a href="#" class="glyphicons search"><i></i></a>
-										<a href="#" class="glyphicons share"><i></i></a>
-										<a href="#" class="glyphicons cloud-download"><i></i></a>
-									</span>
-                                </li>
-                                <li>
-                                    <span class="label label-info">txt</span> <b>readme.txt</b> <i>(7KB)</i>
-									<span class="quickMenu">
-										<a href="#" class="glyphicons search"><i></i></a>
-										<a href="#" class="glyphicons share"><i></i></a>
-										<a href="#" class="glyphicons cloud-download"><i></i></a>
-									</span>
-                                </li>
-                                <li>
-                                    <span class="label label-success">xls</span> <b>spreadsheet.xls</b> <i>(984KB)</i>
-									<span class="quickMenu">
-										<a href="#" class="glyphicons search"><i></i></a>
-										<a href="#" class="glyphicons share"><i></i></a>
-										<a href="#" class="glyphicons cloud-download"><i></i></a>
-									</span>
-                                </li>
-                            </ul>
                         </div>
 
                         <form class="replyForm" method="post" action="">

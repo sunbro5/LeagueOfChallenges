@@ -1,8 +1,9 @@
 package com.astora.web.service;
 
 import com.astora.web.dto.FriendInfoDto;
-import com.astora.web.dto.UserInboxMessageDto;
+import com.astora.web.dto.message.UserMessagesDto;
 import com.astora.web.exception.ServiceException;
+import com.astora.web.model.SendMessageModel;
 
 import java.util.List;
 
@@ -17,5 +18,7 @@ public interface UserService {
 
     void createFriend(int userId, String friendNickname) throws ServiceException;
 
-    List<UserInboxMessageDto> getUserMessages(int userId) throws ServiceException;
+    UserMessagesDto getUserMessagesWithUser(int userId, String friendNickname) throws ServiceException;
+
+    void sendMessage(int userId, SendMessageModel model) throws ServiceException;
 }
