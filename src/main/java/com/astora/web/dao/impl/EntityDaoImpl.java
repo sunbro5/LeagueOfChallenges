@@ -9,6 +9,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.List;
 
 @Transactional
@@ -66,4 +67,11 @@ public class EntityDaoImpl<T> implements EntityDao<T> {
         criteria.add(Restrictions.like(columnName, value, MatchMode.ANYWHERE));
         return criteria.list();
     }
+
+    public List<T> getListInColumnValue(String columnName,Collection collection){
+        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(type);
+        criteria.add(Restrictions.in(columnName, collection));
+        return criteria.list();
+    }
+
 }

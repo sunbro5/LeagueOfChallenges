@@ -25,6 +25,8 @@ import java.util.*;
 @Transactional
 public class UserServiceImpl implements UserService {
 
+    private static final int PREVIEW_CHAR_COUNT = 10;
+
     @Autowired
     private UserDao userDao;
 
@@ -55,14 +57,8 @@ public class UserServiceImpl implements UserService {
     }
 
     public void createFriend(int userId, String friendNickname) throws ServiceException {
-        User user = userDao.findById(userId);
-        User userFriend = userDao.getUserByNickname(friendNickname);
-        if (userFriend == null) {
-            throw new UserDoesntExists("User with nickname" + friendNickname + "does not exists");
-        }
-        if (user == null) {
-            throw new ServiceException("Cant load user with id: " + userId);
-        }
+        User user = getUserById(userId);
+        User userFriend = getFriendByNickname(friendNickname);
         for (Friend friend : user.getFriendsByUserId()) {
             if (friend.getUserByUserFriendId().getNickname().equals(friendNickname)) {
                 throw new FriendAlreadyExistsException("Friend with nickname:" + friendNickname + "already exists");
@@ -74,43 +70,45 @@ public class UserServiceImpl implements UserService {
         friendDao.create(friend);
     }
 
-    public UserMessagesDto getUserMessagesWithUser(int userId, String friendNickname) throws ServiceException {
-        User user = userDao.findById(userId);
-        if (user == null) {
-            throw new ServiceException("Cant load user with id: " + userId);
-        }
-        User userFriend = userDao.getUserByNickname(friendNickname);
-        if (userFriend == null) {
-            throw new UserDoesntExists("User with nickname" + friendNickname + "does not exists");
-        }
-        UserMessagesDto userMessagesDto = new UserMessagesDto(friendNickname);
+    public List<MessageDto> getUserMessagesWithUser(int userId, String friendNickname) throws ServiceException {
+        User user = getUserById(userId);
+        User userFriend = getFriendByNickname(friendNickname);
         List<MessageDto> messageDto = new ArrayList<MessageDto>();
-        messageDto.addAll(mapMessagesDto(messageDao.getMessageWithUsers(user.getUserId(), userFriend.getUserId()), true));
-        messageDto.addAll(mapMessagesDto(messageDao.getMessageWithUsers(user.getUserId(), userFriend.getUserId()), false));
+        messageDto.addAll(mapMessagesDto(messageDao.getMessageWithUsers(user, userFriend), true));
+        messageDto.addAll(mapMessagesDto(messageDao.getMessageWithUsers(userFriend, user), false));
         if(CustomValidationUtils.isEmpty(messageDto)){
-            return userMessagesDto;
+            return messageDto;
         }
         Comparator<MessageDto> comparator = new Comparator<MessageDto>() {
             public int compare(MessageDto o1, MessageDto o2) {
                 return o1.getSentDate().compareTo(o2.getSentDate());
             }
         };
-        Collections.sort(messageDto, comparator);
-        userMessagesDto.setMessages(messageDto);
-        userMessagesDto.setTextPreview(messageDto.get(0).getText());
-        return userMessagesDto;
+        return messageDto;
     }
 
+    public List<UserMessagesDto> getNewestMessagesPreview(int userId) throws ServiceException {
+        User user = getUserById(userId);
+        List<Integer> friendsId = messageDao.getNewestMessagesUserId(userId);
+        Message message;
+        List<UserMessagesDto> messagesDto = new ArrayList<UserMessagesDto>();
+        for (Integer friendId: friendsId){
+            User friend = getUserById(friendId);
+            message = messageDao.getNewestMessageWithUsers(user, friend);
+            if(message != null){
+                UserMessagesDto userMessage = new UserMessagesDto(message.getUserByFromUserId().getNickname());
+                String textPreview = getPreviewFromText(message.getText());
+                userMessage.setTextPreview(textPreview);
+                userMessage.setTextPreviewDate(message.getCreated());
+                messagesDto.add(userMessage);
+            }
+        }
+        return messagesDto;
+    }
 
     public void sendMessage(int userId, SendMessageModel model) throws ServiceException {
-        User user = userDao.findById(userId);
-        if (user == null) {
-            throw new ServiceException("Cant load user with id: " + userId);
-        }
-        User userFriend = userDao.getUserByNickname(model.getToNickname());
-        if (userFriend == null) {
-            throw new UserDoesntExists("User with nickname" + model.getToNickname() + "does not exists");
-        }
+        User user = getUserById(userId);
+        User userFriend = getFriendByNickname(model.getToNickname());
         Message message = new Message();
         message.setSubject(model.getSubject());
         message.setText(model.getText());
@@ -126,6 +124,29 @@ public class UserServiceImpl implements UserService {
             messageDtos.add(new MessageDto(received, message.getText(), message.getCreated()));
         }
         return messageDtos;
+    }
+
+    private User getUserById(int userId) throws ServiceException {
+        User user = userDao.findById(userId);
+        if (user == null) {
+            throw new ServiceException("Cant load user with id: " + userId);
+        }
+        return user;
+    }
+
+    private User getFriendByNickname(String nickname) throws UserDoesntExists {
+        User user = userDao.getUserByNickname(nickname);
+        if (user == null) {
+            throw new UserDoesntExists("User with nickname" + nickname + "does not exists");
+        }
+        return user;
+    }
+
+    private String getPreviewFromText(String text){
+        if(text != null && !text.equals("") && text.length() > PREVIEW_CHAR_COUNT){
+            text = text.substring(0,PREVIEW_CHAR_COUNT);
+        }
+        return text;
     }
 
 }

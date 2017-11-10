@@ -123,8 +123,8 @@ DROP TABLE IF EXISTS `LeagueOfChallenges`.`Message` ;
 
 CREATE TABLE IF NOT EXISTS `LeagueOfChallenges`.`Message` (
   `message_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `created` DATETIME NOT NULL,
-  `text` VARCHAR(200) NOT NULL default CURRENT_TIMESTAMP,
+  `created` DATETIME NOT NULL default CURRENT_TIMESTAMP,
+  `text` VARCHAR(200) NOT NULL,
   `subject` VARCHAR(45) NOT NULL,
   `from_user_id` INT UNSIGNED NOT NULL,
   `to_user_id` INT UNSIGNED NOT NULL,

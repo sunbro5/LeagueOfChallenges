@@ -1,10 +1,7 @@
 package com.astora.web.dto.message;
 
-import com.astora.web.dao.model.Message;
-
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author <a href="mailto:mares.jan@o2.cz">Jan Mares</a>, 9.11.2017
@@ -12,11 +9,11 @@ import java.util.List;
 public class UserMessagesDto implements Serializable {
 
     private String textPreview;
-    private String toNickname;
-    private List<MessageDto> messages;
+    private String userNickname;
+    private Date textPreviewDate;
 
     public UserMessagesDto(String toNickname) {
-        this.toNickname = toNickname;
+        this.userNickname = toNickname;
     }
 
     public String getTextPreview() {
@@ -27,19 +24,19 @@ public class UserMessagesDto implements Serializable {
         this.textPreview = text;
     }
 
-    public String getToNickname() {
-        return toNickname;
+    public String getUserNickname() {
+        return userNickname;
     }
 
-    public void setToNickname(String toNickname) {
-        this.toNickname = toNickname;
+    public void setUserNickname(String userNickname) {
+        this.userNickname = userNickname;
     }
 
-    public List<MessageDto> getMessages() {
-        return messages;
+    public Date getTextPreviewDate() {
+        return textPreviewDate;
     }
 
-    public void setMessages(List<MessageDto> messages) {
-        this.messages = messages;
+    public void setTextPreviewDate(Date textPreviewDate) {
+        this.textPreviewDate = textPreviewDate;
     }
 }

@@ -34,12 +34,6 @@ public class UserSessionManagerImpl implements UserSessionManager {
         return userSecuredModel;
     }
 
-    /**
-     * method return user id by session, if user is not authorized return 0
-     *
-     * @param
-     * @return
-     */
     public int getUserId() {
         UserSecuredModel userSecuredModel = getUserSecuredModelFromSession();
         if (userSecuredModel != null) {

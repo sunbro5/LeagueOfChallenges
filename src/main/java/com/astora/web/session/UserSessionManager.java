@@ -20,5 +20,11 @@ public interface UserSessionManager {
 
     List<String> getUserInfo();
 
+    /**
+     * method return user id by session, if user is not authorized return 0
+     *
+     * @param
+     * @return
+     */
     int getUserId();
 }

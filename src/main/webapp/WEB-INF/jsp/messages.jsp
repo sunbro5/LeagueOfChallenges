@@ -64,14 +64,18 @@
         <div id="content" class="span10 text-center">
             <div class="row-fluid">
 
-                <div class="span7">
+                <div class="span6">
                     <h1><spring:message code="messages.inbox.title"/></h1>
-
                     <ul class="messagesList">
-                        <c:forEach items="${userInboxMessageList}" var="userInboxMessage">
+                        <c:forEach items="${userMessagesPreview}" var="mesagePreview">
+                            <c:url value="/messages" var="showMessageUrl">
+                                <c:param name="friendMessages" value="${mesagePreview.userNickname}"/>
+                            </c:url>
+                            <a href="${showMessageUrl}">
                             <li>
-                                <span class="from"><span class="glyphicons star"><i></i></span> ${userInboxMessage.fromNickname} </span><span class="title">${userInboxMessage.textPreview}</span><span class="date">${userInboxMessage.sendDate}</span>
+                                <span class="from"><span class="glyphicons star"><i></i></span> ${mesagePreview.userNickname} </span><span class="title">${mesagePreview.textPreview}</span><span class="date">${mesagePreview.textPreviewDate}</span>
                             </li>
+                            </a>
                         </c:forEach>
                     </ul>
                     <div class="common-modal modal fade" id="common-Modal1" tabindex="-1" role="dialog" aria-hidden="true">
@@ -83,149 +87,144 @@
                         </div>
                     </div>
                 </div>
-                <div class="span5 noMarginLeft">
-
-                    <div class="message dark">
-
-                        <div class="header">
-                            <div class="from"><i class="halflings-icon user"></i> <b>Dennis Ji</b> / jiguofei@msn.com</div>
-                            <div class="date"><i class="halflings-icon time"></i> Today, <b>3:47 PM</b></div>
-
-                            <div class="menu"></div>
-
-                        </div>
-
-                        <div class="content">
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                            </p>
-                            <blockquote>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                            </blockquote>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                            </p>
-                        </div>
-
-                        <form class="replyForm" method="post" action="">
-
-                            <fieldset>
-                                <textarea tabindex="3" class="input-xlarge span12" id="message" name="body" rows="12" placeholder="Click here to reply"></textarea>
-
-                                <div class="actions">
-
-                                    <button tabindex="3" type="submit" class="btn btn-success">Send message</button>
-
-                                </div>
-
-                            </fieldset>
-
-                        </form>
-
+                <div class="box span6">
+                    <c:url value="/sendMessage" var="sendMessageUrl"/>
+                    <form:form modelAttribute="sendMessageModel" action="${sendMessageUrl}" method="post">
+                    <div class="box-header">
+                        <h3 style ="color: #FFFFFF;"><spring:message code="message.form.toNickname.label" /></h3>
+                        <form:input cssClass="message-button" path="toNickname"/>
+                        <p><form:errors path="toNickname" cssClass="error"/></p>
                     </div>
+                    <div class="box-content">
+                        <div class="scrobable-chat">
 
+                            <ul class="chat">
+                                <c:forEach items="${userMessages}" var="userMessage">
+                                    <c:set var="messagePosition" value="right"/>
+                                    <c:if test="${userMessage.received}">
+                                        <c:set var="messagePosition" value="left"/>
+                                    </c:if>
+
+                                <li class="${messagePosition}">
+								<span class="message"><span class="arrow"></span>
+									<span class="from">Blabla</span>
+									<span class="time">${userMessage.sentDate}</span>
+									<span class="text">
+										${userMessage.text}
+									</span>
+								</span>
+                                </li>
+
+                                </c:forEach>
+                            </ul>
+                        </div>
+                        <div class="chat-form">
+                            <form:textarea path="text"></form:textarea>
+                            <form:errors path="text" cssClass="error"/>
+                            <input type="submit" class="btn btn-info" value="<spring:message code="message.form.sendConfirm.label" />">
+                        </div>
+                    </div>
+                    </form:form>
                 </div>
-
             </div>
+            <!--/.fluid-container-->
+
+            <!-- end: Content -->
         </div>
-        <!--/.fluid-container-->
-
-        <!-- end: Content -->
+        <!--/#content.span10-->
     </div>
-    <!--/#content.span10-->
-</div>
-<!--/fluid-row-->
+    <!--/fluid-row-->
 
-<div class="modal hide fade" id="myModal">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">×</button>
-        <h3>Settings</h3>
+    <div class="modal hide fade" id="myModal">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">×</button>
+            <h3>Settings</h3>
+        </div>
+        <div class="modal-body">
+            <p>Here settings can be configured...</p>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <a href="#" class="btn btn-primary">Save changes</a>
+        </div>
     </div>
-    <div class="modal-body">
-        <p>Here settings can be configured...</p>
+
+    <div class="common-modal modal fade" id="common-Modal1" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+            <ul class="list-inline item-details">
+                <li><a href="http://themifycloud.com">Admin templates</a></li>
+                <li><a href="http://themescloud.org">Bootstrap themes</a></li>
+            </ul>
+        </div>
     </div>
-    <div class="modal-footer">
-        <a href="#" class="btn" data-dismiss="modal">Close</a>
-        <a href="#" class="btn btn-primary">Save changes</a>
-    </div>
-</div>
 
-<div class="common-modal modal fade" id="common-Modal1" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-content">
-        <ul class="list-inline item-details">
-            <li><a href="http://themifycloud.com">Admin templates</a></li>
-            <li><a href="http://themescloud.org">Bootstrap themes</a></li>
-        </ul>
-    </div>
-</div>
+    <div class="clearfix"></div>
 
-<div class="clearfix"></div>
+    <footer>
 
-<footer>
-
-    <p>
+        <p>
         <span style="text-align:left;float:left">&copy; 2013 <a
                 href="http://themifycloud.com/downloads/janux-free-responsive-admin-dashboard-template/"
                 alt="Bootstrap_Metro_Dashboard">JANUX Responsive Dashboard</a></span>
 
-    </p>
+        </p>
 
-</footer>
+    </footer>
 
-<script src="<c:url value="resources/js/jquery-1.9.1.min.js"/>"></script>
-<script src="<c:url value="resources/js/jquery-migrate-1.0.0.min.js"/>"></script>
+    <script src="<c:url value="resources/js/jquery-1.9.1.min.js"/>"></script>
+    <script src="<c:url value="resources/js/jquery-migrate-1.0.0.min.js"/>"></script>
 
-<script src="<c:url value="resources/js/jquery-ui-1.10.0.custom.min.js"/>"></script>
+    <script src="<c:url value="resources/js/jquery-ui-1.10.0.custom.min.js"/>"></script>
 
-<script src="<c:url value="resources/js/jquery.ui.touch-punch.js"/>"></script>
+    <script src="<c:url value="resources/js/jquery.ui.touch-punch.js"/>"></script>
 
-<script src="<c:url value="resources/js/modernizr.js"/>"></script>
+    <script src="<c:url value="resources/js/modernizr.js"/>"></script>
 
-<script src="<c:url value="resources/js/bootstrap.min.js"/>"></script>
+    <script src="<c:url value="resources/js/bootstrap.min.js"/>"></script>
 
-<script src="<c:url value="resources/js/jquery.cookie.js"/>"></script>
+    <script src="<c:url value="resources/js/jquery.cookie.js"/>"></script>
 
-<script src="<c:url value="resources/js/fullcalendar.min.js"/>"></script>
+    <script src="<c:url value="resources/js/fullcalendar.min.js"/>"></script>
 
-<script src="<c:url value="resources/js/jquery.dataTables.min.js"/>"></script>
+    <script src="<c:url value="resources/js/jquery.dataTables.min.js"/>"></script>
 
-<script src="<c:url value="resources/js/excanvas.js"/>"></script>
-<script src="<c:url value="resources/js/jquery.flot.js"/>"></script>
-<script src="<c:url value="resources/js/jquery.flot.pie.js"/>"></script>
-<script src="<c:url value="resources/js/jquery.flot.stack.js"/>"></script>
-<script src="<c:url value="resources/js/jquery.flot.resize.min.js"/>"></script>
+    <script src="<c:url value="resources/js/excanvas.js"/>"></script>
+    <script src="<c:url value="resources/js/jquery.flot.js"/>"></script>
+    <script src="<c:url value="resources/js/jquery.flot.pie.js"/>"></script>
+    <script src="<c:url value="resources/js/jquery.flot.stack.js"/>"></script>
+    <script src="<c:url value="resources/js/jquery.flot.resize.min.js"/>"></script>
 
-<script src="<c:url value="resources/js/jquery.chosen.min.js"/>"></script>
+    <script src="<c:url value="resources/js/jquery.chosen.min.js"/>"></script>
 
-<script src="<c:url value="resources/js/jquery.uniform.min.js"/>"></script>
+    <script src="<c:url value="resources/js/jquery.uniform.min.js"/>"></script>
 
-<script src="<c:url value="resources/js/jquery.cleditor.min.js"/>"></script>
+    <script src="<c:url value="resources/js/jquery.cleditor.min.js"/>"></script>
 
-<script src="<c:url value="resources/js/jquery.noty.js"/>"></script>
+    <script src="<c:url value="resources/js/jquery.noty.js"/>"></script>
 
-<script src="<c:url value="resources/js/jquery.elfinder.min.js"/>"></script>
+    <script src="<c:url value="resources/js/jquery.elfinder.min.js"/>"></script>
 
-<script src="<c:url value="resources/js/jquery.raty.min.js"/>"></script>
+    <script src="<c:url value="resources/js/jquery.raty.min.js"/>"></script>
 
-<script src="<c:url value="resources/js/jquery.iphone.toggle.js"/>"></script>
+    <script src="<c:url value="resources/js/jquery.iphone.toggle.js"/>"></script>
 
-<script src="<c:url value="resources/js/jquery.uploadify-3.1.min.js"/>"></script>
+    <script src="<c:url value="resources/js/jquery.uploadify-3.1.min.js"/>"></script>
 
-<script src="<c:url value="resources/js/jquery.gritter.min.js"/>"></script>
+    <script src="<c:url value="resources/js/jquery.gritter.min.js"/>"></script>
 
-<script src="<c:url value="resources/js/jquery.imagesloaded.js"/>"></script>
+    <script src="<c:url value="resources/js/jquery.imagesloaded.js"/>"></script>
 
-<script src="<c:url value="resources/js/jquery.masonry.min.js"/>"></script>
+    <script src="<c:url value="resources/js/jquery.masonry.min.js"/>"></script>
 
-<script src="<c:url value="resources/js/jquery.knob.modified.js"/>"></script>
+    <script src="<c:url value="resources/js/jquery.knob.modified.js"/>"></script>
 
-<script src="<c:url value="resources/js/jquery.sparkline.min.js"/>"></script>
+    <script src="<c:url value="resources/js/jquery.sparkline.min.js"/>"></script>
 
-<script src="<c:url value="resources/js/counter.js"/>"></script>
+    <script src="<c:url value="resources/js/counter.js"/>"></script>
 
-<script src="<c:url value="resources/js/retina.js"/>"></script>
+    <script src="<c:url value="resources/js/retina.js"/>"></script>
 
-<script src="<c:url value="resources/js/custom.js"/>"></script>
+    <script src="<c:url value="resources/js/custom.js"/>"></script>
 
 </body>
 </html>

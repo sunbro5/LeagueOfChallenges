@@ -85,7 +85,9 @@
 							<div class="clearfix"></div>
 					</form>
 					<hr>
+					<a onclick="confirm('To nasere no')">
 					<h3><spring:message code="login.form.forgotPassword.label"/> </h3>
+							</a>
 				</div><!--/span-->
 			</div><!--/row-->
 			
@@ -102,6 +104,8 @@
 			</div>
 		</div>
 	<!-- start: JavaScript-->
+
+
 
 		<script src="<c:url value="resources/js/jquery-1.9.1.min.js"/>"></script>
 	<script src="<c:url value="resources/js/jquery-migrate-1.0.0.min.js"/>"></script>

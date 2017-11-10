@@ -1,7 +1,9 @@
 package com.astora.web.dao;
 
 import com.astora.web.dao.model.Message;
+import com.astora.web.dao.model.User;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -9,5 +11,10 @@ import java.util.List;
  */
 public interface MessageDao extends EntityDao<Message> {
 
-    List<Message> getMessageWithUsers(int userId1, int userId2);
+    List<Message> getMessageWithUsers(User user1, User user2);
+
+    List<Integer> getNewestMessagesUserId(int userId);
+
+    Message getNewestMessageWithUsers(User user1, User user2);
+
 }

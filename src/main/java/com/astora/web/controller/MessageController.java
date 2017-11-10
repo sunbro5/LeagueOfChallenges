@@ -1,5 +1,8 @@
 package com.astora.web.controller;
 
+import com.astora.web.dao.MessageDao;
+import com.astora.web.dao.model.Message;
+import com.astora.web.dto.message.MessageDto;
 import com.astora.web.dto.message.UserMessagesDto;
 import com.astora.web.exception.ServiceException;
 import com.astora.web.exception.UserDoesntExists;
@@ -43,26 +46,39 @@ public class MessageController extends BaseUserPage {
 
 
     @RequestMapping("/messages")
-    public ModelAndView showMessages(@RequestParam("friendMessages") String friendMessages) {
-        return renderMessages(init(),friendMessages);
+    public ModelAndView showMessages(@RequestParam(value = "friendMessages",required = false) String friendMessages) {
+        SendMessageModel messageModel = getSendMessageModel();
+        messageModel.setToNickname(friendMessages);
+        return renderMessages(messageModel, init(),friendMessages);
     }
 
     public ModelAndView renderMessages(){
-        return renderMessages(init(),null);
+        return renderMessages(getSendMessageModel(),init(),null);
     }
 
-    public ModelAndView renderMessages(Map<String, Object> model){
-        return renderMessages(model,null);
+    public ModelAndView renderMessages(SendMessageModel messageModel, Map<String, Object> model){
+        return renderMessages(messageModel,model,null);
     }
 
-    public ModelAndView renderMessages(Map<String, Object> model, String friendNickname) {
-        UserMessagesDto messages = null;
+    public ModelAndView renderMessages(SendMessageModel messageModel, Map<String, Object> model, String friendNickname) {
+        List<UserMessagesDto> messagesPreview = null;
+        List<MessageDto> messages = null;
         try {
-            messages = userService.getUserMessagesWithUser(getUserId(), friendNickname);
+            messagesPreview = userService.getNewestMessagesPreview(getUserId());
         } catch (ServiceException e) {
             logger.error(e);
         }
+
+        if(!CustomValidationUtils.isEmpty(messageModel.getToNickname())){
+            try {
+                messages = userService.getUserMessagesWithUser(getUserId(),friendNickname);
+            } catch (ServiceException e) {
+                logger.error(e);
+            }
+        }
+        model.put(SendMessageModel.MODEL_NAME,messageModel);
         model.put("userMessages",messages);
+        model.put("userMessagesPreview",messagesPreview);
         return new ModelAndView("messages", model);
     }
 
@@ -74,14 +90,14 @@ public class MessageController extends BaseUserPage {
         try {
             userService.sendMessage(getUserId(),messageModel);
         } catch (UserDoesntExists e) {
-            result.rejectValue("toNickname","messages.form.error.toNickname.userDoesntExists");
+            result.rejectValue("toNickname","messages.form.error.userNickname.userDoesntExists");
             return renderMessages();
         } catch (ServiceException e) {
             logger.info(e);
-            return renderMessages(init());
+            return renderMessages();
         }
         userSessionManager.putUserInfo("message.messageSent.successful");
-        return renderMessages();
+        return renderMessages(messageModel,init());
     }
 
     @ModelAttribute(SendMessageModel.MODEL_NAME)
