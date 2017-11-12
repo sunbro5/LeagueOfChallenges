@@ -1,5 +1,6 @@
 package com.astora.web.controller;
 
+import com.astora.web.dao.model.User;
 import com.astora.web.dto.FriendInfoDto;
 import com.astora.web.exception.FriendAlreadyExistsException;
 import com.astora.web.exception.ServiceException;
@@ -32,17 +33,19 @@ public class UserController extends BaseUserPage {
     }
 
     public ModelAndView renderFriends(Map<String, Object> model){
-        int id = getUserId();
+
         List<FriendInfoDto> list = null;
-        if(id != 0){
-            list = userService.getFriendList(id);
+        try {
+            list = userService.getFriendList(getUserId());
+        } catch (ServiceException e) {
+            logger.error(e);
         }
         model.put("userFriendList",list);
         return new ModelAndView("friends",model);
     }
 
     @RequestMapping("/findFriendUser")
-    public ModelAndView findFriendUser(@RequestParam("nickname") String nickname, Authentication authentication){
+    public ModelAndView findFriendUser(@RequestParam("nickname") String nickname){
         Map<String, Object> model = init();
         List<String> foundUsers = userService.getUsersNicknameLike(nickname);
         model.put("foundUsersList",foundUsers);
@@ -61,6 +64,18 @@ public class UserController extends BaseUserPage {
             return renderFriends(init());
         }
         userSessionManager.putUserInfo("message.friend.successfullyCreated");
+        return renderFriends(init());
+    }
+
+    @RequestMapping("/deleteFriend")
+    public ModelAndView deleteFriend(@RequestParam("nickname") String nickname){
+        try {
+            if(userService.removeFriendByNickname(getUserId(),nickname)){
+                userSessionManager.putUserInfo("message.friend.successfullyRemoved");
+            }
+        } catch (ServiceException e) {
+            logger.error(e);
+        }
         return renderFriends(init());
     }
 

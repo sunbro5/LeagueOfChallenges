@@ -96,18 +96,20 @@
                         <p><form:errors path="toNickname" cssClass="error"/></p>
                     </div>
                     <div class="box-content">
-                        <div class="scrobable-chat">
+                        <div id="scroll-chat" class="scrollable-chat">
 
                             <ul class="chat">
                                 <c:forEach items="${userMessages}" var="userMessage">
                                     <c:set var="messagePosition" value="right"/>
+                                    <c:set var="messageFrom" value="${userName}"/>
                                     <c:if test="${userMessage.received}">
                                         <c:set var="messagePosition" value="left"/>
+                                        <c:set var="messageFrom" value="${sendMessageModel.toNickname}"/>
                                     </c:if>
 
                                 <li class="${messagePosition}">
 								<span class="message"><span class="arrow"></span>
-									<span class="from">Blabla</span>
+									<span class="from">${messageFrom}</span>
 									<span class="time">${userMessage.sentDate}</span>
 									<span class="text">
 										${userMessage.text}
@@ -132,6 +134,7 @@
             <!-- end: Content -->
         </div>
         <!--/#content.span10-->
+    </div>
     </div>
     <!--/fluid-row-->
 
@@ -170,6 +173,13 @@
         </p>
 
     </footer>
+    <script>
+        function scrollDownChat(){
+            var element = document.getElementById('scroll-chat');
+            element.scrollTop = element.scrollHeight - element.clientHeight;
+        }
+        window.onload = scrollDownChat;
+    </script>
 
     <script src="<c:url value="resources/js/jquery-1.9.1.min.js"/>"></script>
     <script src="<c:url value="resources/js/jquery-migrate-1.0.0.min.js"/>"></script>

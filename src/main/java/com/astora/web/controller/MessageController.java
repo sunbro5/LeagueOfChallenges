@@ -49,18 +49,14 @@ public class MessageController extends BaseUserPage {
     public ModelAndView showMessages(@RequestParam(value = "friendMessages",required = false) String friendMessages) {
         SendMessageModel messageModel = getSendMessageModel();
         messageModel.setToNickname(friendMessages);
-        return renderMessages(messageModel, init(),friendMessages);
+        return renderMessages(messageModel, init());
     }
 
     public ModelAndView renderMessages(){
-        return renderMessages(getSendMessageModel(),init(),null);
+        return renderMessages(getSendMessageModel(),init());
     }
 
-    public ModelAndView renderMessages(SendMessageModel messageModel, Map<String, Object> model){
-        return renderMessages(messageModel,model,null);
-    }
-
-    public ModelAndView renderMessages(SendMessageModel messageModel, Map<String, Object> model, String friendNickname) {
+    public ModelAndView renderMessages(SendMessageModel messageModel, Map<String, Object> model) {
         List<UserMessagesDto> messagesPreview = null;
         List<MessageDto> messages = null;
         try {
@@ -71,7 +67,7 @@ public class MessageController extends BaseUserPage {
 
         if(!CustomValidationUtils.isEmpty(messageModel.getToNickname())){
             try {
-                messages = userService.getUserMessagesWithUser(getUserId(),friendNickname);
+                messages = userService.getUserMessagesWithUser(getUserId(),messageModel.getToNickname());
             } catch (ServiceException e) {
                 logger.error(e);
             }
@@ -84,20 +80,21 @@ public class MessageController extends BaseUserPage {
 
     @RequestMapping("/sendMessage")
     public ModelAndView sendMessage(@ModelAttribute(SendMessageModel.MODEL_NAME) @Validated SendMessageModel messageModel, BindingResult result){
+        Map<String, Object> map = init();
         if(result.hasErrors()){
-            return renderMessages();
+            return renderMessages(messageModel,map);
         }
         try {
             userService.sendMessage(getUserId(),messageModel);
         } catch (UserDoesntExists e) {
             result.rejectValue("toNickname","messages.form.error.userNickname.userDoesntExists");
-            return renderMessages();
+            return renderMessages(messageModel,map);
         } catch (ServiceException e) {
             logger.info(e);
-            return renderMessages();
+            return renderMessages(messageModel,map);
         }
         userSessionManager.putUserInfo("message.messageSent.successful");
-        return renderMessages(messageModel,init());
+        return renderMessages(messageModel,map);
     }
 
     @ModelAttribute(SendMessageModel.MODEL_NAME)

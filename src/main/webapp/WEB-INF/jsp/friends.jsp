@@ -76,6 +76,14 @@
                         <c:forEach items="${userFriendList}" var="userFriend">
                             <tr>
                                 <th>${userFriend.nickname}</th>
+                                <c:url value="/messages" var="friendMessageUrl">
+                                    <c:param name="friendMessages" value="${userFriend.nickname}"/>
+                                </c:url>
+                                <th><a href="${friendMessageUrl}"><spring:message code="friends.list.sendMessage.label"/></a></th>
+                                <c:url value="/deleteFriend" var="deleteFriendUrl">
+                                    <c:param name="nickname" value="${userFriend.nickname}"/>
+                                </c:url>
+                                <th><a href="${deleteFriendUrl}"><spring:message code="friends.list.removeFriend.label"/></a></th>
                             </tr>
                         </c:forEach>
                     </table>

@@ -13,7 +13,7 @@ import java.util.List;
  */
 public interface UserService {
 
-    List<FriendInfoDto> getFriendList(int userId);
+    List<FriendInfoDto> getFriendList(int userId) throws ServiceException;
 
     List<String> getUsersNicknameLike(String nickname);
 
@@ -24,4 +24,6 @@ public interface UserService {
     void sendMessage(int userId, SendMessageModel model) throws ServiceException;
 
     List<MessageDto> getUserMessagesWithUser(int userId, String friendNickname) throws ServiceException;
+
+    boolean removeFriendByNickname(int userId, String friendNickname) throws ServiceException;
 }
