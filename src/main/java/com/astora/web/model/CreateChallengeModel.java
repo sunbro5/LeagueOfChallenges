@@ -1,28 +1,37 @@
 package com.astora.web.model;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
 public class CreateChallengeModel {
-    private int challengerTeamId;
-    private Timestamp challengeStart;
-    private Timestamp challengeEnd;
+
+    private Integer challengerTeamId;
+    private Date challengeStart;
+    private Date challengeEnd;
     private String coordsLat;
     private String coordsLng;
+    private String text;
 
+    public Integer getChallengerTeamId() {
+        return challengerTeamId;
+    }
 
-    public Timestamp getChallengeStart() {
+    public void setChallengerTeamId(Integer challengerTeamId) {
+        this.challengerTeamId = challengerTeamId;
+    }
+
+    public Date getChallengeStart() {
         return challengeStart;
     }
 
-    public void setChallengeStart(Timestamp challengeStart) {
+    public void setChallengeStart(Date challengeStart) {
         this.challengeStart = challengeStart;
     }
 
-    public Timestamp getChallengeEnd() {
+    public Date getChallengeEnd() {
         return challengeEnd;
     }
 
-    public void setChallengeEnd(Timestamp challengeEnd) {
+    public void setChallengeEnd(Date challengeEnd) {
         this.challengeEnd = challengeEnd;
     }
 
@@ -49,6 +58,4 @@ public class CreateChallengeModel {
     public void setText(String text) {
         this.text = text;
     }
-
-    private String text;
 }

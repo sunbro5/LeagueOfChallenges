@@ -7,11 +7,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-/**
- * Created by to068466 on 29.10.2017.
- */
 @Entity
-@Table(name = "team_user", schema = "mydb", catalog = "")
+@Table(name = "team_user", schema = "leagueofchallenges")
 public class TeamUser {
     private int teamUserId;
     private Team teamByTeamTeamId;

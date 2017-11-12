@@ -12,11 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service("challengeService")
@@ -44,17 +40,9 @@ public class ChallengeServiceImpl implements ChallengeService {
         Challenge challenge = new Challenge();
         challenge.setText(createChallengeModel.getText());
         challenge.setTeamByChallengerTeamId(teamService.findById(1));// will be get from session
-        DateFormat dateFormat = new SimpleDateFormat("dd. MM. yyyy, HH:mm");
-        Date date = null;
-        try {
-            date = dateFormat.parse("1970-01-01 00:00:01");
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        //long time = date.getTime();
 
-        challenge.setChallengeStart(new Timestamp(233));
-        challenge.setChallengeEnd(new Timestamp(425));
+        challenge.setChallengeStart(new Timestamp(createChallengeModel.getChallengeStart().getTime()));
+        challenge.setChallengeEnd(new Timestamp(createChallengeModel.getChallengeEnd().getTime()));
         challenge.setCoordsLat(createChallengeModel.getCoordsLat());
         challenge.setCoordsLng(createChallengeModel.getCoordsLng());
         challengeDao.create(challenge);
