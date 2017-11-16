@@ -55,6 +55,8 @@
 
     <!-- start: Content -->
     <div id="content" class="span10">
+        Language : <a href="?language=en">English</a> | <a href="?language=cz">Czech</a><br><br>
+
         <a href="/createTest">Create test</a><br>
         <a href="/updateTest">Update test</a><br>
         <a href="/findByIdTest">Find by id test</a><br>
