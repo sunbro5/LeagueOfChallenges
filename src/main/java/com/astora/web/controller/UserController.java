@@ -1,13 +1,12 @@
 package com.astora.web.controller;
 
-import com.astora.web.dao.model.User;
 import com.astora.web.dto.FriendInfoDto;
 import com.astora.web.exception.FriendAlreadyExistsException;
 import com.astora.web.exception.ServiceException;
+import com.astora.web.service.FriendService;
 import com.astora.web.service.UserService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,6 +24,9 @@ public class UserController extends BaseUserPage {
     private static final Logger logger = Logger.getLogger(UserController.class);
 
     @Autowired
+    private FriendService friendService;
+
+    @Autowired
     private UserService userService;
 
     @RequestMapping("/friends")
@@ -36,7 +38,7 @@ public class UserController extends BaseUserPage {
 
         List<FriendInfoDto> list = null;
         try {
-            list = userService.getFriendList(getUserId());
+            list = friendService.getFriendList(getUserId());
         } catch (ServiceException e) {
             logger.error(e);
         }
@@ -55,7 +57,7 @@ public class UserController extends BaseUserPage {
     @RequestMapping("/createFriend")
     public ModelAndView createFriend(@RequestParam("nickname") String nickname){
         try {
-            userService.createFriend(getUserId(),nickname);
+            friendService.createFriend(getUserId(),nickname);
         } catch (FriendAlreadyExistsException e) {
             userSessionManager.putUserInfo("message.friend.alreadyExists");
             return renderFriends(init());
@@ -70,7 +72,7 @@ public class UserController extends BaseUserPage {
     @RequestMapping("/deleteFriend")
     public ModelAndView deleteFriend(@RequestParam("nickname") String nickname){
         try {
-            if(userService.removeFriendByNickname(getUserId(),nickname)){
+            if(friendService.removeFriendByNickname(getUserId(),nickname)){
                 userSessionManager.putUserInfo("message.friend.successfullyRemoved");
             }
         } catch (ServiceException e) {

@@ -8,6 +8,7 @@ import com.astora.web.exception.ServiceException;
 import com.astora.web.exception.UserDoesntExists;
 import com.astora.web.model.SendMessageModel;
 import com.astora.web.model.validator.SendMessageModelValidator;
+import com.astora.web.service.MessageService;
 import com.astora.web.service.UserService;
 import com.astora.web.utils.CustomValidationUtils;
 import org.apache.log4j.Logger;
@@ -34,7 +35,7 @@ public class MessageController extends BaseUserPage {
     private static final Logger logger = Logger.getLogger(MessageController.class);
 
     @Autowired
-    private UserService userService;
+    private MessageService messageService;
 
     @Autowired
     private SendMessageModelValidator sendMessageModelValidator;
@@ -60,14 +61,14 @@ public class MessageController extends BaseUserPage {
         List<UserMessagesDto> messagesPreview = null;
         List<MessageDto> messages = null;
         try {
-            messagesPreview = userService.getNewestMessagesPreview(getUserId());
+            messagesPreview = messageService.getNewestMessagesPreview(getUserId());
         } catch (ServiceException e) {
             logger.error(e);
         }
 
         if(!CustomValidationUtils.isEmpty(messageModel.getToNickname())){
             try {
-                messages = userService.getUserMessagesWithUser(getUserId(),messageModel.getToNickname());
+                messages = messageService.getUserMessagesWithUser(getUserId(),messageModel.getToNickname());
             } catch (ServiceException e) {
                 logger.error(e);
             }
@@ -78,6 +79,7 @@ public class MessageController extends BaseUserPage {
         return new ModelAndView("messages", model);
     }
 
+    //TODO should be REST
     @RequestMapping("/sendMessage")
     public ModelAndView sendMessage(@ModelAttribute(SendMessageModel.MODEL_NAME) @Validated SendMessageModel messageModel, BindingResult result){
         Map<String, Object> map = init();
@@ -85,7 +87,7 @@ public class MessageController extends BaseUserPage {
             return renderMessages(messageModel,map);
         }
         try {
-            userService.sendMessage(getUserId(),messageModel);
+            messageService.sendMessage(getUserId(),messageModel);
         } catch (UserDoesntExists e) {
             result.rejectValue("toNickname","messages.form.error.userNickname.userDoesntExists");
             return renderMessages(messageModel,map);
