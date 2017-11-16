@@ -277,7 +277,7 @@ DROP TABLE IF EXISTS `LeagueOfChallenges`.`Report` ;
 
 CREATE TABLE IF NOT EXISTS `LeagueOfChallenges`.`Report` (
   `report_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `created` DATETIME NOT NULL,
+  `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `reason` VARCHAR(45) NOT NULL,
   `reason_text` VARCHAR(255) NULL,
   `reporting_user_id` INT UNSIGNED NOT NULL,

@@ -31,7 +31,7 @@ public class Report {
     }
 
     @Basic
-    @Column(name = "created")
+    @Column(name = "created", insertable = false)
     public Timestamp getCreated() {
         return created;
     }

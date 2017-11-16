@@ -23,6 +23,9 @@ import java.util.List;
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userDao.getUserByNickname(username);
+        if(user == null){
+            throw new UsernameNotFoundException("Use with username: " + username + " not found.");
+        }
         UserSecuredModel userModel = new UserSecuredModel();
         userModel.setPassword(user.getPassword());
         userModel.setUsername(user.getNickname());

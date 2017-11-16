@@ -7,7 +7,7 @@ import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 /**
- * @author <a href="mailto:mares.jan@o2.cz">Jan Mares</a>, 9.11.2017
+ * @author <a href="mailto:maresjan694@gmail.com">Jan Mares</a>, 9.11.2017
  */
 @Component("sendMessageModelValidator")
 public class SendMessageModelValidator implements Validator {

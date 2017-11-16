@@ -62,35 +62,9 @@
 
         <!-- start: Content -->
         <div id="content" class="span10 text-center">
-            <h1><spring:message code="page.menu.report.label"/></h1>
+            <h1><spring:message code="page.menu.userChallenges.label"/></h1>
             <jsp:include page="infoMessage.jsp"/>
-            <div class="row-fluid">
-                <div class="span6">
-                    <c:url value="/sendReport" var="sendReportUrl"/>
-                    <form:form modelAttribute="userReportModel" action="${sendReportUrl}" method="post">
-                        <div class="form-group">
-                            <p><spring:message code="report.form.nickname.label"/></p>
-                            <form:input cssClass="form-control" path="nickname"/>
-                            <form:errors path="nickname" element="p" cssClass="error"/>
-                        </div>
-                        <div class="form-group">
-                            <p><spring:message code="report.form.reason.label"/></p>
-                            <form:select path="reason">
-                                <c:forEach items="${reportReasonTypes}" var="reportReasonType">
-                                    <form:option value="${reportReasonType}"><spring:message code="${reportReasonType.code}"/></form:option>
-                                </c:forEach>
-                            </form:select>
-                            <p><form:errors path="reason" cssClass="error"/></p>
-                        </div>
-                        <div class="form-group">
-                            <p><spring:message code="report.form.reasonText.label"/></p>
-                            <form:input cssClass="form-control" path="reasonText"/>
-                            <p><form:errors path="reasonText" cssClass="error"/></p>
-                        </div>
-                        <input type="submit" value="<spring:message code="report.form.confirmButton.label"/>" class="btn btn-default">
-                    </form:form>
-                </div>
-            </div>
+
         </div>
         <!--/.fluid-container-->
 

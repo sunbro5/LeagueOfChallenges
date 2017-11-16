@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author <a href="mailto:mares.jan@o2.cz">Jan Mares</a>, 6.11.2017
+ * @author <a href="mailto:maresjan694@gmail.com">Jan Mares</a>, 6.11.2017
  */
 @Controller
 public class MessageController extends BaseUserPage {

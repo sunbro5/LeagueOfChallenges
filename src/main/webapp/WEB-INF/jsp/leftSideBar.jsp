@@ -9,7 +9,8 @@
 <c:url value="/registration" var="registrationUrl"/>
 <c:url value="/friends" var="friendsUrl"/>
 <c:url value="/messages" var="messagesUrl"/>
-<c:url value="/j_spring_security_logout" var="logoutUrl"/>
+<c:url value="/userChallenges" var="userChallengesUrl"/>
+<c:url value="/report" var="reportUrl"/>
 <div id="sidebar-left" class="span2">
   <div class="nav-collapse sidebar-nav">
     <ul class="nav nav-tabs nav-stacked main-menu">
@@ -21,7 +22,8 @@
       <li><a href="${friendsUrl}"><i class="halflings-icon white user"></i><span class="hidden-tablet"> <spring:message code="page.menu.friends.label"/></span></a></li>
       <li><a href="${messagesUrl}"><i class="icon-envelope"></i><span class="hidden-tablet"> <spring:message code="page.menu.messages.label"/></span></a></li>
       <li><a href="#"><i class="icon-lock"></i><span class="hidden-tablet"> <spring:message code="menu.user.statistics.title"/></span></a></li>
-      <li><a href="${logoutUrl}"><i class="halflings-icon white off"></i><span class="hidden-tablet"> <spring:message code="menu.logout.title"/></span></a></li>
+      <li><a href="${userChallengesUrl}"><i class="icon-lock"></i><span class="hidden-tablet"> <spring:message code="page.menu.userChallenges.label"/></span></a></li>
+        <li><a href="${reportUrl}"><i class="icon-edit"></i><span class="hidden-tablet"> <spring:message code="page.menu.report.label"/></span></a></li>
 </sec:authorize>
 <sec:authorize access="isAnonymous()">
       <li><a href="${loginUrl}"><i class="icon-lock"></i><span class="hidden-tablet"> <spring:message code="page.menu.login"/></span></a></li>

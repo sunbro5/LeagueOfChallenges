@@ -62,10 +62,11 @@
 
         <!-- start: Content -->
         <div id="content" class="span10 text-center">
+            <h1><spring:message code="messages.inbox.title"/></h1>
             <div class="row-fluid">
 
                 <div class="span6">
-                    <h1><spring:message code="messages.inbox.title"/></h1>
+
                     <ul class="messagesList">
                         <c:forEach items="${userMessagesPreview}" var="mesagePreview">
                             <c:url value="/messages" var="showMessageUrl">
@@ -87,12 +88,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="box span6">
+                <div class="span6 chat-form">
                     <c:url value="/sendMessage" var="sendMessageUrl"/>
                     <form:form modelAttribute="sendMessageModel" action="${sendMessageUrl}" method="post">
-                    <div class="box-header">
-                        <h3 style ="color: #FFFFFF;"><spring:message code="message.form.toNickname.label" /></h3>
-                        <form:input cssClass="message-button" path="toNickname"/>
+                    <div>
+                        <h3><spring:message code="message.form.toNickname.label" /></h3>
+                        <form:input path="toNickname"/>
                         <p><form:errors path="toNickname" cssClass="error"/></p>
                     </div>
                     <div class="box-content">
