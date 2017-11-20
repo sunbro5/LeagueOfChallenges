@@ -2,8 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<%--@elvariable id="challenge" type="com.astora.web.dto.ChallengeDto"--%>
-<%--@elvariable id="challenges" type="java.util.List<com.astora.web.dto.ChallengeDto>"--%>
+<%--@elvariable id="challenge" type="com.astora.web.dao.model.Challenge"--%>
 
 <html lang="en">
 <head>
@@ -70,7 +69,20 @@
         // locate you. -->
         <!-- start: Content -->
         <div id="content" class="span10">
-            Zdarek, jedu
+            Challenge: ${challenge.challengeId}<br>
+            Start: ${challenge.challengeStart}<br>
+            End: ${challenge.challengeEnd}<br>
+            <c:url value="/team" var="teamUrl">
+                <c:param name="teamId" value="${challenge.teamByChallengerTeamId.teamId}"/>
+            </c:url>
+            Vyzyvatel: <a href="${teamUrl}">${challenge.teamByChallengerTeamId.name}</a> <br>
+            Prijemce:
+            <c:if test=" ${ not empty challenge.teamByOponnentTeamId}">
+                 ${challenge.teamByOponnentTeamId.name}'<br>
+            </c:if>
+            Souradnice LAT: ${challenge.coordsLat}<br>
+            Souradnice LNG: ${challenge.coordsLng}<br>
+            Popis: ${challenge.text}<br>
 
             <!--AIzaSyAgmM1VPSmo3QtkT4cOyZ_UR_uaDfUhH8Q -->
             <!--geolocation key AIzaSyDM3hLUh10lPdC4qzzQ24HMuVldsSja0yk -->

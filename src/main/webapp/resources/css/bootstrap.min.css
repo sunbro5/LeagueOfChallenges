@@ -3425,7 +3425,7 @@ button.btn.btn-mini, input[type="submit"].btn.btn-mini {
 }
 
 .nav {
-    margin-bottom: 20px;
+
     margin-left: 0;
     list-style: none
 }
@@ -3797,7 +3797,7 @@ button.btn.btn-mini, input[type="submit"].btn.btn-mini {
 .navbar {
     *position: relative;
     *z-index: 2;
-    margin-bottom: 20px;
+
     overflow: visible
 }
 

@@ -68,7 +68,7 @@ public class EntityDaoImpl<T> implements EntityDao<T> {
         return criteria.list();
     }
 
-    public List<T> getListEqColumnValue(String columnName, int value){
+    public List<T> getListEqColumnValue(String columnName, Object value){
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(type);
         criteria.add(Restrictions.eq(columnName, value));
         return criteria.list();
