@@ -3,6 +3,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
 <c:url value="/login" var="loginUrl"/>
 <c:url value="/j_spring_security_logout" var="logoutUrl"/>
 
@@ -16,11 +17,17 @@
             </a>
             <a class="brand" href="<c:url value="/"/>"><span><spring:message code="page.title"/> </span></a>
 
+
+
             <!-- start: Header Menu -->
             <div class="nav-no-collapse header-nav">
                 <sec:authorize access="isAuthenticated()">
                     <ul class="nav pull-right">
-
+                        <div ng-app="MyApp">
+                            <div ng-controller="testText">
+                                <p>{{testMessage.userNickname}}</p>
+                            </div>
+                        </div>
                         <!-- start: User Dropdown -->
                         <li class="dropdown">
                             <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
@@ -57,3 +64,18 @@
   </div>
 </div>
 <!-- start: Header -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+<script>
+    var app = angular.module("MyApp", []);
+
+    app.controller("testText", function($scope, $http) {
+        $http.get('testRest').
+                success(function(data, status, headers, config) {
+                    $scope.testMessage = data;
+                }).
+                error(function(data, status, headers, config) {
+                    // log error
+                });
+    });
+</script>

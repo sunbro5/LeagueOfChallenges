@@ -12,8 +12,8 @@ INSERT INTO leagueofchallenges.role VALUES(1, '1970-01-01 00:00:01', 'USER');
 INSERT INTO leagueofchallenges.role VALUES(2, '2038-01-19 03:14:07', 'ADMIN');
 
 TRUNCATE TABLE leagueofchallenges.user;
-INSERT INTO leagueofchallenges.user VALUES(1, '1970-01-01 00:00:01', 'Tomas', 'Bartosek', 'AsylumDemon', 'AsylumDemon@praise.sun', 'tomas123', '1970-01-01 01:01:01', '1', '1');
-INSERT INTO leagueofchallenges.user VALUES(2, '2038-01-19 03:14:07', 'Jan', 'Mares', 'BellGargoyle', 'BellGargoyle@praise.sun', 'jan123', '1970-02-02 02:02:02', '2', '1');
+INSERT INTO leagueofchallenges.user VALUES(1, '1970-01-01 00:00:01', 'Tomas', 'Bartosek', 'AsylumDemon', 'AsylumDemon@praise.sun', 'tomas123', '1970-01-01 01:01:01', '1', '1', '1');
+INSERT INTO leagueofchallenges.user VALUES(2, '2038-01-19 03:14:07', 'Jan', 'Mares', 'BellGargoyle', 'BellGargoyle@praise.sun', 'jan123', '1970-02-02 02:02:02', '1', '2', '1');
 
 TRUNCATE TABLE leagueofchallenges.report;
 INSERT INTO leagueofchallenges.report VALUES(1, '1970-01-01 00:00:01', 'report_reason_1', 'report_text_1', '1', '2');

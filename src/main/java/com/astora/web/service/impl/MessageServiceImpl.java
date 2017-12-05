@@ -5,10 +5,12 @@ import com.astora.web.dao.model.Message;
 import com.astora.web.dao.model.User;
 import com.astora.web.dto.message.MessageDto;
 import com.astora.web.dto.message.UserMessagesDto;
+import com.astora.web.exception.CantSendMessageException;
 import com.astora.web.exception.ServiceException;
 import com.astora.web.model.SendMessageModel;
 import com.astora.web.service.MessageService;
 import com.astora.web.service.UserService;
+import com.astora.web.session.UserSessionManager;
 import com.astora.web.utils.CustomValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -26,12 +29,18 @@ import java.util.List;
 public class MessageServiceImpl implements MessageService {
 
     private static final int PREVIEW_CHAR_COUNT = 20;
+    private static final long TEN_SECONDS = 10000;
+    private static final int MESSAGE_INBOX_COUNT = 10;
+    private static final int MESSAGE_NOTIFICATION_COUNT = 5;
 
     @Autowired
     private MessageDao messageDao;
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserSessionManager userSessionManager;
 
     public List<MessageDto> getUserMessagesWithUser(int userId, String friendNickname) throws ServiceException {
         User user = userService.getUserById(userId);
@@ -50,9 +59,17 @@ public class MessageServiceImpl implements MessageService {
         return messageDto;
     }
 
-    public List<UserMessagesDto> getNewestMessagesPreview(int userId) throws ServiceException {
+    public List<UserMessagesDto> getNotificationMessagesPreview(int userId) throws ServiceException{
+        return getNewestMessagesPreview(userId,MESSAGE_NOTIFICATION_COUNT);
+    }
+
+    public List<UserMessagesDto> getNewestMessagesPreview(int userId) throws ServiceException{
+        return getNewestMessagesPreview(userId,MESSAGE_INBOX_COUNT);
+    }
+
+    private List<UserMessagesDto> getNewestMessagesPreview(int userId, int rowsCount) throws ServiceException {
         User user = userService.getUserById(userId);
-        List<Integer> friendsId = messageDao.getNewestMessagesUserId(userId);
+        List<Integer> friendsId = messageDao.getNewestMessagesUserId(userId,rowsCount);
         Message message;
         List<UserMessagesDto> messagesDto = new ArrayList<UserMessagesDto>();
         for (Integer friendId: friendsId){
@@ -72,12 +89,12 @@ public class MessageServiceImpl implements MessageService {
     public void sendMessage(int userId, SendMessageModel model) throws ServiceException {
         User user = userService.getUserById(userId);
         User userFriend = userService.getUserByNickname(model.getToNickname());
+        validateMessage();
         Message message = new Message();
         message.setSubject(model.getSubject());
         message.setText(model.getText());
         message.setUserByFromUserId(user);
         message.setUserByToUserId(userFriend);
-        //TODO add tome cache for antispam ??? maybe 5 message per 10 min
         messageDao.create(message);
     }
 
@@ -94,5 +111,14 @@ public class MessageServiceImpl implements MessageService {
             text = text.substring(0,PREVIEW_CHAR_COUNT);
         }
         return text;
+    }
+
+    private void validateMessage() throws CantSendMessageException {
+        Date now = new Date();
+        Date lastMessage = userSessionManager.getLastMessageTime();
+        if (lastMessage != null && (lastMessage.getTime() + TEN_SECONDS) > now.getTime()) {
+            throw new CantSendMessageException("Message time limit do not approve message send.");
+        }
+        userSessionManager.setLastMessageTime(now);
     }
 }

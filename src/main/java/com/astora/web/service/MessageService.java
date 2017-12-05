@@ -17,4 +17,6 @@ public interface MessageService {
     void sendMessage(int userId, SendMessageModel model) throws ServiceException;
 
     List<MessageDto> getUserMessagesWithUser(int userId, String friendNickname) throws ServiceException;
+
+    List<UserMessagesDto> getNotificationMessagesPreview(int userId) throws ServiceException;
 }

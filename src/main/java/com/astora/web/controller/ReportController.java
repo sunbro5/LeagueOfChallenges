@@ -40,8 +40,6 @@ public class ReportController extends BaseUserPage {
     @Autowired
     private ReportService reportService;
 
-    @Autowired
-    private UserSessionManager userSessionManager;
 
     @RequestMapping("/report")
     public ModelAndView showReport(){

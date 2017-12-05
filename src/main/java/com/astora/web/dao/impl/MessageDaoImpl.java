@@ -35,10 +35,11 @@ public class MessageDaoImpl extends EntityDaoImpl<Message> implements MessageDao
         return criteria.list();
     }
 
-    public List<Integer> getNewestMessagesUserId(int userId){
-        String sql = "SELECT from_user_id, max(created) as sentDate from message where to_user_id = :userId group by from_user_id order by sentDate desc LIMIT 10";
+    public List<Integer> getNewestMessagesUserId(int userId, int rowsCount){
+        String sql = "SELECT from_user_id, max(created) as sentDate from message where to_user_id = :userId group by from_user_id order by sentDate desc LIMIT :rowsCount ";
         Query query = sessionFactory.getCurrentSession().createSQLQuery(sql);
         query.setParameter("userId",userId);
+        query.setParameter("rowsCount",rowsCount);
         List<Integer> list = new ArrayList<Integer>();
         for (Iterator it = query.list().iterator(); it.hasNext();){
             Object[] result = (Object[]) it.next();

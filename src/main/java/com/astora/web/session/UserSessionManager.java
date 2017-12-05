@@ -2,6 +2,7 @@ package com.astora.web.session;
 
 import com.astora.web.model.UserSecuredModel;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -27,4 +28,8 @@ public interface UserSessionManager {
      * @return
      */
     int getUserId();
+
+    void setLastMessageTime(Date date);
+
+    Date getLastMessageTime();
 }

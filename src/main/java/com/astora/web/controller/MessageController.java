@@ -4,6 +4,7 @@ import com.astora.web.dao.MessageDao;
 import com.astora.web.dao.model.Message;
 import com.astora.web.dto.message.MessageDto;
 import com.astora.web.dto.message.UserMessagesDto;
+import com.astora.web.exception.CantSendMessageException;
 import com.astora.web.exception.ServiceException;
 import com.astora.web.exception.UserDoesntExists;
 import com.astora.web.model.SendMessageModel;
@@ -53,11 +54,7 @@ public class MessageController extends BaseUserPage {
         return renderMessages(messageModel, init());
     }
 
-    public ModelAndView renderMessages(){
-        return renderMessages(getSendMessageModel(),init());
-    }
-
-    public ModelAndView renderMessages(SendMessageModel messageModel, Map<String, Object> model) {
+    private ModelAndView renderMessages(SendMessageModel messageModel, Map<String, Object> model) {
         List<UserMessagesDto> messagesPreview = null;
         List<MessageDto> messages = null;
         try {
@@ -88,6 +85,9 @@ public class MessageController extends BaseUserPage {
         }
         try {
             messageService.sendMessage(getUserId(),messageModel);
+        } catch (CantSendMessageException e) {
+            userSessionManager.putUserInfo("message.messageSent.timeLimit");
+            return renderMessages(messageModel,map);
         } catch (UserDoesntExists e) {
             result.rejectValue("toNickname","messages.form.error.userNickname.userDoesntExists");
             return renderMessages(messageModel,map);

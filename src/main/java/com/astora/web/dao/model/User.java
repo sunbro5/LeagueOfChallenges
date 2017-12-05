@@ -17,6 +17,7 @@ public class User {
     private String email;
     private String password;
     private Timestamp lastLogin;
+    private int userRating;
     private Collection<Friend> friendsByUserId;
     private Collection<Friend> friendsByUserId_0;
     private Collection<Message> messagesOutbox;
@@ -106,6 +107,16 @@ public class User {
 
     public void setLastLogin(Timestamp lastLogin) {
         this.lastLogin = lastLogin;
+    }
+
+    @Basic
+    @Column(name = "user_rating")
+    public int getUserRating() {
+        return userRating;
+    }
+
+    public void setUserRating(int userRating) {
+        this.userRating = userRating;
     }
 
     @Override

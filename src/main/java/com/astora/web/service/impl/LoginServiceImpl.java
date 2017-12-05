@@ -9,7 +9,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -26,6 +28,8 @@ import java.util.List;
         if(user == null){
             throw new UsernameNotFoundException("Use with username: " + username + " not found.");
         }
+        user.setLastLogin(new Timestamp(System.currentTimeMillis()));
+        userDao.update(user);
         UserSecuredModel userModel = new UserSecuredModel();
         userModel.setPassword(user.getPassword());
         userModel.setUsername(user.getNickname());

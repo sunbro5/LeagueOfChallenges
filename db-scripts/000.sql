@@ -59,6 +59,7 @@ CREATE TABLE IF NOT EXISTS `LeagueOfChallenges`.`User` (
   `email` VARCHAR(45) NOT NULL,
   `password` VARCHAR(255) NOT NULL,
   `last_login` DATETIME,
+  `user_rating` INT NULL,
   `Avatars_avatar_id` INT UNSIGNED NOT NULL,
   `Role_role_id` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`user_id`),

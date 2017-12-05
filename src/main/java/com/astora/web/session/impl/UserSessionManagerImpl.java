@@ -13,6 +13,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -22,6 +23,7 @@ import java.util.List;
 public class UserSessionManagerImpl implements UserSessionManager {
 
     private static final String USER_INFO_MESSAGE = "user_info_message";
+    private static final String LAST_MESSAGE_TIME = "user_last_message_time";
 
     private final Logger logger = Logger.getLogger(UserSessionManagerImpl.class);
 
@@ -51,7 +53,6 @@ public class UserSessionManagerImpl implements UserSessionManager {
             list.add(info);
             setSessionAttribute(USER_INFO_MESSAGE, list);
         } else {
-            // wtf iam doing ???? its 3:AM i should sleep
             list = (List<String>) getSessionAttribute(USER_INFO_MESSAGE);
             list.add(info);
             setSessionAttribute(USER_INFO_MESSAGE,list);
@@ -63,6 +64,14 @@ public class UserSessionManagerImpl implements UserSessionManager {
         List<String> list = (List<String>) getSessionAttribute(USER_INFO_MESSAGE);
         setSessionAttribute(USER_INFO_MESSAGE,new ArrayList<String>());
         return list;
+    }
+
+    public void setLastMessageTime(Date date){
+        setSessionAttribute(LAST_MESSAGE_TIME,date);
+    }
+
+    public Date getLastMessageTime(){
+        return (Date) getSessionAttribute(LAST_MESSAGE_TIME);
     }
 
 

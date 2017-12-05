@@ -63,6 +63,7 @@
         <!-- start: Content -->
         <div id="content" class="span10 text-center">
             <h1><spring:message code="messages.inbox.title"/></h1>
+            <jsp:include page="infoMessage.jsp"/>
             <div class="row-fluid">
 
                 <div class="span6">

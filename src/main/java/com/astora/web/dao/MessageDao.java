@@ -13,7 +13,7 @@ public interface MessageDao extends EntityDao<Message> {
 
     List<Message> getMessageWithUsers(User user1, User user2);
 
-    List<Integer> getNewestMessagesUserId(int userId);
+    List<Integer> getNewestMessagesUserId(int userId, int rowsCount);
 
     Message getNewestMessageWithUsers(User user1, User user2);
 

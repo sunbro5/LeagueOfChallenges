@@ -5,10 +5,13 @@ import com.astora.web.dao.MessageDao;
 import com.astora.web.dao.UserDao;
 import com.astora.web.dao.model.Friend;
 import com.astora.web.dao.model.Message;
+import com.astora.web.dao.model.Report;
 import com.astora.web.dao.model.User;
 import com.astora.web.dto.FriendInfoDto;
+import com.astora.web.dto.UserInfoDto;
 import com.astora.web.dto.message.MessageDto;
 import com.astora.web.dto.message.UserMessagesDto;
+import com.astora.web.enums.ReportReason;
 import com.astora.web.exception.FriendAlreadyExistsException;
 import com.astora.web.exception.ServiceException;
 import com.astora.web.exception.UserDoesntExists;
@@ -51,6 +54,23 @@ public class UserServiceImpl implements UserService {
             throw new UserDoesntExists("User with nickname" + nickname + "does not exists");
         }
         return user;
+    }
+
+    public UserInfoDto getUserInfoByNickname(String nickname) throws UserDoesntExists {
+        User user = getUserByNickname(nickname);
+        return null;
+    }
+
+    private UserInfoDto mapUserInfo(User user){
+        UserInfoDto userInfo = new UserInfoDto(user);
+        Map<ReportReason, Integer> reportList = new HashMap<ReportReason, Integer>();
+        for (Report report: user.getReportsByUserId()){
+            ReportReason reason = ReportReason.valueOf(report.getReason());
+            Integer count = reportList.get(reason);
+            reportList.put(reason,count + 1);
+        }
+        userInfo.setReportList(reportList);
+        return userInfo;
     }
 
 }

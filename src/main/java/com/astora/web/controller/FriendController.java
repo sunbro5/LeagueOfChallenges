@@ -19,9 +19,9 @@ import java.util.Map;
  * @author <a href="mailto:maresjan694@gmail.com">Jan Mares</a>, 06.11.2017
  */
 @Controller
-public class UserController extends BaseUserPage {
+public class FriendController extends BaseUserPage {
 
-    private static final Logger logger = Logger.getLogger(UserController.class);
+    private static final Logger logger = Logger.getLogger(FriendController.class);
 
     @Autowired
     private FriendService friendService;
