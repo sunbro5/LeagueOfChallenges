@@ -62,12 +62,12 @@
 
         <!-- start: Content -->
         <div id="content" class="span10 text-center">
-            <h1><spring:message code="messages.inbox.title"/></h1>
-            <jsp:include page="infoMessage.jsp"/>
+
             <div class="row-fluid">
 
                 <div class="span6">
-
+                    <h1><spring:message code="messages.inbox.title"/></h1>
+                    <jsp:include page="infoMessage.jsp"/>
                     <ul class="messagesList">
                         <c:forEach items="${userMessagesPreview}" var="mesagePreview">
                             <c:url value="/messages" var="showMessageUrl">
@@ -89,11 +89,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="span6 chat-form">
+                <div class="span6 chat-form noMarginLeft">
                     <c:url value="/sendMessage" var="sendMessageUrl"/>
-                    <form:form modelAttribute="sendMessageModel" action="${sendMessageUrl}" method="post">
+                    <form:form cssClass="dark" modelAttribute="sendMessageModel" action="${sendMessageUrl}" method="post">
                     <div>
-                        <h3><spring:message code="message.form.toNickname.label" /></h3>
+                        <p><spring:message code="message.form.toNickname.label" /></p>
                         <form:input path="toNickname"/>
                         <p><form:errors path="toNickname" cssClass="error"/></p>
                     </div>
@@ -180,7 +180,7 @@
             var element = document.getElementById('scroll-chat');
             element.scrollTop = element.scrollHeight - element.clientHeight;
         }
-        window.onload = scrollDownChat;
+        document.onload = scrollDownChat;
     </script>
 
     <script src="<c:url value="resources/js/jquery-1.9.1.min.js"/>"></script>

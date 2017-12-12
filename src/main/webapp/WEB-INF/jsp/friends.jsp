@@ -80,6 +80,10 @@
                                     <c:param name="friendMessages" value="${userFriend.nickname}"/>
                                 </c:url>
                                 <th><a href="${friendMessageUrl}"><spring:message code="friends.list.sendMessage.label"/></a></th>
+                                <c:url value="/userProfile" var="userProfileUrl">
+                                    <c:param name="userNickname" value="${userFriend.nickname}"/>
+                                </c:url>
+                                <th><a href="${userProfileUrl}"><spring:message code="friends.list.userProfile.label"/></a></th>
                                 <c:url value="/deleteFriend" var="deleteFriendUrl">
                                     <c:param name="nickname" value="${userFriend.nickname}"/>
                                 </c:url>
@@ -107,6 +111,10 @@
                             <c:forEach items="${foundUsersList}" var="foundUser">
                                 <tr>
                                     <th>${foundUser}</th>
+                                    <c:url value="/userProfile" var="userProfileUrl">
+                                        <c:param name="userNickname" value="${foundUser}"/>
+                                    </c:url>
+                                    <th><a href="${userProfileUrl}"><spring:message code="friends.list.userProfile.label"/></a></th>
                                     <c:url value="/createFriend" var="createFriendUrl">
                                         <c:param name="nickname" value="${foundUser}"/>
                                     </c:url>

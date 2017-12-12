@@ -5,11 +5,14 @@ import com.astora.web.model.UserSecuredModel;
 import com.astora.web.utils.CustomValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class BaseUserPage {
+
+    private static final String USER_INFO_MESSAGE = "userInfoMessages";
 
     @Autowired
     protected UserSessionManager userSessionManager;
@@ -26,9 +29,18 @@ public class BaseUserPage {
         }
         List<String> userInfos = userSessionManager.getUserInfo();
         if(!CustomValidationUtils.isEmpty(userInfos)){
-            model.put("userInfoMessages",userInfos);
+            model.put(USER_INFO_MESSAGE,userInfos);
         }
         return model;
+    }
+
+    public void pushInfo(Map<String, Object> model, String info){
+        List<String> userInfos = (List<String>) model.get(USER_INFO_MESSAGE);
+        if(userInfos == null){
+            userInfos = new ArrayList<String>();
+        }
+        userInfos.add(info);
+        model.put(USER_INFO_MESSAGE, userInfos);
     }
 
     public Map<String, Object> init() {

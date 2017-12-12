@@ -33,14 +33,18 @@ INSERT INTO leagueofchallenges.game_param VALUES(2, 'game_param_name_2', '2038-0
 
 -- TODO add created to game table
 TRUNCATE TABLE leagueofchallenges.game;
-INSERT INTO leagueofchallenges.game VALUES(1, 'chess', 'game_description_1');
-INSERT INTO leagueofchallenges.game VALUES(2, 'football', 'game_description_2');
+INSERT INTO leagueofchallenges.game VALUES(1, 'chess', 'game_description_1',1);
+INSERT INTO leagueofchallenges.game VALUES(2, 'football', 'game_description_2',2);
 
 -- TODO add created to league table
 -- TODO add some column that says if its gold, bronze, diamond or whatever league
 TRUNCATE TABLE leagueofchallenges.league;
-INSERT INTO leagueofchallenges.league VALUES(1, 'Centipede Deamon League', 'league_description_1', 1);
-INSERT INTO leagueofchallenges.league VALUES(2, 'Moonlight Butterfly League', 'league_description_2', 2);
+INSERT INTO leagueofchallenges.league VALUES(1, 'GOLD', 'Centipede Deamon League', 1);
+INSERT INTO leagueofchallenges.league VALUES(2, 'SILVER', 'Centipede Deamon League', 1);
+INSERT INTO leagueofchallenges.league VALUES(3, 'BRONZE', 'Centipede Deamon League', 1);
+INSERT INTO leagueofchallenges.league VALUES(4, 'GOLD', 'Moonlight Butterfly League', 2);
+INSERT INTO leagueofchallenges.league VALUES(5, 'SILVER', 'Moonlight Butterfly League', 2);
+INSERT INTO leagueofchallenges.league VALUES(6, 'BRONZE', 'Moonlight Butterfly League', 2);
 
 TRUNCATE TABLE leagueofchallenges.team;
 INSERT INTO leagueofchallenges.team VALUES(1, '1970-01-01 00:00:01', 'Nito team', 'team_description_1', '1', 42);

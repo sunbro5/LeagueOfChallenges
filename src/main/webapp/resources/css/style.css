@@ -745,7 +745,7 @@ ul.messages li .message {
 	background: #fdfdfd;
 	text-shadow: 0px 1px 1px #fff !important;
 	padding: 20px;
-	top: -28px;
+	top: -52px;
 	right: -28px;
 	margin-bottom: -56px;
 	margin-right: -30px;
@@ -1464,8 +1464,6 @@ ul.chat li .message .text {
 }
 
 .chat-form {
-	border-top: 1px solid #ddd;
-	background: #eee;
 	padding: 10px;
 	margin: 20px -10px -10px -10px;
 }
@@ -3008,7 +3006,7 @@ ul.messagesList li span.date {
 }
 .scrollable-chat{
 	overflow-y: scroll;
-	height: 30vh;
+	height: 60vh;
 }
 
 .message-button{
@@ -3016,3 +3014,18 @@ ul.messagesList li span.date {
 	background-color: #000000 !important;
 	border: none !important;
 }
+
+.profil-box{
+	display: block;
+	margin: 40px 40px 40px 40px;
+}
+
+.profil-box h2{
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+
+.profil-box .span3{
+	text-align: right;
+}
+

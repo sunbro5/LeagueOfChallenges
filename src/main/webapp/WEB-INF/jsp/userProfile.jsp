@@ -62,62 +62,56 @@
 
         <!-- start: Content -->
         <div id="content" class="span10 text-center">
-            <h1><spring:message code="page.menu.report.label"/></h1>
-            <jsp:include page="infoMessage.jsp"/>
-            <div class="row-fluid">
-                <div class="span6">
-                    <h2><spring:message code="page.menu.reportSend.label"/></h2>
-                    <c:url value="/sendReport" var="sendReportUrl"/>
-                    <form:form modelAttribute="userReportModel" action="${sendReportUrl}" method="post">
-                        <div class="form-group">
-                            <p><spring:message code="report.form.nickname.label"/></p>
-                            <form:input cssClass="form-control" path="nickname"/>
-                            <form:errors path="nickname" element="p" cssClass="error"/>
-                        </div>
-                        <div class="form-group">
-                            <p><spring:message code="report.form.reason.label"/></p>
-                            <form:select path="reason">
-                                <c:forEach items="${reportReasonTypes}" var="reportReasonType">
-                                    <form:option value="${reportReasonType}"><spring:message code="${reportReasonType.code}"/></form:option>
-                                </c:forEach>
-                            </form:select>
-                            <p><form:errors path="reason" cssClass="error"/></p>
-                        </div>
-                        <div class="form-group">
-                            <p><spring:message code="report.form.reasonText.label"/></p>
-                            <form:input cssClass="form-control" path="reasonText"/>
-                            <p><form:errors path="reasonText" cssClass="error"/></p>
-                        </div>
-                        <input type="submit" value="<spring:message code="report.form.confirmButton.label"/>" class="btn btn-default">
-                    </form:form>
+            <h1><spring:message code="menu.user.profile.title"/></h1>
+
+            <div class="profil-box">
+                <div class="row-fluid">
+                    <strong>
+                    <p class="span6 text-right"><spring:message code="user.profile.userInformation.nickname"/></p>
+                    </strong>
+                    <p class="span6 text-left">${userByNicknameInfo.nickname}</p>
                 </div>
-                <div class="span6">
-                    <h2><spring:message code="page.menu.myReports.label"/></h2>
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th><spring:message code="reports.table.nickname.head"/></th>
-                        </tr>
-                        </thead>
-                        <c:forEach items="${reportedUsersList}" var="reportedUser">
-                        <tr>
-                            <th>${reportedUser.nickname}</th>
-                            <th><spring:message code="${reportedUser.reason.code}"/></th>
-                            <c:url var="reportChangeUrl" value="/report">
-                                <c:param name="userNickname" value="${reportedUser.nickname}"/>
-                            </c:url>
-                            <th><a href="${reportChangeUrl}"><spring:message code="reports.table.report.change"/></a></th>
-                        </tr>
+                <div class="row-fluid">
+                    <strong>
+                    <p class="span6 text-right"><spring:message code="user.profile.userInformation.firstName"/></p>
+                    </strong>
+                    <p class="span6 text-left">${userByNicknameInfo.firstName}</p>
+                </div>
+                <div class="row-fluid">
+                    <strong>
+                    <p class="span6 text-right"><spring:message code="user.profile.userInformation.email"/></p>
+                    </strong>
+                    <p class="span6 text-left">${userByNicknameInfo.email}</p>
+                </div>
+                <div class="row-fluid">
+                    <strong>
+                    <p class="span6 text-right"><spring:message code="user.profile.userInformation.lastLogin"/></p>
+                    </strong>
+                    <p class="span6 text-left">${userByNicknameInfo.lastLogin}</p>
+                </div>
+                <div class="row-fluid">
+                    <strong>
+                    <p class="span6 text-right"><spring:message code="user.profile.userInformation.rating"/></p>
+                    </strong>
+                    <p class="span6 text-left">${userByNicknameInfo.rating}</p>
+                </div>
+                <div class="row-fluid">
+                    <strong>
+                    <p class="span6 text-right"><spring:message code="user.profile.userInformation.reports"/></p>
+                    </strong>
+                    <div class="span6 text-left">
+                        <c:forEach items="${userByNicknameInfo.reportList}" var="report">
+                            <p><spring:message code="${report.key.code}"/> = ${report.value}</p>
                         </c:forEach>
-                    </table>
+                    </div>
                 </div>
             </div>
-            <!--/.fluid-container-->
-
-            <!-- end: Content -->
         </div>
-        <!--/#content.span10-->
+        <!--/.fluid-container-->
+
+        <!-- end: Content -->
     </div>
+    <!--/#content.span10-->
 </div>
 <!--/fluid-row-->
 

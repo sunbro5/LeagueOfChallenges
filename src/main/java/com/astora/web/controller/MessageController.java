@@ -76,32 +76,25 @@ public class MessageController extends BaseUserPage {
     //TODO should be REST
     @RequestMapping("/sendMessage")
     public ModelAndView sendMessage(@ModelAttribute(SendMessageModel.MODEL_NAME) @Validated SendMessageModel messageModel, BindingResult result){
-        Map<String, Object> map = init();
+        Map<String, Object> model = init();
         if(result.hasErrors()){
-            return renderMessages(messageModel,map);
+            return renderMessages(messageModel,model);
         }
         try {
             messageService.sendMessage(getUserId(),messageModel);
         } catch (CantSendMessageException e) {
-            userSessionManager.putUserInfo("message.messageSent.timeLimit");
-            return renderMessages(messageModel,map);
+            pushInfo(model,"message.messageSent.timeLimit");
+            return renderMessages(messageModel,model);
         } catch (UserDoesntExists e) {
             result.rejectValue("toNickname","messages.form.error.userNickname.userDoesntExists");
-            return renderMessages(messageModel,map);
+            return renderMessages(messageModel,model);
         } catch (ServiceException e) {
             logger.info(e);
-            return renderMessages(messageModel,map);
+            return renderMessages(messageModel,model);
         }
-        userSessionManager.putUserInfo("message.messageSent.successful");
-        return renderMessages(messageModel,map);
+        return renderMessages(messageModel,model);
     }
 
-    @RequestMapping("/getMessages")
-    public @ResponseBody List<MessageDto> getMessages(){
-
-
-        return null;
-    }
 
     @ModelAttribute(SendMessageModel.MODEL_NAME)
     public SendMessageModel getSendMessageModel(){

@@ -1,11 +1,12 @@
 package com.astora.web.dto.message;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * @author <a href="mailto:maresjan694@gmail.com">Jan Mares</a>, 9.11.2017
  */
-public class MessageDto {
+public class MessageDto implements Serializable {
 
     boolean received;
     private String text;

@@ -17,6 +17,7 @@ public class Game {
     private String gameDescription;
     private Collection<GameParam> gameParamsByGameId;
     private Collection<League> leaguesByGameId;
+    private int teamMemberCount;
 
     @Id
     @Column(name = "game_id")
@@ -46,6 +47,16 @@ public class Game {
 
     public void setGameDescription(String gameDescription) {
         this.gameDescription = gameDescription;
+    }
+
+    @Basic
+    @Column(name = "team_member_count")
+    public int getTeamMemberCount() {
+        return teamMemberCount;
+    }
+
+    public void setTeamMemberCount(int teamMemberCount) {
+        this.teamMemberCount = teamMemberCount;
     }
 
     @Override
@@ -87,5 +98,9 @@ public class Game {
 
     public void setLeaguesByGameId(Collection<League> leaguesByGameId) {
         this.leaguesByGameId = leaguesByGameId;
+    }
+
+    public boolean noTeam(){
+        return teamMemberCount == 1;
     }
 }

@@ -18,6 +18,7 @@ import com.astora.web.exception.UserDoesntExists;
 import com.astora.web.model.SendMessageModel;
 import com.astora.web.service.UserService;
 import com.astora.web.utils.CustomValidationUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,8 +29,14 @@ import java.util.*;
 @Transactional
 public class UserServiceImpl implements UserService {
 
+    private static final Logger logger = Logger.getLogger(UserServiceImpl.class);
+
     @Autowired
     private UserDao userDao;
+
+    public void updateUser(User user) {
+        userDao.update(user);
+    }
 
     public List<String> getUsersNicknameLike(String nickname) {
         List<User> users = userDao.getUserLikeNickname(nickname);
@@ -58,16 +65,28 @@ public class UserServiceImpl implements UserService {
 
     public UserInfoDto getUserInfoByNickname(String nickname) throws UserDoesntExists {
         User user = getUserByNickname(nickname);
-        return null;
+        UserInfoDto userInfo = mapUserInfo(user);
+        return userInfo;
     }
 
-    private UserInfoDto mapUserInfo(User user){
+    private UserInfoDto mapUserInfo(User user) {
         UserInfoDto userInfo = new UserInfoDto(user);
         Map<ReportReason, Integer> reportList = new HashMap<ReportReason, Integer>();
-        for (Report report: user.getReportsByUserId()){
-            ReportReason reason = ReportReason.valueOf(report.getReason());
+        for (Report report : user.getReportsByUserId()) {
+            ReportReason reason;
+            try {
+                reason = ReportReason.valueOf(report.getReason());
+            } catch (IllegalArgumentException e) {
+                logger.error(e);
+                continue;
+            }
             Integer count = reportList.get(reason);
-            reportList.put(reason,count + 1);
+            if (count != null) {
+                count = count + 1;
+            } else {
+                count = 1;
+            }
+            reportList.put(reason, count);
         }
         userInfo.setReportList(reportList);
         return userInfo;

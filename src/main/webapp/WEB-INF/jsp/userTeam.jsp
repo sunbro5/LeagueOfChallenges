@@ -62,54 +62,69 @@
 
         <!-- start: Content -->
         <div id="content" class="span10 text-center">
-            <h1><spring:message code="page.menu.report.label"/></h1>
+            <h1><spring:message code="page.menu.userTeam.label"/></h1>
             <jsp:include page="infoMessage.jsp"/>
             <div class="row-fluid">
                 <div class="span6">
-                    <h2><spring:message code="page.menu.reportSend.label"/></h2>
-                    <c:url value="/sendReport" var="sendReportUrl"/>
-                    <form:form modelAttribute="userReportModel" action="${sendReportUrl}" method="post">
-                        <div class="form-group">
-                            <p><spring:message code="report.form.nickname.label"/></p>
-                            <form:input cssClass="form-control" path="nickname"/>
-                            <form:errors path="nickname" element="p" cssClass="error"/>
-                        </div>
-                        <div class="form-group">
-                            <p><spring:message code="report.form.reason.label"/></p>
-                            <form:select path="reason">
-                                <c:forEach items="${reportReasonTypes}" var="reportReasonType">
-                                    <form:option value="${reportReasonType}"><spring:message code="${reportReasonType.code}"/></form:option>
-                                </c:forEach>
-                            </form:select>
-                            <p><form:errors path="reason" cssClass="error"/></p>
-                        </div>
-                        <div class="form-group">
-                            <p><spring:message code="report.form.reasonText.label"/></p>
-                            <form:input cssClass="form-control" path="reasonText"/>
-                            <p><form:errors path="reasonText" cssClass="error"/></p>
-                        </div>
-                        <input type="submit" value="<spring:message code="report.form.confirmButton.label"/>" class="btn btn-default">
-                    </form:form>
-                </div>
-                <div class="span6">
-                    <h2><spring:message code="page.menu.myReports.label"/></h2>
+                    <h2><spring:message code="userTeam.games.header"/></h2>
                     <table class="table">
                         <thead>
                         <tr>
-                            <th><spring:message code="reports.table.nickname.head"/></th>
+                            <th><spring:message code="userTeam.table.game.name"/></th>
+                            <th><spring:message code="userTeam.table.game.description"/></th>
+                            <th><spring:message code="userTeam.table.game.teamCount"/></th>
                         </tr>
                         </thead>
-                        <c:forEach items="${reportedUsersList}" var="reportedUser">
-                        <tr>
-                            <th>${reportedUser.nickname}</th>
-                            <th><spring:message code="${reportedUser.reason.code}"/></th>
-                            <c:url var="reportChangeUrl" value="/report">
-                                <c:param name="userNickname" value="${reportedUser.nickname}"/>
-                            </c:url>
-                            <th><a href="${reportChangeUrl}"><spring:message code="reports.table.report.change"/></a></th>
-                        </tr>
+                        <c:forEach items="${userGamesInformationList}" var="userGameInformation">
+                            <tr>
+                                <%--TODO texty pridat pres klice --%>
+                                <c:url value="/userTeam" var="userTeamUrl">
+                                    <c:param name="gameName" value="${userGameInformation.gameName}"/>
+                                </c:url>
+                                <th><a href="${userTeamUrl}">${userGameInformation.gameName}</a></th>
+                                <th>${userGameInformation.gameDescription}</th>
+                                <th>${userGameInformation.teamsCount}</th>
+                            </tr>
                         </c:forEach>
                     </table>
+                </div>
+                <div class="span6">
+                    <c:choose>
+                        <c:when test="${isNoTeamGame}">
+                            <h2><spring:message code="userTeam.game.header"/></h2>
+                            <strong><p><spring:message code="userTeam.table.team.league"/></p></strong>
+                            <p></p>
+                        </c:when>
+                        <c:otherwise>
+                            <h2><spring:message code="userTeam.team.header"/></h2>
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th><spring:message code="userTeam.table.team.name"/></th>
+                                    <th><spring:message code="userTeam.table.team.description"/></th>
+                                    <th><spring:message code="userTeam.table.team.league"/></th>
+                                    <th><spring:message code="userTeam.table.team.users"/></th>
+                                </tr>
+                                </thead>
+                                <c:forEach items="${userTeamInformationList}" var="userTeam">
+                                    <tr>
+                                        <th>${userTeam.name}</th>
+                                        <th>${userTeam.description}</th>
+                                        <th><spring:message code="${userTeam.league.code}"/></th>
+                                        <th>
+                                            <c:forEach items="${userTeam.users}" var="user">
+                                                <p>${user}</p>
+                                            </c:forEach>
+                                        </th>
+                                    </tr>
+                                </c:forEach>
+                            </table>
+                            <c:url value="/createTeam" var="createTeamUrl">
+                                <c:param name="gameName" value="${gameName}"/>
+                            </c:url>
+                            <a href="${createTeamUrl}"><spring:message code="userTeam.table.team.newTeam"/></a>
+                        </c:otherwise>
+                    </c:choose>
                 </div>
             </div>
             <!--/.fluid-container-->

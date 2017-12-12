@@ -44,7 +44,7 @@ public class FriendServiceImpl implements FriendService {
         User user = userService.getUserById(userId);
         User userFriend = userService.getUserByNickname(friendNickname);
         if(user.equals(userFriend)){
-            throw new ServiceException("Actual user cannot be assigned as friend");
+            return;
         }
         for (Friend friend : user.getFriendsByUserId()) {
             if (friend.getUserByUserFriendId().getNickname().equals(friendNickname)) {

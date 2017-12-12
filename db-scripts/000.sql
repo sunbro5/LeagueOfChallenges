@@ -87,6 +87,7 @@ CREATE TABLE IF NOT EXISTS `LeagueOfChallenges`.`Game` (
   `game_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `game_name` VARCHAR(45) NOT NULL,
   `game_description` VARCHAR(100) NOT NULL,
+  `team_member_count` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`game_id`))
 ENGINE = InnoDB;
 
