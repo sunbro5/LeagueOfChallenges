@@ -13,14 +13,13 @@ import com.astora.web.model.RegistrationModel;
 import com.astora.web.service.RegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 
 /**
  * @author <a href="mailto:maresjan694@gmail.com">Jan Mares</a>, 1.11.2017
  */
 @Service("registrationService")
-@Transactional
 public class RegistrationServiceImpl implements RegistrationService {
 
     private static final String DEFAULT_AVATAR_NAME = "avatar_1";
@@ -34,6 +33,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Autowired
     private AvatarDao avatarDao;
 
+    @Transactional
     public void createUser(RegistrationModel registration) throws ServiceException {
         User alreadyCreated = userDao.getUserByNickname(registration.getNickname());
         if (alreadyCreated != null) {

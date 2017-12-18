@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Repository("userDao")
-@Transactional
 public class UserDaoImpl extends EntityDaoImpl<User> implements UserDao{
 
     public UserDaoImpl(){

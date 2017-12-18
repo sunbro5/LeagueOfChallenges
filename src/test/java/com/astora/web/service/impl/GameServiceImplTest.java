@@ -34,4 +34,9 @@ public class GameServiceImplTest {
         List<TeamInfoDto> list = gameService.getTeamsByGameName(1,"chess");
         assertNotNull(list);
     }
+
+    @Test
+    public void testCreateDefaultTeam() throws Exception {
+        gameService.createDefaultTeam(1,"chess");
+    }
 }

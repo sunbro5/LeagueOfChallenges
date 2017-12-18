@@ -91,12 +91,22 @@
                 <div class="span6">
                     <c:choose>
                         <c:when test="${isNoTeamGame}">
-                            <h2><spring:message code="userTeam.game.header"/></h2>
-                            <strong><p><spring:message code="userTeam.table.team.league"/></p></strong>
-                            <p></p>
+                            <h2><spring:message code="userTeam.game.header"/> ${gameName}</h2>
+                            <c:choose>
+                                <c:when test="${not empty userNoTeamGameInformation}">
+                                    <strong><p><spring:message code="userTeam.table.team.league"/></p></strong>
+                                    <p><spring:message code="${userNoTeamGameInformation.code}"/></p>
+                                </c:when>
+                                <c:otherwise>
+                                    <c:url value="/createDefaultTeam" var="createDefaultTeamUrl">
+                                        <c:param name="gameName" value="${gameName}"/>
+                                    </c:url>
+                                    <a href="${createDefaultTeamUrl}"><spring:message code="userTeam.table.team.newGame"/></a>
+                                </c:otherwise>
+                            </c:choose>
                         </c:when>
                         <c:otherwise>
-                            <h2><spring:message code="userTeam.team.header"/></h2>
+                            <h2><spring:message code="userTeam.team.header"/> ${gameName}</h2>
                             <table class="table">
                                 <thead>
                                 <tr>

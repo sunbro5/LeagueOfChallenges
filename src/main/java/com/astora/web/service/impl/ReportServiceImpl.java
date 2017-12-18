@@ -15,8 +15,8 @@ import com.astora.web.utils.CustomValidationUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +24,6 @@ import java.util.List;
  * @author <a href="mailto:maresjan694@gmail.com">Jan Mares</a>, 16.11.2017
  */
 @Service("reportService")
-@Transactional
 public class ReportServiceImpl implements ReportService {
 
     private static final Logger logger = Logger.getLogger(ReportServiceImpl.class);
@@ -35,6 +34,7 @@ public class ReportServiceImpl implements ReportService {
     @Autowired
     private ReportDao reportDao;
 
+    @Transactional
     public void createUpdateReport(int userId, UserReportModel reportModel) throws ServiceException {
         User user = userService.getUserById(userId);
         User reportedUser = userService.getUserByNickname(reportModel.getNickname());
@@ -71,6 +71,7 @@ public class ReportServiceImpl implements ReportService {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<UserReportInfo> getUserReports(int userId) throws ServiceException {
         User user = userService.getUserById(userId);
         List<UserReportInfo> reportsInfo = new ArrayList<UserReportInfo>();
@@ -95,6 +96,7 @@ public class ReportServiceImpl implements ReportService {
      * @param oldReport
      * @throws ServiceException
      */
+
     private void calculateUserRating(User user, ReportReason reason, Report oldReport) throws ServiceException {
         int rating = user.getUserRating();
         if(oldReport == null){

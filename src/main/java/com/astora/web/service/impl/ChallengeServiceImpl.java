@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service("challengeService")
-@Transactional
 public class ChallengeServiceImpl implements ChallengeService {
 
     private ChallengeDao challengeDao;
@@ -32,10 +31,12 @@ public class ChallengeServiceImpl implements ChallengeService {
         this.teamService = teamService;
     }
 
+    @Transactional()
     public void create(Challenge challenge) {
         challengeDao.create(challenge);
     }
 
+    @Transactional
     public void create(CreateChallengeModel createChallengeModel) {
         Challenge challenge = new Challenge();
         challenge.setText(createChallengeModel.getText());
@@ -48,22 +49,27 @@ public class ChallengeServiceImpl implements ChallengeService {
         challengeDao.create(challenge);
     }
 
+    @Transactional
     public void update(Challenge challenge) {
         challengeDao.update(challenge);
     }
 
+    @Transactional
     public Challenge findById(int id) {
         return challengeDao.findById(id);
     }
 
+    @Transactional
     public List<Challenge> findAll() {
         return challengeDao.findAll();
     }
 
+    @Transactional
     public void delete(int id) {
         challengeDao.delete(id);
     }
 
+    @Transactional
     public List<ChallengeDto> prepareChallenges() {
         List<ChallengeDto> challenges = new ArrayList<ChallengeDto>();
 

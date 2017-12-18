@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository("teamUserDao")
-@Transactional
 public class TeamUserDaoImpl extends EntityDaoImpl<TeamUser> implements TeamUserDao {
 
     protected TeamUserDaoImpl() {

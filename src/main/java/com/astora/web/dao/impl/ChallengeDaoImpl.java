@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository("challengeDao")
-@Transactional
 public class ChallengeDaoImpl extends EntityDaoImpl<Challenge> implements ChallengeDao {
 
     protected ChallengeDaoImpl() {

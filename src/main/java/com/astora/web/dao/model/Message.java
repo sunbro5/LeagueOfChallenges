@@ -17,6 +17,7 @@ public class Message {
     private Timestamp created;
     private String text;
     private String subject;
+    private int alreadyRead;
     private User userByFromUserId;
     private User userByToUserId;
 
@@ -58,6 +59,16 @@ public class Message {
 
     public void setSubject(String subject) {
         this.subject = subject;
+    }
+
+    @Basic
+    @Column(name = "already_read", insertable = false)
+    public int getAlreadyRead() {
+        return alreadyRead;
+    }
+
+    public void setAlreadyRead(int alreadyRead) {
+        this.alreadyRead = alreadyRead;
     }
 
     @Override
@@ -103,4 +114,5 @@ public class Message {
     public void setUserByToUserId(User userByToUserId) {
         this.userByToUserId = userByToUserId;
     }
+
 }

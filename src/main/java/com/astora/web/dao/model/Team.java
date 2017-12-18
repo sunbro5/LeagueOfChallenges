@@ -1,12 +1,6 @@
 package com.astora.web.dao.model;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Collection;
 
@@ -28,6 +22,7 @@ public class Team {
 
     @Id
     @Column(name = "team_id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     public int getTeamId() {
         return teamId;
     }
@@ -37,7 +32,7 @@ public class Team {
     }
 
     @Basic
-    @Column(name = "created")
+    @Column(name = "created",insertable = false)
     public Timestamp getCreated() {
         return created;
     }

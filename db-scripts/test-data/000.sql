@@ -24,8 +24,8 @@ INSERT INTO leagueofchallenges.friend VALUES(1, '1970-01-01 00:00:01', '1', '2')
 INSERT INTO leagueofchallenges.friend VALUES(2, '2038-01-19 03:14:07', '2', '1');
 
 TRUNCATE TABLE leagueofchallenges.message;
-INSERT INTO leagueofchallenges.message VALUES(1, '1970-01-01 00:00:01', 'message_text_1', 'message_subject_1', '1', '2');
-INSERT INTO leagueofchallenges.message VALUES(2, '2038-01-19 03:14:07', 'message_text_2', 'message_subject_2', '2', '1');
+INSERT INTO leagueofchallenges.message VALUES(1, '1970-01-01 00:00:01', 'message_text_1', 'message_subject_1', '0', '1', '2');
+INSERT INTO leagueofchallenges.message VALUES(2, '2038-01-19 03:14:07', 'message_text_2', 'message_subject_2', '0', '2', '1');
 
 TRUNCATE TABLE leagueofchallenges.game_param;
 INSERT INTO leagueofchallenges.game_param VALUES(1, 'game_param_name_1', '1970-01-01 00:00:01', 'game_param_value_1', '1');

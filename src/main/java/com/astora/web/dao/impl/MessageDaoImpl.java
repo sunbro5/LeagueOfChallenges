@@ -48,6 +48,19 @@ public class MessageDaoImpl extends EntityDaoImpl<Message> implements MessageDao
         return list;
     }
 
+    public List<Integer> getNotReadNewestMessagesUserId(int userId, int rowsCount){
+        String sql = "SELECT from_user_id, max(created) as sentDate from message where to_user_id = :userId and already_read = 0 group by from_user_id order by sentDate desc LIMIT :rowsCount ";
+        Query query = sessionFactory.getCurrentSession().createSQLQuery(sql);
+        query.setParameter("userId",userId);
+        query.setParameter("rowsCount",rowsCount);
+        List<Integer> list = new ArrayList<Integer>();
+        for (Iterator it = query.list().iterator(); it.hasNext();){
+            Object[] result = (Object[]) it.next();
+            list.add((Integer) result[0]);
+        }
+        return list;
+    }
+
     public Message getNewestMessageWithUsers(User user1, User user2){
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Message.class);
         criteria.add(Restrictions.eq("userByToUserId",user1));

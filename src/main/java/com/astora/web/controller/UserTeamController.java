@@ -34,9 +34,9 @@ public class UserTeamController extends BaseUserPage {
                 boolean noTeamGame = gameService.noTeamGame(gameName);
                 model.put("isNoTeamGame", noTeamGame);
                 if (noTeamGame) {
-                    model.put("userTeamInformationList", gameService.getTeamsByGameName(getUserId(), gameName));
+                    model.put("userNoTeamGameInformation",gameService.getLeagueForNoTeamGame(getUserId(),gameName));
                 } else {
-                    model.put("userNoTeamGameInformation",null);
+                    model.put("userTeamInformationList", gameService.getTeamsByGameName(getUserId(), gameName));
                 }
                 model.put("gameName", gameName);
             } catch (ServiceException e) {
@@ -47,8 +47,13 @@ public class UserTeamController extends BaseUserPage {
         return new ModelAndView("userTeam", model);
     }
 
-    @RequestMapping("/createTeam")
-    public ModelAndView createTeam(@RequestParam(value = "gameName", required = false) String gameName) {
-        return new ModelAndView("newTeam");
+    @RequestMapping("/createDefaultTeam")
+    public ModelAndView createDefaultTeam(@RequestParam(value = "gameName") String gameName) {
+        try {
+            gameService.createDefaultTeam(getUserId(),gameName);
+        } catch (ServiceException e) {
+            logger.error(e);
+        }
+        return renderUserTeam(init(),gameName);
     }
 }

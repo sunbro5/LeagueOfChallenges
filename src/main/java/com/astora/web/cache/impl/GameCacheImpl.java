@@ -4,10 +4,12 @@ import com.astora.web.cache.GameCache;
 import com.astora.web.dao.GameDao;
 import com.astora.web.dao.model.Game;
 import com.astora.web.exception.ServiceException;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -29,8 +31,10 @@ public class GameCacheImpl implements GameCache {
     }
 
     @Cacheable(value = "cacheGames")
+    @Transactional
     public Game getGame(String gameName) throws ServiceException {
         Game game = gameDao.getByUniqueColumnValue("gameName",gameName);
+        Hibernate.initialize(game.getLeaguesByGameId());
         if(game == null){
             throw new ServiceException("Game with name: " + gameName + " doesnt exists.");
         }

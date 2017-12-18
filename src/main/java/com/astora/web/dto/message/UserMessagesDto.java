@@ -11,6 +11,7 @@ public class UserMessagesDto implements Serializable {
     private String textPreview;
     private String userNickname;
     private Date textPreviewDate;
+    private int alreadyRead;
 
     public UserMessagesDto(String toNickname) {
         this.userNickname = toNickname;
@@ -38,5 +39,13 @@ public class UserMessagesDto implements Serializable {
 
     public void setTextPreviewDate(Date textPreviewDate) {
         this.textPreviewDate = textPreviewDate;
+    }
+
+    public int getAlreadyRead() {
+        return alreadyRead;
+    }
+
+    public void setAlreadyRead(int alreadyRead) {
+        this.alreadyRead = alreadyRead;
     }
 }

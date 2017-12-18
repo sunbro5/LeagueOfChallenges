@@ -74,9 +74,18 @@
                                 <c:param name="friendMessages" value="${mesagePreview.userNickname}"/>
                             </c:url>
                             <a href="${showMessageUrl}">
-                            <li>
-                                <span class="from"><span class="glyphicons star"><i></i></span> ${mesagePreview.userNickname} </span><span class="title">${mesagePreview.textPreview}</span><span class="date">${mesagePreview.textPreviewDate}</span>
-                            </li>
+                            <c:choose>
+                                <c:when test="${mesagePreview.alreadyRead == 0}">
+                                    <li class="already-read">
+                                        <span class="from"><span class="glyphicons star "><i></i></span> ${mesagePreview.userNickname} </span><span class="title">${mesagePreview.textPreview}</span><span class="date">${mesagePreview.textPreviewDate}</span>
+                                    </li>
+                                </c:when>
+                                <c:otherwise>
+                                    <li>
+                                        <span class="from"><span class="glyphicons envelope"><i></i></span> ${mesagePreview.userNickname} </span><span class="title">${mesagePreview.textPreview}</span><span class="date">${mesagePreview.textPreviewDate}</span>
+                                    </li>
+                                </c:otherwise>
+                            </c:choose>
                             </a>
                         </c:forEach>
                     </ul>

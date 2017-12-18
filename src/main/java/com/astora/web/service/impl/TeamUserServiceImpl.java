@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service("teamUserService")
-@Transactional
 public class TeamUserServiceImpl implements TeamUserService {
 
     private TeamUserDao teamUserDao;
@@ -20,6 +19,7 @@ public class TeamUserServiceImpl implements TeamUserService {
         this.teamUserDao = teamUserDao;
     }
 
+    @Transactional
     public List<Team> getAllTeamsForUser(int userId){
         return  teamUserDao.getAllTeamsForUser(userId);
     }

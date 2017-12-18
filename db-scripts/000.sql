@@ -128,6 +128,7 @@ CREATE TABLE IF NOT EXISTS `LeagueOfChallenges`.`Message` (
   `created` DATETIME NOT NULL default CURRENT_TIMESTAMP,
   `text` VARCHAR(200) NOT NULL,
   `subject` VARCHAR(45) NOT NULL,
+  `already_read` INT NOT NULL default 0,
   `from_user_id` INT UNSIGNED NOT NULL,
   `to_user_id` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`message_id`),
@@ -173,7 +174,7 @@ DROP TABLE IF EXISTS `LeagueOfChallenges`.`Team` ;
 
 CREATE TABLE IF NOT EXISTS `LeagueOfChallenges`.`Team` (
   `team_id` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'played games budem brat jako count z nakej tabulky\npocet vyher tymu a pocet proher tymu taky budem brat z nakej jinej tabulky(jako COUNT) sracka aby to bylo tady\nvlozime ho do bronze ligy hry co si zvoli a z ligy pak vime i hru ktera se hraje',
-  `created` DATETIME NOT NULL,
+  `created` DATETIME NOT NULL default CURRENT_TIMESTAMP,
   `name` VARCHAR(45) NOT NULL,
   `description` VARCHAR(45) NOT NULL,
   `League_leagu_id` INT UNSIGNED NOT NULL,

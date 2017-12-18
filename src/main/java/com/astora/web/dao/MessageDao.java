@@ -17,4 +17,5 @@ public interface MessageDao extends EntityDao<Message> {
 
     Message getNewestMessageWithUsers(User user1, User user2);
 
+    List<Integer> getNotReadNewestMessagesUserId(int userId, int rowsCount);
 }

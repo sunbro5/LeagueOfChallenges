@@ -3029,3 +3029,7 @@ ul.messagesList li span.date {
 	text-align: right;
 }
 
+.already-read{
+	font-weight: bold;
+}
+

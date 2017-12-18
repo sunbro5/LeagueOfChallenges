@@ -1,11 +1,6 @@
 package com.astora.web.dao.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "team_user", schema = "leagueofchallenges")
@@ -16,6 +11,7 @@ public class TeamUser {
 
     @Id
     @Column(name = "team_user_id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     public int getTeamUserId() {
         return teamUserId;
     }

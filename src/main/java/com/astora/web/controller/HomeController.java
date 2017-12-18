@@ -23,8 +23,8 @@ public class HomeController extends BaseUserPage {
 
     private RoleService roleService;
 
-    @Autowired
-    private UserDao userDao;
+    //@Autowired
+    //private UserDao userDao;
 
     @Autowired
     public void setRoleService(RoleService roleService) {
@@ -34,8 +34,8 @@ public class HomeController extends BaseUserPage {
     @RequestMapping("/")
     public ModelAndView renderHome() throws Exception {
         Map<String, Object> map = init();
-        List<User> list = userDao.findAll();
-        Role role = list.get(0).getRoleByRoleRoleId();
+        //List<User> list = userDao.findAll();
+        //Role role = list.get(0).getRoleByRoleRoleId();
         return new ModelAndView("home", map);
     }
 

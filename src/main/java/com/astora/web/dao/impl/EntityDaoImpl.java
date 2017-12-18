@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collection;
 import java.util.List;
 
-@Transactional
 public class EntityDaoImpl<T> implements EntityDao<T> {
 
     protected SessionFactory sessionFactory;

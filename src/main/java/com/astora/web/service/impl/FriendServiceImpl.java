@@ -11,7 +11,8 @@ import com.astora.web.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+
+import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +20,6 @@ import java.util.List;
  * @author <a href="mailto:maresjan694@gmail.com">Jan Mares</a>, 16.11.2017
  */
 @Service("friendService")
-@Transactional
 public class FriendServiceImpl implements FriendService {
 
     @Autowired
@@ -28,9 +28,9 @@ public class FriendServiceImpl implements FriendService {
     @Autowired
     private UserService userService;
 
+    @Transactional
     public boolean removeFriendByNickname(int userId, String friendNickname) throws ServiceException {
         User user = userService.getUserById(userId);
-        List<FriendInfoDto> list = new ArrayList<FriendInfoDto>();
         for (Friend friend : user.getFriendsByUserId()) {
             if(friend.getUserByUserFriendId().getNickname().equals(friendNickname)){
                 friendDao.delete(friend.getFriendId());
@@ -40,6 +40,7 @@ public class FriendServiceImpl implements FriendService {
         return false;
     }
 
+    @Transactional
     public void createFriend(int userId, String friendNickname) throws ServiceException {
         User user = userService.getUserById(userId);
         User userFriend = userService.getUserByNickname(friendNickname);
@@ -57,6 +58,7 @@ public class FriendServiceImpl implements FriendService {
         friendDao.create(friend);
     }
 
+    @Transactional(readOnly = true)
     public List<FriendInfoDto> getFriendList(int userId) throws ServiceException {
         User user = userService.getUserById(userId);
         List<FriendInfoDto> list = new ArrayList<FriendInfoDto>();

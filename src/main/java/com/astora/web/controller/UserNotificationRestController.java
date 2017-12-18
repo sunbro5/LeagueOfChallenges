@@ -21,8 +21,8 @@ public class UserNotificationRestController extends BaseUserPage {
     @Autowired
     private MessageService messageService;
 
-    @RequestMapping("/refreshNotifications")
-    public @ResponseBody UserNotificationsDto getNotifications(){
+    @RequestMapping("/refreshMessageNotifications")
+    public @ResponseBody UserNotificationsDto getMessageNotifications(){
         UserNotificationsDto notification = new UserNotificationsDto();
         try {
             notification.setUserMessages(messageService.getNotificationMessagesPreview(getUserId()));

@@ -17,4 +17,6 @@ public interface GameService {
     boolean noTeamGame(String gameName) throws ServiceException;
 
     Leagues getLeagueForNoTeamGame(int userId, String gameName) throws ServiceException;
+
+    void createDefaultTeam(int userId, String gameName ) throws ServiceException;
 }

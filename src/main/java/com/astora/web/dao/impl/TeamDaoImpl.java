@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Repository("teamDao")
-@Transactional
 public class TeamDaoImpl extends EntityDaoImpl<Team> implements TeamDao {
 
     protected TeamDaoImpl() {

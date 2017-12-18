@@ -101,6 +101,6 @@ public class Game {
     }
 
     public boolean noTeam(){
-        return teamMemberCount == 1;
+        return getTeamMemberCount() == 1;
     }
 }

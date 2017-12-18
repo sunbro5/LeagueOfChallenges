@@ -8,10 +8,10 @@ import java.io.Serializable;
 public enum ReportReason implements Serializable {
 
     //bad player
-    USER_INSERT_INVALID_DATA("enums.reportReason.invalidData",2),
-    USER_CHEATER("enums.reportReason.cheater",3),
-    USER_BAD_TO_PLAY_WITH("enums.reportReason.badTopLayWith",1),
-    USER_VERBAL_ABUSE("enums.reportReason.verbalAbuse",3),
+    USER_INSERT_INVALID_DATA("enums.reportReason.invalidData",-2),
+    USER_CHEATER("enums.reportReason.cheater",-3),
+    USER_BAD_TO_PLAY_WITH("enums.reportReason.badTopLayWith",-1),
+    USER_VERBAL_ABUSE("enums.reportReason.verbalAbuse",-3),
     //good player
     USER_GOOD_TO_PLAY_WITH("enums.reportReason.goodToPlayWith",1),
     USER_FRIENDLY("enums.reportReason.friendly",1),

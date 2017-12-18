@@ -26,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 @Service("userService")
-@Transactional
 public class UserServiceImpl implements UserService {
 
     private static final Logger logger = Logger.getLogger(UserServiceImpl.class);
@@ -38,6 +37,7 @@ public class UserServiceImpl implements UserService {
         userDao.update(user);
     }
 
+    @Transactional(readOnly = true)
     public List<String> getUsersNicknameLike(String nickname) {
         List<User> users = userDao.getUserLikeNickname(nickname);
         List<String> nicknameList = new ArrayList<String>();
@@ -47,6 +47,7 @@ public class UserServiceImpl implements UserService {
         return nicknameList;
     }
 
+    @Transactional
     public User getUserById(int userId) throws ServiceException {
         User user = userDao.findById(userId);
         if (user == null) {
@@ -55,6 +56,7 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+    @Transactional
     public User getUserByNickname(String nickname) throws UserDoesntExists {
         User user = userDao.getUserByNickname(nickname);
         if (user == null) {
@@ -63,12 +65,14 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+    @Transactional(readOnly = true)
     public UserInfoDto getUserInfoByNickname(String nickname) throws UserDoesntExists {
         User user = getUserByNickname(nickname);
         UserInfoDto userInfo = mapUserInfo(user);
         return userInfo;
     }
 
+    @Transactional(readOnly = true)
     private UserInfoDto mapUserInfo(User user) {
         UserInfoDto userInfo = new UserInfoDto(user);
         Map<ReportReason, Integer> reportList = new HashMap<ReportReason, Integer>();

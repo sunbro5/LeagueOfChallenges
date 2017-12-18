@@ -16,7 +16,7 @@ public class TeamServiceImpl implements TeamService {
     private TeamDao teamDao;
 
     @Autowired
-    public void setRoleDao(TeamDao teamDao) {
+    public void setTeamDao(TeamDao teamDao) {
         this.teamDao = teamDao;
     }
 

@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Repository("roleDao")
-@Transactional
 public class RoleDaoImpl extends EntityDaoImpl<Role> implements RoleDao {
 
     public RoleDaoImpl(){

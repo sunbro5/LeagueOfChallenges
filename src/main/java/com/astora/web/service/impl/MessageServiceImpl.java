@@ -15,21 +15,18 @@ import com.astora.web.utils.CustomValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
 
 /**
  * @author <a href="mailto:maresjan694@gmail.com">Jan Mares</a>, 16.11.2017
  */
 @Service("messageService")
-@Transactional
 public class MessageServiceImpl implements MessageService {
 
     private static final int PREVIEW_CHAR_COUNT = 20;
-    private static final long TEN_SECONDS = 10000;
+    private static final long SECOND = 1000;
     private static final int MESSAGE_INBOX_COUNT = 10;
     private static final int MESSAGE_NOTIFICATION_COUNT = 5;
 
@@ -42,13 +39,16 @@ public class MessageServiceImpl implements MessageService {
     @Autowired
     private UserSessionManager userSessionManager;
 
+    @Transactional
     public List<MessageDto> getUserMessagesWithUser(int userId, String friendNickname) throws ServiceException {
         User user = userService.getUserById(userId);
         User userFriend = userService.getUserByNickname(friendNickname);
         List<MessageDto> messageDto = new ArrayList<MessageDto>();
-        messageDto.addAll(mapMessagesDto(messageDao.getMessageWithUsers(user, userFriend), true));
+        List<Message> messageList = messageDao.getMessageWithUsers(user, userFriend);
+        markAsReaded(messageList);
+        messageDto.addAll(mapMessagesDto(messageList, true));
         messageDto.addAll(mapMessagesDto(messageDao.getMessageWithUsers(userFriend, user), false));
-        if(CustomValidationUtils.isEmpty(messageDto)){
+        if (CustomValidationUtils.isEmpty(messageDto)) {
             return messageDto;
         }
         Comparator<MessageDto> comparator = new Comparator<MessageDto>() {
@@ -56,28 +56,37 @@ public class MessageServiceImpl implements MessageService {
                 return o1.getSentDate().compareTo(o2.getSentDate());
             }
         };
+        Collections.sort(messageDto,comparator);
         return messageDto;
     }
 
-    public List<UserMessagesDto> getNotificationMessagesPreview(int userId) throws ServiceException{
-        return getNewestMessagesPreview(userId,MESSAGE_NOTIFICATION_COUNT);
+    public List<UserMessagesDto> getNotificationMessagesPreview(int userId) throws ServiceException {
+        return getNewestMessagesPreview(userId, MESSAGE_NOTIFICATION_COUNT,true);
     }
 
-    public List<UserMessagesDto> getNewestMessagesPreview(int userId) throws ServiceException{
-        return getNewestMessagesPreview(userId,MESSAGE_INBOX_COUNT);
+    public List<UserMessagesDto> getNewestMessagesPreview(int userId) throws ServiceException {
+        return getNewestMessagesPreview(userId, MESSAGE_INBOX_COUNT,false);
     }
 
-    private List<UserMessagesDto> getNewestMessagesPreview(int userId, int rowsCount) throws ServiceException {
+    @Transactional(readOnly = true)
+    private List<UserMessagesDto> getNewestMessagesPreview(int userId, int rowsCount, boolean onlyNotRead) throws ServiceException {
         User user = userService.getUserById(userId);
-        List<Integer> friendsId = messageDao.getNewestMessagesUserId(userId,rowsCount);
+        List<Integer> friendsId;
+        if(onlyNotRead){
+            friendsId = messageDao.getNotReadNewestMessagesUserId(userId, rowsCount);
+        } else {
+            friendsId = messageDao.getNewestMessagesUserId(userId, rowsCount);
+        }
+
         Message message;
         List<UserMessagesDto> messagesDto = new ArrayList<UserMessagesDto>();
-        for (Integer friendId: friendsId){
+        for (Integer friendId : friendsId) {
             User friend = userService.getUserById(friendId);
             message = messageDao.getNewestMessageWithUsers(user, friend);
-            if(message != null){
+            if (message != null) {
                 UserMessagesDto userMessage = new UserMessagesDto(message.getUserByFromUserId().getNickname());
                 String textPreview = getPreviewFromText(message.getText());
+                userMessage.setAlreadyRead(message.getAlreadyRead());
                 userMessage.setTextPreview(textPreview);
                 userMessage.setTextPreviewDate(message.getCreated());
                 messagesDto.add(userMessage);
@@ -86,6 +95,7 @@ public class MessageServiceImpl implements MessageService {
         return messagesDto;
     }
 
+    @Transactional
     public void sendMessage(int userId, SendMessageModel model) throws ServiceException {
         User user = userService.getUserById(userId);
         User userFriend = userService.getUserByNickname(model.getToNickname());
@@ -106,9 +116,9 @@ public class MessageServiceImpl implements MessageService {
         return messageDtos;
     }
 
-    private String getPreviewFromText(String text){
-        if(text != null && !text.equals("") && text.length() > PREVIEW_CHAR_COUNT){
-            text = text.substring(0,PREVIEW_CHAR_COUNT);
+    private String getPreviewFromText(String text) {
+        if (text != null && !text.equals("") && text.length() > PREVIEW_CHAR_COUNT) {
+            text = text.substring(0, PREVIEW_CHAR_COUNT);
         }
         return text;
     }
@@ -116,9 +126,19 @@ public class MessageServiceImpl implements MessageService {
     private void validateMessage() throws CantSendMessageException {
         Date now = new Date();
         Date lastMessage = userSessionManager.getLastMessageTime();
-        if (lastMessage != null && (lastMessage.getTime() + TEN_SECONDS) > now.getTime()) {
+        if (lastMessage != null && (lastMessage.getTime() + SECOND) > now.getTime()) {
             throw new CantSendMessageException("Message time limit do not approve message send.");
         }
         userSessionManager.setLastMessageTime(now);
+    }
+
+    @Transactional
+    private void markAsReaded(List<Message> messageList) {
+        for (Message message : messageList) {
+            if (message.getAlreadyRead() == 0) {
+                message.setAlreadyRead(1);
+                messageDao.update(message);
+            }
+        }
     }
 }
