@@ -30,53 +30,49 @@ public class FriendController extends BaseUserPage {
     private UserService userService;
 
     @RequestMapping("/friends")
-    public ModelAndView showFriends(){
+    public ModelAndView showFriends() {
         return renderFriends(init());
     }
 
-    public ModelAndView renderFriends(Map<String, Object> model){
+    public ModelAndView renderFriends() {
+        return renderFriends(init());
+    }
+
+    public ModelAndView renderFriends(Map<String, Object> model) {
 
         List<FriendInfoDto> list = null;
-        try {
-            list = friendService.getFriendList(getUserId());
-        } catch (ServiceException e) {
-            logger.error(e);
-        }
-        model.put("userFriendList",list);
-        return new ModelAndView("friends",model);
+        list = friendService.getFriendList(getUserId());
+        model.put("userFriendList", list);
+        return new ModelAndView("friends", model);
     }
 
     @RequestMapping("/findFriendUser")
-    public ModelAndView findFriendUser(@RequestParam("nickname") String nickname){
+    public ModelAndView findFriendUser(@RequestParam("nickname") String nickname) {
         Map<String, Object> model = init();
         List<String> foundUsers = userService.getUsersNicknameLike(nickname);
-        model.put("foundUsersList",foundUsers);
+        model.put("foundUsersList", foundUsers);
         return renderFriends(model);
     }
 
     @RequestMapping("/createFriend")
-    public ModelAndView createFriend(@RequestParam("nickname") String nickname){
+    public ModelAndView createFriend(@RequestParam("nickname") String nickname) {
         try {
-            friendService.createFriend(getUserId(),nickname);
+            friendService.createFriend(getUserId(), nickname);
         } catch (FriendAlreadyExistsException e) {
             userSessionManager.putUserInfo("message.friend.alreadyExists");
-            return renderFriends(init());
+            return renderFriends();
         } catch (ServiceException e) {
-            logger.error(e);
-            return renderFriends(init());
+            logger.warn(e);
+            return renderFriends();
         }
         userSessionManager.putUserInfo("message.friend.successfullyCreated");
-        return renderFriends(init());
+        return renderFriends();
     }
 
     @RequestMapping("/deleteFriend")
-    public ModelAndView deleteFriend(@RequestParam("nickname") String nickname){
-        try {
-            if(friendService.removeFriendByNickname(getUserId(),nickname)){
-                userSessionManager.putUserInfo("message.friend.successfullyRemoved");
-            }
-        } catch (ServiceException e) {
-            logger.error(e);
+    public ModelAndView deleteFriend(@RequestParam("nickname") String nickname) {
+        if (friendService.removeFriendByNickname(getUserId(), nickname)) {
+            userSessionManager.putUserInfo("message.friend.successfullyRemoved");
         }
         return renderFriends(init());
     }

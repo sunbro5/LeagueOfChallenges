@@ -29,7 +29,7 @@ public class TeamController {
 
     @RequestMapping(TEAM_MAPPING)
     public ModelAndView challengeDetail(@RequestParam(TEAM_ID_PARAM) int teamId, Map<String, Object> map) {
-        map.put(TEAM_MODEL_KEY, teamService.findById(teamId));
+        //map.put(TEAM_MODEL_KEY, teamService.findById(teamId));
         return new ModelAndView(TEAM_VIEW_NAME, map);
     }
 

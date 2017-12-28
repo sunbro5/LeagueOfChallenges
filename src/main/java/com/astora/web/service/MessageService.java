@@ -12,11 +12,11 @@ import java.util.List;
  */
 public interface MessageService {
 
-    List<UserMessagesDto> getNewestMessagesPreview(int userId) throws ServiceException;
+    List<UserMessagesDto> getNewestMessagesPreview(int userId);
 
     void sendMessage(int userId, SendMessageModel model) throws ServiceException;
 
-    List<MessageDto> getUserMessagesWithUser(int userId, String friendNickname) throws ServiceException;
+    List<MessageDto> getUserMessagesWithUser(int userId, String friendNickname);
 
-    List<UserMessagesDto> getNotificationMessagesPreview(int userId) throws ServiceException;
+    List<UserMessagesDto> getNotificationMessagesPreview(int userId);
 }

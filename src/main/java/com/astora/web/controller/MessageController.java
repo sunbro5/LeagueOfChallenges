@@ -45,7 +45,7 @@ public class MessageController extends BaseUserPage {
 
 
     @RequestMapping("/messages")
-    public ModelAndView showMessages(@RequestParam(value = "friendMessages",required = false) String friendMessages) {
+    public ModelAndView showMessages(@RequestParam(value = "friendMessages", required = false) String friendMessages) {
         SendMessageModel messageModel = getSendMessageModel();
         messageModel.setToNickname(friendMessages);
         return renderMessages(messageModel, init());
@@ -54,50 +54,42 @@ public class MessageController extends BaseUserPage {
     private ModelAndView renderMessages(SendMessageModel messageModel, Map<String, Object> model) {
         List<UserMessagesDto> messagesPreview = null;
         List<MessageDto> messages = null;
-        try {
-            messagesPreview = messageService.getNewestMessagesPreview(getUserId());
-        } catch (ServiceException e) {
-            logger.error(e);
-        }
+        messagesPreview = messageService.getNewestMessagesPreview(getUserId());
 
-        if(!CustomValidationUtils.isEmpty(messageModel.getToNickname())){
-            try {
-                messages = messageService.getUserMessagesWithUser(getUserId(),messageModel.getToNickname());
-            } catch (ServiceException e) {
-                logger.error(e);
-            }
+        if (!CustomValidationUtils.isEmpty(messageModel.getToNickname())) {
+            messages = messageService.getUserMessagesWithUser(getUserId(), messageModel.getToNickname());
         }
-        model.put(SendMessageModel.MODEL_NAME,messageModel);
-        model.put("userMessages",messages);
-        model.put("userMessagesPreview",messagesPreview);
+        model.put(SendMessageModel.MODEL_NAME, messageModel);
+        model.put("userMessages", messages);
+        model.put("userMessagesPreview", messagesPreview);
         return new ModelAndView("messages", model);
     }
 
     //TODO should be REST
     @RequestMapping("/sendMessage")
-    public ModelAndView sendMessage(@ModelAttribute(SendMessageModel.MODEL_NAME) @Validated SendMessageModel messageModel, BindingResult result){
+    public ModelAndView sendMessage(@ModelAttribute(SendMessageModel.MODEL_NAME) @Validated SendMessageModel messageModel, BindingResult result) {
         Map<String, Object> model = init();
-        if(result.hasErrors()){
-            return renderMessages(messageModel,model);
+        if (result.hasErrors()) {
+            return renderMessages(messageModel, model);
         }
         try {
-            messageService.sendMessage(getUserId(),messageModel);
+            messageService.sendMessage(getUserId(), messageModel);
         } catch (CantSendMessageException e) {
-            pushInfo(model,"message.messageSent.timeLimit");
-            return renderMessages(messageModel,model);
+            pushInfo(model, "message.messageSent.timeLimit");
+            return renderMessages(messageModel, model);
         } catch (UserDoesntExists e) {
-            result.rejectValue("toNickname","messages.form.error.userNickname.userDoesntExists");
-            return renderMessages(messageModel,model);
+            result.rejectValue("toNickname", "messages.form.error.userNickname.userDoesntExists");
+            return renderMessages(messageModel, model);
         } catch (ServiceException e) {
             logger.info(e);
-            return renderMessages(messageModel,model);
+            return renderMessages(messageModel, model);
         }
-        return renderMessages(messageModel,model);
+        return renderMessages(messageModel, model);
     }
 
 
     @ModelAttribute(SendMessageModel.MODEL_NAME)
-    public SendMessageModel getSendMessageModel(){
+    public SendMessageModel getSendMessageModel() {
         return new SendMessageModel();
     }
 }

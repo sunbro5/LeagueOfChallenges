@@ -5,11 +5,20 @@ import java.util.Date;
 public class CreateChallengeModel {
 
     private Integer challengerTeamId;
-    private Date challengeStart;
-    private Date challengeEnd;
+    private String challengeStart;
+    private String challengeEnd;
     private String coordsLat;
     private String coordsLng;
     private String text;
+    private String gameName;
+
+    public String getGameName() {
+        return gameName;
+    }
+
+    public void setGameName(String gameName) {
+        this.gameName = gameName;
+    }
 
     public Integer getChallengerTeamId() {
         return challengerTeamId;
@@ -19,19 +28,19 @@ public class CreateChallengeModel {
         this.challengerTeamId = challengerTeamId;
     }
 
-    public Date getChallengeStart() {
+    public String getChallengeStart() {
         return challengeStart;
     }
 
-    public void setChallengeStart(Date challengeStart) {
+    public void setChallengeStart(String challengeStart) {
         this.challengeStart = challengeStart;
     }
 
-    public Date getChallengeEnd() {
+    public String getChallengeEnd() {
         return challengeEnd;
     }
 
-    public void setChallengeEnd(Date challengeEnd) {
+    public void setChallengeEnd(String challengeEnd) {
         this.challengeEnd = challengeEnd;
     }
 

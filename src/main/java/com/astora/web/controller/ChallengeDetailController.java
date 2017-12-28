@@ -29,7 +29,7 @@ public class ChallengeDetailController {
 
     @RequestMapping(CHALLENGE_MAPPING)
     public ModelAndView challengeDetail(@RequestParam(CHALLENGE_ID_PARAM) int challengeId, Map<String, Object> map) {
-        map.put(CHALLENGE_MODEL_KEY, challengeService.findById(challengeId));
+        //map.put(CHALLENGE_MODEL_KEY, challengeService.findById(challengeId));
         return new ModelAndView(CHALLENGE_VIEW_NAME, map);
     }
 

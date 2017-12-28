@@ -1,9 +1,15 @@
 package com.astora.web.controller;
 
+import com.astora.web.cache.GameCache;
+import com.astora.web.exception.ServiceException;
 import com.astora.web.model.CreateChallengeModel;
+import com.astora.web.model.validator.CreateChallengeModelValidator;
 import com.astora.web.service.ChallengeService;
+import com.astora.web.service.GameService;
+import com.astora.web.service.TeamService;
 import com.astora.web.service.TeamUserService;
 import com.astora.web.session.UserSessionManager;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -21,11 +27,22 @@ import java.util.Date;
 import java.util.Map;
 
 @Controller
-public class CreateChallengeController {
+public class CreateChallengeController extends BaseUserPage {
+
+    private static final Logger logger = Logger.getLogger(CreateChallengeController.class);
+
+    @Autowired
+    private GameService gameService;
+
+    @Autowired
+    private TeamService teamService;
+
+    @Autowired
+    private CreateChallengeModelValidator createChallengeModelValidator;
 
     private ChallengeService challengeService;
     private TeamUserService teamUserService;
-    private UserSessionManager userSessionManager;
+
 
     @Autowired
     public void setChallengeService(ChallengeService challengeService) {
@@ -37,9 +54,9 @@ public class CreateChallengeController {
         this.teamUserService = teamUserService;
     }
 
-    @Autowired
-    public void setUserSessionManager(UserSessionManager userSessionManager) {
-        this.userSessionManager = userSessionManager;
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        binder.addValidators(createChallengeModelValidator);
     }
 
     @ModelAttribute("createChallengeModel")
@@ -47,33 +64,27 @@ public class CreateChallengeController {
         return new CreateChallengeModel();
     }
 
-    @InitBinder
-    public void initBinder(WebDataBinder binder) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-        sdf.setLenient(true);
-        binder.registerCustomEditor(Date.class, new CustomDateEditor(sdf, true));
+    private ModelAndView renderCreateChallenge(Map<String, Object> model) {
+        model.put("gameTypes", gameService.getAllGameNames());
+        model.put("userTeamsList",teamService.getAllUserTeams(getUserId()));
+        return new ModelAndView("createChallenge", model);
     }
 
     @RequestMapping(value = "/createChallenge")
-    public ModelAndView createChallenge(Map<String, Object> map, HttpServletResponse response) throws IOException {
-        if(userSessionManager.getUserId() == 0){
-            response.sendRedirect("/login");
-        }
-        map.put("userTeams", teamUserService.getAllTeamsForUser(userSessionManager.getUserId()));
-
-        return new ModelAndView("createChallenge", map);
+    public ModelAndView createChallenge(HttpServletResponse response) throws IOException {
+        return renderCreateChallenge(init());
     }
 
-    @RequestMapping(value = "/chooseCoords")
-    public ModelAndView chooseCoords(Map<String, Object> map) {
-        return new ModelAndView("chooseCoords", map);
-    }
 
     @RequestMapping(value = "/createChallengeForm", method = RequestMethod.POST)
-    public ModelAndView createChallengeForm(@ModelAttribute("createChallengeModel") CreateChallengeModel createChallengeModel, Map<String, Object> map) {
-        challengeService.create(createChallengeModel);
-
-        map.put("challenges", challengeService.prepareChallenges());
-        return new ModelAndView("map", map);
+    public ModelAndView createChallengeForm(@ModelAttribute("createChallengeModel") CreateChallengeModel createChallengeModel) {
+        try {
+            challengeService.createChallenge(createChallengeModel);
+        } catch (ServiceException e) {
+            logger.error(e);
+            renderCreateChallenge(init());
+        }
+        userSessionManager.putUserInfo("createChallenge.successfully.created");
+        return renderCreateChallenge(init());
     }
 }

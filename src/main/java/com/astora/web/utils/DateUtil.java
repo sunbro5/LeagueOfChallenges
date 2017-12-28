@@ -1,6 +1,10 @@
 package com.astora.web.utils;
 
+import com.astora.web.exception.ServiceException;
+
+import java.sql.Timestamp;
 import java.text.Format;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -10,6 +14,7 @@ import java.util.Date;
  */
 public class DateUtil {
 
+    private static final String DATE_INPUT_FORMAT = "dd.MM.yyyy hh:mm";
     private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
     private static final String DATE_FORMAT_DAY = "HH:mm:ss";
 
@@ -31,5 +36,16 @@ public class DateUtil {
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
         return calendar.getTime();
+    }
+
+    public static Timestamp convertToTimestamp(String date) throws ServiceException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_INPUT_FORMAT);
+        Date parsedDate = null;
+        try {
+            parsedDate = dateFormat.parse(date);
+        } catch (ParseException e) {
+            throw new ServiceException("Cant parse time: " + date,e);
+        }
+        return new Timestamp(parsedDate.getTime());
     }
 }

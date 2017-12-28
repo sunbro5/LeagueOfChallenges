@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional(readOnly = true)
-    private UserInfoDto mapUserInfo(User user) {
+    public UserInfoDto mapUserInfo(User user) {
         UserInfoDto userInfo = new UserInfoDto(user);
         Map<ReportReason, Integer> reportList = new HashMap<ReportReason, Integer>();
         for (Report report : user.getReportsByUserId()) {

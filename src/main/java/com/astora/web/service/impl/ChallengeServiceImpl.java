@@ -3,20 +3,29 @@ package com.astora.web.service.impl;
 import com.astora.web.dao.ChallengeDao;
 import com.astora.web.dao.model.Challenge;
 import com.astora.web.dao.model.Game;
+import com.astora.web.dao.model.Team;
 import com.astora.web.dto.ChallengeDto;
+import com.astora.web.exception.ServiceException;
 import com.astora.web.model.CreateChallengeModel;
 import com.astora.web.service.ChallengeService;
 import com.astora.web.service.TeamService;
+import com.astora.web.utils.DateUtil;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service("challengeService")
 public class ChallengeServiceImpl implements ChallengeService {
+
+    private static final Logger logger = Logger.getLogger(ChallengeServiceImpl.class);
 
     private ChallengeDao challengeDao;
     private TeamService teamService;
@@ -29,44 +38,6 @@ public class ChallengeServiceImpl implements ChallengeService {
     @Autowired
     public void setTeamService(TeamService teamService) {
         this.teamService = teamService;
-    }
-
-    @Transactional()
-    public void create(Challenge challenge) {
-        challengeDao.create(challenge);
-    }
-
-    @Transactional
-    public void create(CreateChallengeModel createChallengeModel) {
-        Challenge challenge = new Challenge();
-        challenge.setText(createChallengeModel.getText());
-        challenge.setTeamByChallengerTeamId(teamService.findById(1));// will be get from session
-
-        challenge.setChallengeStart(new Timestamp(createChallengeModel.getChallengeStart().getTime()));
-        challenge.setChallengeEnd(new Timestamp(createChallengeModel.getChallengeEnd().getTime()));
-        challenge.setCoordsLat(createChallengeModel.getCoordsLat());
-        challenge.setCoordsLng(createChallengeModel.getCoordsLng());
-        challengeDao.create(challenge);
-    }
-
-    @Transactional
-    public void update(Challenge challenge) {
-        challengeDao.update(challenge);
-    }
-
-    @Transactional
-    public Challenge findById(int id) {
-        return challengeDao.findById(id);
-    }
-
-    @Transactional
-    public List<Challenge> findAll() {
-        return challengeDao.findAll();
-    }
-
-    @Transactional
-    public void delete(int id) {
-        challengeDao.delete(id);
     }
 
     @Transactional
@@ -94,6 +65,21 @@ public class ChallengeServiceImpl implements ChallengeService {
 
         return challenges;
     }
+
+    @Transactional
+    public void createChallenge(CreateChallengeModel createChallengeModel) throws ServiceException {
+        Team team = teamService.getTeamById(createChallengeModel.getChallengerTeamId());
+        Challenge challenge = new Challenge();
+        challenge.setText(createChallengeModel.getText());
+        challenge.setCoordsLat(createChallengeModel.getCoordsLat());
+        challenge.setCoordsLng(createChallengeModel.getCoordsLng());
+        challenge.setTeamByChallengerTeamId(team);
+        challenge.setChallengeStart(DateUtil.convertToTimestamp(createChallengeModel.getChallengeStart()));
+        challenge.setChallengeEnd(DateUtil.convertToTimestamp(createChallengeModel.getChallengeEnd()));
+        challengeDao.create(challenge);
+    }
+
+
 
 
 }

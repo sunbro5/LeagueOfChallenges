@@ -8,6 +8,7 @@ import com.astora.web.exception.FriendAlreadyExistsException;
 import com.astora.web.exception.ServiceException;
 import com.astora.web.service.FriendService;
 import com.astora.web.service.UserService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,8 @@ import java.util.List;
 @Service("friendService")
 public class FriendServiceImpl implements FriendService {
 
+    private static final Logger logger = Logger.getLogger(FriendServiceImpl.class);
+
     @Autowired
     private FriendDao friendDao;
 
@@ -29,8 +32,14 @@ public class FriendServiceImpl implements FriendService {
     private UserService userService;
 
     @Transactional
-    public boolean removeFriendByNickname(int userId, String friendNickname) throws ServiceException {
-        User user = userService.getUserById(userId);
+    public boolean removeFriendByNickname(int userId, String friendNickname) {
+        User user;
+        try {
+            user = userService.getUserById(userId);
+        } catch (ServiceException e) {
+            logger.error(e);
+            return false;
+        }
         for (Friend friend : user.getFriendsByUserId()) {
             if(friend.getUserByUserFriendId().getNickname().equals(friendNickname)){
                 friendDao.delete(friend.getFriendId());
@@ -45,7 +54,7 @@ public class FriendServiceImpl implements FriendService {
         User user = userService.getUserById(userId);
         User userFriend = userService.getUserByNickname(friendNickname);
         if(user.equals(userFriend)){
-            return;
+            throw new ServiceException("Cant add myself to friend list");
         }
         for (Friend friend : user.getFriendsByUserId()) {
             if (friend.getUserByUserFriendId().getNickname().equals(friendNickname)) {
@@ -59,9 +68,15 @@ public class FriendServiceImpl implements FriendService {
     }
 
     @Transactional(readOnly = true)
-    public List<FriendInfoDto> getFriendList(int userId) throws ServiceException {
-        User user = userService.getUserById(userId);
+    public List<FriendInfoDto> getFriendList(int userId) {
         List<FriendInfoDto> list = new ArrayList<FriendInfoDto>();
+        User user;
+        try {
+            user = userService.getUserById(userId);
+        } catch (ServiceException e) {
+            logger.error(e);
+            return list;
+        }
         for (Friend friend : user.getFriendsByUserId()) {
             FriendInfoDto friendInfo = new FriendInfoDto();
             friendInfo.setNickname(friend.getUserByUserFriendId().getNickname());

@@ -23,20 +23,11 @@ public class GameServiceImplTest {
     @Autowired
     private GameService gameService;
 
+
     @Test
     public void testGetGamesInformation() throws Exception {
         List<GamesInfoDto> list = gameService.getGamesInformation();
         assertNotNull(list);
     }
 
-    @Test
-    public void testGetTeamsByGameName() throws Exception {
-        List<TeamInfoDto> list = gameService.getTeamsByGameName(1,"chess");
-        assertNotNull(list);
-    }
-
-    @Test
-    public void testCreateDefaultTeam() throws Exception {
-        gameService.createDefaultTeam(1,"chess");
-    }
 }

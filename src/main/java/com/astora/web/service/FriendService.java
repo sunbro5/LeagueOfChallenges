@@ -12,7 +12,7 @@ public interface FriendService {
 
     void createFriend(int userId, String friendNickname) throws ServiceException;
 
-    boolean removeFriendByNickname(int userId, String friendNickname) throws ServiceException;
+    boolean removeFriendByNickname(int userId, String friendNickname);
 
-    List<FriendInfoDto> getFriendList(int userId) throws ServiceException;
+    List<FriendInfoDto> getFriendList(int userId);
 }

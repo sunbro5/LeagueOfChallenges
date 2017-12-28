@@ -74,6 +74,7 @@ public class ReportController extends BaseUserPage {
 
     @RequestMapping("/sendReport")
     public ModelAndView sendReport(@Validated @ModelAttribute(UserReportModel.MODEL_NAME) UserReportModel reportModel, BindingResult result) {
+        Map<String, Object> model = init();
         if (result.hasErrors()) {
             renderReport();
         }
@@ -85,8 +86,8 @@ public class ReportController extends BaseUserPage {
         } catch (ServiceException e) {
             logger.error(e);
         }
-        userSessionManager.putUserInfo("message.report.successfullyCreated");
-        return renderReport();
+        pushInfo(model, "message.report.successfullyCreated");
+        return renderReport(model,null);
     }
 
     @ModelAttribute(UserReportModel.MODEL_NAME)

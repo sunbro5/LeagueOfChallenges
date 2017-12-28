@@ -62,7 +62,7 @@
 <body>
 <jsp:include page="header.jsp"/>
 <div class="container-fluid-full">
-    <div class="row-fluid">
+    <div class="row-fluid" >
         <jsp:include page="leftSideBar.jsp"/>
 
         <!--  Note: This example requires that you consent to location sharing when
@@ -70,7 +70,7 @@
         // failed.", it means you probably did not give permission for the browser to
         // locate you. -->
         <!-- start: Content -->
-        <div id="content" class="span10">
+        <div id="content" class="span10 map-no-padding">
             <div id="map"></div>
             <script>
                 var challenges = [
@@ -238,60 +238,60 @@
 
 </footer>
 
-<script src="<c:url value="resources/js/jquery-1.9.1.min.js"/>"></script>
-<script src="<c:url value="resources/js/jquery-migrate-1.0.0.min.js"/>"></script>
+<script src="resources/js/jquery-1.9.1.min.js"></script>
+<script src="resources/js/jquery-migrate-1.0.0.min.js"></script>
 
-<script src="<c:url value="resources/js/jquery-ui-1.10.0.custom.min.js"/>"></script>
+<script src="resources/js/jquery-ui-1.10.0.custom.min.js"></script>
 
-<script src="<c:url value="resources/js/jquery.ui.touch-punch.js"/>"></script>
+<script src="resources/js/jquery.ui.touch-punch.js"></script>
 
-<script src="<c:url value="resources/js/modernizr.js"/>"></script>
+<script src="resources/js/modernizr.js"></script>
 
-<script src="<c:url value="resources/js/bootstrap.min.js"/>"></script>
+<script src="resources/js/bootstrap.min.js"></script>
 
-<script src="<c:url value="resources/js/jquery.cookie.js"/>"></script>
+<script src="resources/js/jquery.cookie.js"></script>
 
-<script src="<c:url value="resources/js/fullcalendar.min.js"/>"></script>
+<script src="resources/js/fullcalendar.min.js"></script>
 
-<script src="<c:url value="resources/js/jquery.dataTables.min.js"/>"></script>
+<script src="resources/js/jquery.dataTables.min.js"></script>
 
-<script src="<c:url value="resources/js/excanvas.js"/>"></script>
-<script src="<c:url value="resources/js/jquery.flot.js"/>"></script>
-<script src="<c:url value="resources/js/jquery.flot.pie.js"/>"></script>
-<script src="<c:url value="resources/js/jquery.flot.stack.js"/>"></script>
-<script src="<c:url value="resources/js/jquery.flot.resize.min.js"/>"></script>
+<script src="resources/js/excanvas.js"></script>
+<script src="resources/js/jquery.flot.js"></script>
+<script src="resources/js/jquery.flot.pie.js"></script>
+<script src="resources/js/jquery.flot.stack.js"></script>
+<script src="resources/js/jquery.flot.resize.min.js"></script>
 
-<script src="<c:url value="resources/js/jquery.chosen.min.js"/>"></script>
+<script src="resources/js/jquery.chosen.min.js"></script>
 
-<script src="<c:url value="resources/js/jquery.uniform.min.js"/>"></script>
+<script src="resources/js/jquery.uniform.min.js"></script>
 
-<script src="<c:url value="resources/js/jquery.cleditor.min.js"/>"></script>
+<script src="resources/js/jquery.cleditor.min.js"></script>
 
-<script src="<c:url value="resources/js/jquery.noty.js"/>"></script>
+<script src="resources/js/jquery.noty.js"></script>
 
-<script src="<c:url value="resources/js/jquery.elfinder.min.js"/>"></script>
+<script src="resources/js/jquery.elfinder.min.js"></script>
 
-<script src="<c:url value="resources/js/jquery.raty.min.js"/>"></script>
+<script src="resources/js/jquery.raty.min.js"></script>
 
-<script src="<c:url value="resources/js/jquery.iphone.toggle.js"/>"></script>
+<script src="resources/js/jquery.iphone.toggle.js"></script>
 
-<script src="<c:url value="resources/js/jquery.uploadify-3.1.min.js"/>"></script>
+<script src="resources/js/jquery.uploadify-3.1.min.js"></script>
 
-<script src="<c:url value="resources/js/jquery.gritter.min.js"/>"></script>
+<script src="resources/js/jquery.gritter.min.js"></script>
 
-<script src="<c:url value="resources/js/jquery.imagesloaded.js"/>"></script>
+<script src="resources/js/jquery.imagesloaded.js"></script>
 
-<script src="<c:url value="resources/js/jquery.masonry.min.js"/>"></script>
+<script src="resources/js/jquery.masonry.min.js"></script>
 
-<script src="<c:url value="resources/js/jquery.knob.modified.js"/>"></script>
+<script src="resources/js/jquery.knob.modified.js"></script>
 
-<script src="<c:url value="resources/js/jquery.sparkline.min.js"/>"></script>
+<script src="resources/js/jquery.sparkline.min.js"></script>
 
-<script src="<c:url value="resources/js/counter.js"/>"></script>
+<script src="resources/js/counter.js"></script>
 
-<script src="<c:url value="resources/js/retina.js"/>"></script>
+<script src="resources/js/retina.js"></script>
 
-<script src="<c:url value="resources/js/custom.js"/>"></script>
+<script src="resources/js/custom.js"></script>
 
 </body>
 </html>

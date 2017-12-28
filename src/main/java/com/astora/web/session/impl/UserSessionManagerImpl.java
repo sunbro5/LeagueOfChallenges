@@ -41,7 +41,7 @@ public class UserSessionManagerImpl implements UserSessionManager {
         if (userSecuredModel != null) {
             return userSecuredModel.getUserId();
         }
-        return 0;
+        return -1;
     }
 
     @SuppressWarnings("unchecked")

@@ -26,18 +26,23 @@ public class GameCacheImpl implements GameCache {
     }
 
     @Cacheable(value = "cacheGames")
+    @Transactional
     public List<Game> getAllGames() {
-        return gameDao.findAll();
+        List<Game> gameList = gameDao.findAll();
+        for (Game game : gameList) {
+            Hibernate.initialize(game.getLeaguesByGameId());
+        }
+        return gameList;
     }
 
     @Cacheable(value = "cacheGames")
     @Transactional
     public Game getGame(String gameName) throws ServiceException {
-        Game game = gameDao.getByUniqueColumnValue("gameName",gameName);
-        Hibernate.initialize(game.getLeaguesByGameId());
-        if(game == null){
+        Game game = gameDao.getByUniqueColumnValue("gameName", gameName);
+        if (game == null) {
             throw new ServiceException("Game with name: " + gameName + " doesnt exists.");
         }
+        Hibernate.initialize(game.getLeaguesByGameId());
         return game;
     }
 }

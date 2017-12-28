@@ -3033,3 +3033,9 @@ ul.messagesList li span.date {
 	font-weight: bold;
 }
 
+.map-no-padding{
+	padding: 0px !important;
+}
+#createChallengeMap{
+	height: 80vh;
+}

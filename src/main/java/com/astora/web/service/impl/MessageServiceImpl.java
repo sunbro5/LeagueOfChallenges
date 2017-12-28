@@ -7,11 +7,13 @@ import com.astora.web.dto.message.MessageDto;
 import com.astora.web.dto.message.UserMessagesDto;
 import com.astora.web.exception.CantSendMessageException;
 import com.astora.web.exception.ServiceException;
+import com.astora.web.exception.UserDoesntExists;
 import com.astora.web.model.SendMessageModel;
 import com.astora.web.service.MessageService;
 import com.astora.web.service.UserService;
 import com.astora.web.session.UserSessionManager;
 import com.astora.web.utils.CustomValidationUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,8 @@ import java.util.*;
  */
 @Service("messageService")
 public class MessageServiceImpl implements MessageService {
+
+    private static final Logger logger = Logger.getLogger(MessageServiceImpl.class);
 
     private static final int PREVIEW_CHAR_COUNT = 20;
     private static final long SECOND = 1000;
@@ -40,10 +44,18 @@ public class MessageServiceImpl implements MessageService {
     private UserSessionManager userSessionManager;
 
     @Transactional
-    public List<MessageDto> getUserMessagesWithUser(int userId, String friendNickname) throws ServiceException {
-        User user = userService.getUserById(userId);
-        User userFriend = userService.getUserByNickname(friendNickname);
+    public List<MessageDto> getUserMessagesWithUser(int userId, String friendNickname) {
         List<MessageDto> messageDto = new ArrayList<MessageDto>();
+        User user;
+        User userFriend;
+        try {
+            userFriend = userService.getUserByNickname(friendNickname);
+            user = userService.getUserById(userId);
+        } catch (ServiceException e) {
+            logger.error(e);
+            return messageDto;
+        }
+
         List<Message> messageList = messageDao.getMessageWithUsers(user, userFriend);
         markAsReaded(messageList);
         messageDto.addAll(mapMessagesDto(messageList, true));
@@ -60,17 +72,24 @@ public class MessageServiceImpl implements MessageService {
         return messageDto;
     }
 
-    public List<UserMessagesDto> getNotificationMessagesPreview(int userId) throws ServiceException {
+    public List<UserMessagesDto> getNotificationMessagesPreview(int userId){
         return getNewestMessagesPreview(userId, MESSAGE_NOTIFICATION_COUNT,true);
     }
 
-    public List<UserMessagesDto> getNewestMessagesPreview(int userId) throws ServiceException {
+    public List<UserMessagesDto> getNewestMessagesPreview(int userId) {
         return getNewestMessagesPreview(userId, MESSAGE_INBOX_COUNT,false);
     }
 
     @Transactional(readOnly = true)
-    private List<UserMessagesDto> getNewestMessagesPreview(int userId, int rowsCount, boolean onlyNotRead) throws ServiceException {
-        User user = userService.getUserById(userId);
+    public List<UserMessagesDto> getNewestMessagesPreview(int userId, int rowsCount, boolean onlyNotRead) {
+        List<UserMessagesDto> messagesDto = new ArrayList<UserMessagesDto>();
+        User user;
+        try {
+            user = userService.getUserById(userId);
+        } catch (ServiceException e) {
+            logger.error(e);
+            return messagesDto;
+        }
         List<Integer> friendsId;
         if(onlyNotRead){
             friendsId = messageDao.getNotReadNewestMessagesUserId(userId, rowsCount);
@@ -79,9 +98,14 @@ public class MessageServiceImpl implements MessageService {
         }
 
         Message message;
-        List<UserMessagesDto> messagesDto = new ArrayList<UserMessagesDto>();
         for (Integer friendId : friendsId) {
-            User friend = userService.getUserById(friendId);
+            User friend;
+            try {
+                friend = userService.getUserById(friendId);
+            } catch (ServiceException e) {
+                logger.error(e);
+                continue;
+            }
             message = messageDao.getNewestMessageWithUsers(user, friend);
             if (message != null) {
                 UserMessagesDto userMessage = new UserMessagesDto(message.getUserByFromUserId().getNickname());
@@ -133,7 +157,7 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Transactional
-    private void markAsReaded(List<Message> messageList) {
+    public void markAsReaded(List<Message> messageList) {
         for (Message message : messageList) {
             if (message.getAlreadyRead() == 0) {
                 message.setAlreadyRead(1);

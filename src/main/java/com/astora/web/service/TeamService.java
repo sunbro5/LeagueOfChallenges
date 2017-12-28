@@ -1,17 +1,26 @@
 package com.astora.web.service;
 
 import com.astora.web.dao.model.Team;
+import com.astora.web.dto.games.GameTypeDto;
+import com.astora.web.dto.games.TeamInfoDto;
+import com.astora.web.dto.games.TeamPickDto;
+import com.astora.web.exception.ServiceException;
+import com.astora.web.exception.UserDoesntExists;
+import com.astora.web.model.NewTeamModel;
+import javafx.util.Pair;
 
 import java.util.List;
 
 public interface TeamService {
-    void create(Team team);
 
-    void update(Team tean);
+    List<TeamInfoDto> getTeamsByGameName(int userId, String gameName) throws ServiceException;
 
-    Team findById(int id);
+    void createDefaultTeam(int userId, String gameName);
 
-    List<Team> findAll();
+    void createTeamFromModel(int userId, NewTeamModel model) throws UserDoesntExists;
 
-    void delete(int id);
+    List<TeamPickDto> getAllUserTeams(int userId);
+
+    Team getTeamById(int id) throws ServiceException;
+
 }

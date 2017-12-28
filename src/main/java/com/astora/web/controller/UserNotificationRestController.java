@@ -22,18 +22,16 @@ public class UserNotificationRestController extends BaseUserPage {
     private MessageService messageService;
 
     @RequestMapping("/refreshMessageNotifications")
-    public @ResponseBody UserNotificationsDto getMessageNotifications(){
+    public @ResponseBody
+    UserNotificationsDto getMessageNotifications() {
         UserNotificationsDto notification = new UserNotificationsDto();
-        try {
-            notification.setUserMessages(messageService.getNotificationMessagesPreview(getUserId()));
-        } catch (ServiceException e) {
-            logger.error(e);
-        }
+        notification.setUserMessages(messageService.getNotificationMessagesPreview(getUserId()));
         return notification;
     }
 
     @RequestMapping("/testRest")
-    public @ResponseBody UserMessagesDto test(){
+    public @ResponseBody
+    UserMessagesDto test() {
         UserMessagesDto message = new UserMessagesDto("test");
         return message;
     }
