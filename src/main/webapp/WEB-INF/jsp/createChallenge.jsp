@@ -88,15 +88,15 @@
                         <div class="form-group">
                             <p><spring:message code="createChallenge.form.dateStart.label"/></p>
                             <div class="input-group date">
+                                <form:errors path="challengeStart" cssClass="error" element="p"/>
                                 <form:input id="datePickerStart" cssClass="flatpickr" path="challengeStart"/>
-
                             </div>
                         </div>
                         <div class="form-group">
                             <p><spring:message code="createChallenge.form.dateEnd.label"/></p>
                             <div class="input-group date">
+                                <form:errors path="challengeEnd" cssClass="error" element="p"/>
                                 <form:input id="datePickerEnd" cssClass="flatpickr" path="challengeEnd"/>
-
                             </div>
                             <div class="form-group">
                                 <p><spring:message code="createChallenge.form.text.label"/></p>

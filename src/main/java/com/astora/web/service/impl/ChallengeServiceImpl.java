@@ -9,6 +9,7 @@ import com.astora.web.exception.ServiceException;
 import com.astora.web.model.CreateChallengeModel;
 import com.astora.web.service.ChallengeService;
 import com.astora.web.service.TeamService;
+import com.astora.web.utils.CustomValidationUtils;
 import com.astora.web.utils.DateUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +69,9 @@ public class ChallengeServiceImpl implements ChallengeService {
 
     @Transactional
     public void createChallenge(CreateChallengeModel createChallengeModel) throws ServiceException {
+        if(CustomValidationUtils.isEmpty(createChallengeModel.getCoordsLat()) || CustomValidationUtils.isEmpty(createChallengeModel.getCoordsLng())){
+            throw new ServiceException("Challenge coords are empty. Something is wrong !!!!");
+        }
         Team team = teamService.getTeamById(createChallengeModel.getChallengerTeamId());
         Challenge challenge = new Challenge();
         challenge.setText(createChallengeModel.getText());

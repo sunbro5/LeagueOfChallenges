@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -103,16 +104,16 @@ public class UserTeamController extends BaseUserPage {
     }
 
     @RequestMapping("/createTeam")
-    public ModelAndView createTeam(@ModelAttribute(NewTeamModel.MODEL_NAME) NewTeamModel newTeamModel, BindingResult result) {
+    public ModelAndView createTeam(@ModelAttribute(NewTeamModel.MODEL_NAME) @Validated NewTeamModel newTeamModel, BindingResult result) {
         if (result.hasErrors()) {
-            return renderUserTeam();
+            return renderNewTeam(init());
         }
         try {
             teamService.createTeamFromModel(getUserId(), newTeamModel);
         } catch (UserDoesntExists e) {
             logger.error(e);
             userSessionManager.putUserInfo("newTeam.form.error.userName.doesntExist");
-            return renderUserTeam();
+            return renderNewTeam(init());
         }
         userSessionManager.putUserInfo("createTeam.successfully.created");
         return renderUserTeam(init(), newTeamModel.getGameName());

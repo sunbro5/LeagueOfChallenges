@@ -13,6 +13,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -77,12 +79,15 @@ public class CreateChallengeController extends BaseUserPage {
 
 
     @RequestMapping(value = "/createChallengeForm", method = RequestMethod.POST)
-    public ModelAndView createChallengeForm(@ModelAttribute("createChallengeModel") CreateChallengeModel createChallengeModel) {
+    public ModelAndView createChallengeForm(@ModelAttribute("createChallengeModel") @Validated CreateChallengeModel createChallengeModel, BindingResult result) {
+        if(result.hasErrors()){
+            return renderCreateChallenge(init());
+        }
         try {
             challengeService.createChallenge(createChallengeModel);
         } catch (ServiceException e) {
             logger.error(e);
-            renderCreateChallenge(init());
+            return renderCreateChallenge(init());
         }
         userSessionManager.putUserInfo("createChallenge.successfully.created");
         return renderCreateChallenge(init());

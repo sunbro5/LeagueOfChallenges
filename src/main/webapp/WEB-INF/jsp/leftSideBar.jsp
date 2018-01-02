@@ -24,7 +24,6 @@
                 <li><a href="${friendsUrl}"><i class="halflings-icon white user"></i><span class="hidden-tablet"> <spring:message code="page.menu.friends.label"/></span></a></li>
                 <li><a href="${userProfileUrl}"><i class="halflings-icon white user"></i><span class="hidden-tablet"> <spring:message code="menu.user.profile.title"/></span></a></li>
                 <li><a href="${messagesUrl}"><i class="icon-envelope"></i><span class="hidden-tablet"> <spring:message code="page.menu.messages.label"/></span></a></li>
-                <li><a href="#"><i class="icon-lock"></i><span class="hidden-tablet"> <spring:message code="menu.user.statistics.title"/></span></a></li>
                 <li><a href="${userChallengesUrl}"><i class="icon-lock"></i><span class="hidden-tablet"> <spring:message code="page.menu.userChallenges.label"/></span></a></li>
                 <li><a href="${userTeamUrl}"><i class="icon-edit"></i><span class="hidden-tablet"> <spring:message code="page.menu.userTeam.label"/></span></a></li>
                 <li><a href="${reportUrl}"><i class="icon-edit"></i><span class="hidden-tablet"> <spring:message code="page.menu.report.label"/></span></a></li>
