@@ -1,7 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,7 +24,7 @@
     <link href="resources/css/bootstrap-responsive.min.css" rel="stylesheet">
     <link id="base-style" href="resources/css/style.css" rel="stylesheet">
     <link id="base-style-responsive" href="resources/css/style-responsive.css" rel="stylesheet">
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&subset=latin,cyrillic-ext,latin-ext'
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&subset=latin,cyrillic-ext,latin-ext'
           rel='stylesheet' type='text/css'>
     <link href="resources/css/date-picker/flatpickr.min.css" rel="stylesheet">
 
@@ -43,7 +42,7 @@
     <![endif]-->
 
     <!-- start: Favicon -->
-    <link rel="shortcut icon" href="resources/img/favicon.ico">
+    <%--<link rel="shortcut icon" href="resources/img/favicon.ico">--%>
     <!-- end: Favicon -->
 </head>
 <body>
@@ -282,8 +281,8 @@
 <script src="resources/js/custom.js"></script>
 
 <script>
-    flatpickr("#datePickerStart", {"locale": "cs", enableTime: true, dateFormat: "d.m.Y H:i"});
-    flatpickr("#datePickerEnd", {"locale": "cs", enableTime: true, dateFormat: "d.m.Y H:i"});
+    flatpickr("#datePickerStart", { enableTime: true, dateFormat: "d.m.Y H:i"});
+    flatpickr("#datePickerEnd", { enableTime: true, dateFormat: "d.m.Y H:i"});
 
     teams = [
         <c:forEach items="${userTeamsList}" var="team" varStatus="status">

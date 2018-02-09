@@ -1,17 +1,15 @@
 package com.astora.web.controller;
 
-import com.astora.web.cache.GameCache;
 import com.astora.web.exception.ServiceException;
+import com.astora.web.model.CreateChallengeModel;
 import com.astora.web.model.CreateChallengeModel;
 import com.astora.web.model.validator.CreateChallengeModelValidator;
 import com.astora.web.service.ChallengeService;
 import com.astora.web.service.GameService;
 import com.astora.web.service.TeamService;
 import com.astora.web.service.TeamUserService;
-import com.astora.web.session.UserSessionManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -24,8 +22,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Map;
 
 @Controller

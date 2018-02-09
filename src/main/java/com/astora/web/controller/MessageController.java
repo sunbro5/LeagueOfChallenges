@@ -84,6 +84,7 @@ public class MessageController extends BaseUserPage {
             logger.info(e);
             return renderMessages(messageModel, model);
         }
+        messageModel.refresh();
         return renderMessages(messageModel, model);
     }
 

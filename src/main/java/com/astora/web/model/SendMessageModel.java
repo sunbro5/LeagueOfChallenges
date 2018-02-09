@@ -34,4 +34,8 @@ public class SendMessageModel {
     public void setToNickname(String toNickname) {
         this.toNickname = toNickname;
     }
+
+    public void refresh(){
+        setText(null);
+    }
 }

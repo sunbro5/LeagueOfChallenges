@@ -2,7 +2,6 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <c:url value="/login" var="loginUrl"/>
 <c:url value="/j_spring_security_logout" var="logoutUrl"/>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
@@ -83,7 +82,7 @@
                         <li class="dropdown hidden-phone">
                             <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
                                 <i class="icon-envelope"></i>
-                                <span class="badge red">{{messageNotifications.userMessages.length}}
+                                <span class="badge red" ng-bind="messageNotifications.userMessages.length">
                                  </span>
                             </a>
                             <ul class="dropdown-menu messages">
@@ -93,17 +92,15 @@
                                 </li>
                                 <li ng-repeat="message in messageNotifications.userMessages">
                                     <a href="/messages?friendMessages={{message.userNickname}}">
-                                        <span class="avatar"><img src="img/avatar.jpg" alt="Avatar"></span>
+                                        <span class="avatar"><img src="" alt="Avatar"></span>
                                         <span class="header">
-											<span class="from">
-										    	{{message.userNickname}}
+											<span class="from" ng-bind="message.userNickname">
 										     </span>
 											<span class="time">
 										    	6 min
 										    </span>
 										</span>
-                                        <span class="message">
-                                           {{message.textPreview}}
+                                        <span class="message" ng-bind="message.textPreview">
                                         </span>
                                     </a>
                                 </li>

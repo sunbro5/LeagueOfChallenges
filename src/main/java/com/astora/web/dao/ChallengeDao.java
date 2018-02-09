@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface ChallengeDao extends EntityDao<Challenge> {
 
+    List<Challenge> getActiveChallenges();
+
 }

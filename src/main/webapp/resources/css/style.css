@@ -3006,7 +3006,7 @@ ul.messagesList li span.date {
 }
 .scrollable-chat{
 	overflow-y: scroll;
-	height: 60vh;
+	height: 50vh;
 }
 
 .message-button{
