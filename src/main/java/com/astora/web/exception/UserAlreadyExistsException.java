@@ -1,11 +1,9 @@
 package com.astora.web.exception;
 
-import javax.xml.ws.Service;
-
 /**
  * @author <a href="mailto:maresjan694@gmail.com">Jan Mares</a>, 04.11.2017.
  */
-public class UserAlreadyExistsException extends ServiceException {
+public class UserAlreadyExistsException extends UserConflictException {
 
     public UserAlreadyExistsException(String message) {
         super(message);

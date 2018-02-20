@@ -7,6 +7,7 @@ import com.astora.web.dao.model.User;
 import com.astora.web.dto.UserReportInfo;
 import com.astora.web.enums.ReportReason;
 import com.astora.web.exception.ServiceException;
+import com.astora.web.exception.UserConflictException;
 import com.astora.web.exception.UserDoesntExists;
 import com.astora.web.model.UserReportModel;
 import com.astora.web.service.ReportService;
@@ -39,7 +40,7 @@ public class ReportServiceImpl implements ReportService {
         User user = userService.getUserById(userId);
         User reportedUser = userService.getUserByNickname(reportModel.getNickname());
         if(user.equals(reportedUser)){
-            return;
+            throw new UserConflictException("Cannot create report for yourself.");
         }
         ReportReason reason;
         try {

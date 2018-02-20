@@ -3,6 +3,7 @@ package com.astora.web.service;
 import com.astora.web.dto.message.MessageDto;
 import com.astora.web.dto.message.UserMessagesDto;
 import com.astora.web.exception.ServiceException;
+import com.astora.web.exception.UserDoesntExists;
 import com.astora.web.model.SendMessageModel;
 
 import java.util.List;
@@ -12,11 +13,11 @@ import java.util.List;
  */
 public interface MessageService {
 
-    List<UserMessagesDto> getNewestMessagesPreview(int userId);
+    List<UserMessagesDto> getNewestMessagesPreview(int userId) throws ServiceException;
 
     void sendMessage(int userId, SendMessageModel model) throws ServiceException;
 
-    List<MessageDto> getUserMessagesWithUser(int userId, String friendNickname);
+    List<MessageDto> getUserMessagesWithUser(int userId, String friendNickname) throws ServiceException;
 
-    List<UserMessagesDto> getNotificationMessagesPreview(int userId);
+    List<UserMessagesDto> getNotificationMessagesPreview(int userId) throws ServiceException;
 }

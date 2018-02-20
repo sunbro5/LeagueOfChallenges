@@ -21,44 +21,31 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service("teamService")
 public class TeamServiceImpl implements TeamService {
 
     private static final Logger logger = Logger.getLogger(TeamServiceImpl.class);
 
+    @Autowired
     private UserService userService;
+
+    @Autowired
     private TeamDao teamDao;
+
+    @Autowired
     private GameCache gameCache;
+
+    @Autowired
     private TeamUserDao teamUserDao;
 
-    @Autowired
-    public void setTeamUserDao(TeamUserDao teamUserDao) {
-        this.teamUserDao = teamUserDao;
-    }
-
-    @Autowired
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
-
-    @Autowired
-    public void setGameCache(GameCache gameCache) {
-        this.gameCache = gameCache;
-    }
-
-    @Autowired
-    public void setTeamDao(TeamDao teamDao) {
-        this.teamDao = teamDao;
-    }
-
     @Transactional
-    public void createDefaultTeam(int userId, String gameName)  {
-        User user;
+    public void createDefaultTeam(int userId, String gameName) throws ServiceException {
+        User user = userService.getUserById(userId);
         League defaultLeague;
         Game game;
         try {
-            user = userService.getUserById(userId);
             game = gameCache.getGame(gameName);
             defaultLeague = getLeagueFromGame(game, Leagues.getDefault());
         } catch (ServiceException e) {
@@ -97,10 +84,8 @@ public class TeamServiceImpl implements TeamService {
     @Transactional
     public TeamInfoDto mapTeamInfo(Team team) {
         TeamInfoDto teamInfo = new TeamInfoDto(team);
-        List<String> users = new ArrayList<String>();
-        for (TeamUser teamUser : team.getTeamUsersByTeamId()) {
-            users.add(teamUser.getUserByUserUserId().getNickname());
-        }
+        List<String> users = team.getTeamUsersByTeamId().stream()
+                .map(teamUser -> teamUser.getUserByUserUserId().getNickname()).collect(Collectors.toList());
         teamInfo.setUsers(users);
         teamInfo.setLeague(Leagues.valueOf(team.getLeagueByLeagueLeaguId().getLeagueName()));
         return teamInfo;
@@ -116,15 +101,10 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Transactional(readOnly = true)
-    public List<TeamPickDto> getAllUserTeams(int userId){
+    public List<TeamPickDto> getAllUserTeams(int userId) throws ServiceException {
         List<TeamPickDto> teamList = new ArrayList<TeamPickDto>();
-        User user;
-        try {
-            user = userService.getUserById(userId);
-        } catch (ServiceException e) {
-            logger.error(e);
-            return teamList;
-        }
+        User user = userService.getUserById(userId);
+
         for (TeamUser teamUser: user.getTeamUsersByUserId()){
             Team team = teamUser.getTeamByTeamTeamId();
             Game game = team.getLeagueByLeagueLeaguId().getGameByGameGameId();
@@ -138,13 +118,12 @@ public class TeamServiceImpl implements TeamService {
 
 
     @Transactional
-    public void createTeamFromModel(int userId, NewTeamModel model) throws UserDoesntExists {
+    public void createTeamFromModel(int userId, NewTeamModel model) throws ServiceException {
         League defaultLeague;
-        User user;
+        User user = userService.getUserById(userId);
         Game game;
         try {
             game = gameCache.getGame(model.getGameName());
-            user = userService.getUserById(userId);
             defaultLeague = getLeagueFromGame(game, Leagues.getDefault());
         } catch (ServiceException e) {
             logger.error(e);

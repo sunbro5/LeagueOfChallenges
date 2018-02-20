@@ -28,9 +28,8 @@ import java.util.Map;
  * @author <a href="mailto:maresjan694@gmail.com">Jan Mares</a>, 6.11.2017
  */
 @Controller
+@RequestMapping("/user")
 public class MessageController extends BaseUserPage {
-
-    private static final Logger logger = Logger.getLogger(MessageController.class);
 
     @Autowired
     private MessageService messageService;
@@ -45,16 +44,15 @@ public class MessageController extends BaseUserPage {
 
 
     @RequestMapping("/messages")
-    public ModelAndView showMessages(@RequestParam(value = "friendMessages", required = false) String friendMessages) {
+    public ModelAndView showMessages(@RequestParam(value = "friendMessages", required = false) String friendMessages) throws ServiceException {
         SendMessageModel messageModel = getSendMessageModel();
         messageModel.setToNickname(friendMessages);
         return renderMessages(messageModel, init());
     }
 
-    private ModelAndView renderMessages(SendMessageModel messageModel, Map<String, Object> model) {
-        List<UserMessagesDto> messagesPreview = null;
+    private ModelAndView renderMessages(SendMessageModel messageModel, Map<String, Object> model) throws ServiceException {
         List<MessageDto> messages = null;
-        messagesPreview = messageService.getNewestMessagesPreview(getUserId());
+        List<UserMessagesDto> messagesPreview = messageService.getNewestMessagesPreview(getUserId());
 
         if (!CustomValidationUtils.isEmpty(messageModel.getToNickname())) {
             messages = messageService.getUserMessagesWithUser(getUserId(), messageModel.getToNickname());
@@ -67,7 +65,7 @@ public class MessageController extends BaseUserPage {
 
     //TODO should be REST
     @RequestMapping("/sendMessage")
-    public ModelAndView sendMessage(@ModelAttribute(SendMessageModel.MODEL_NAME) @Validated SendMessageModel messageModel, BindingResult result) {
+    public ModelAndView sendMessage(@ModelAttribute(SendMessageModel.MODEL_NAME) @Validated SendMessageModel messageModel, BindingResult result) throws ServiceException {
         Map<String, Object> model = init();
         if (result.hasErrors()) {
             return renderMessages(messageModel, model);
@@ -79,9 +77,6 @@ public class MessageController extends BaseUserPage {
             return renderMessages(messageModel, model);
         } catch (UserDoesntExists e) {
             result.rejectValue("toNickname", "messages.form.error.userNickname.userDoesntExists");
-            return renderMessages(messageModel, model);
-        } catch (ServiceException e) {
-            logger.info(e);
             return renderMessages(messageModel, model);
         }
         messageModel.refresh();

@@ -1,5 +1,7 @@
 package com.astora.web.session.impl;
 
+import com.astora.web.exception.ServiceException;
+import com.astora.web.exception.UnAuthenticatedUserException;
 import com.astora.web.session.UserSessionManager;
 import com.astora.web.model.UserSecuredModel;
 import org.apache.log4j.Logger;
@@ -36,12 +38,12 @@ public class UserSessionManagerImpl implements UserSessionManager {
         return userSecuredModel;
     }
 
-    public int getUserId() {
+    public int getUserId() throws ServiceException {
         UserSecuredModel userSecuredModel = getUserSecuredModelFromSession();
         if (userSecuredModel != null) {
             return userSecuredModel.getUserId();
         }
-        return -1;
+        throw new UnAuthenticatedUserException("There is no user in session");
     }
 
     @SuppressWarnings("unchecked")

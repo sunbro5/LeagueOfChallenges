@@ -14,7 +14,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 /**
- * @author <a href="mailto:mares.jan@o2.cz">Jan Mares</a>, 8.12.2017
+ * @author <a href="mailto:maresjan694@gmail.com">Jan Mares</a>, 8.12.2017
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("/bean-conf.xml")

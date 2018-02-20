@@ -7,6 +7,7 @@ import com.astora.web.dao.model.Team;
 import com.astora.web.dao.model.User;
 import com.astora.web.dto.ChallengeDto;
 import com.astora.web.exception.ServiceException;
+import com.astora.web.mapper.ChallengeMapper;
 import com.astora.web.model.CreateChallengeModel;
 import com.astora.web.service.ChallengeService;
 import com.astora.web.service.TeamService;
@@ -14,6 +15,7 @@ import com.astora.web.service.UserService;
 import com.astora.web.utils.CustomValidationUtils;
 import com.astora.web.utils.DateUtil;
 import org.apache.log4j.Logger;
+import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,25 +27,16 @@ import java.util.List;
 public class ChallengeServiceImpl implements ChallengeService {
 
     private static final Logger logger = Logger.getLogger(ChallengeServiceImpl.class);
+    private ChallengeMapper challengeMapper = Mappers.getMapper(ChallengeMapper.class);
 
+    @Autowired
     private ChallengeDao challengeDao;
+
+    @Autowired
     private TeamService teamService;
+
+    @Autowired
     private UserService userService;
-
-    @Autowired
-    public void setRoleDao(ChallengeDao challengeDao) {
-        this.challengeDao = challengeDao;
-    }
-
-    @Autowired
-    public void setTeamService(TeamService teamService) {
-        this.teamService = teamService;
-    }
-
-    @Autowired
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
 
     @Transactional
     public List<ChallengeDto> prepareChallenges() {
@@ -59,7 +52,7 @@ public class ChallengeServiceImpl implements ChallengeService {
             challengeDto.setChallengerTeamName(challenge.getTeamByChallengerTeamId().getName());
             challengeDto.setChallengerTeamId(challenge.getTeamByChallengerTeamId().getTeamId());
             if (challenge.getTeamByOponnentTeamId() != null) {
-                challengeDto.setOponnentTeamId(challenge.getTeamByOponnentTeamId().getTeamId());
+                challengeDto.setOpponentTeamId(challenge.getTeamByOponnentTeamId().getTeamId());
             }
             challengeDto.setText(challenge.getText());
             Game game = challenge.getTeamByChallengerTeamId().getLeagueByLeagueLeaguId().getGameByGameGameId();
@@ -91,24 +84,14 @@ public class ChallengeServiceImpl implements ChallengeService {
     @Transactional(readOnly = true)
     public List<ChallengeDto> getAllActiveChallenges(){
         List<ChallengeDto> challenges = new ArrayList<ChallengeDto>();
-        for (Challenge challenge : challengeDao.getActiveChallenges()) {
-            ChallengeDto challengeDto = new ChallengeDto();
-            challengeDto.setChallengeId(challenge.getChallengeId());
-            challengeDto.setChallengeStart((challenge.getChallengeStart()));
-            challengeDto.setChallengeEnd(challenge.getChallengeEnd());
-            challengeDto.setCoordsLat(challenge.getCoordsLat());
-            challengeDto.setCoordsLng(challenge.getCoordsLng());
-            challengeDto.setChallengerTeamName(challenge.getTeamByChallengerTeamId().getName());
-            challengeDto.setChallengerTeamId(challenge.getTeamByChallengerTeamId().getTeamId());
-            if (challenge.getTeamByOponnentTeamId() != null) {
-                challengeDto.setOponnentTeamId(challenge.getTeamByOponnentTeamId().getTeamId());
-            }
-            challengeDto.setText(challenge.getText());
-            Game game = challenge.getTeamByChallengerTeamId().getLeagueByLeagueLeaguId().getGameByGameGameId();
-            challengeDto.setGameName(game.getGameName());
-            challengeDto.setGameId(game.getGameId());
+        List<Challenge> activeChallenges = challengeDao.getActiveChallenges();
+        activeChallenges.stream().forEach(challenge -> {
+            ChallengeDto challengeDto = challengeMapper.challengeToChallengeDto(challenge,
+                    challenge.getTeamByChallengerTeamId().getLeagueByLeagueLeaguId().getGameByGameGameId(),
+                    challenge.getTeamByChallengerTeamId(), challenge.getTeamByOponnentTeamId());
+
             challenges.add(challengeDto);
-        }
+        });
         return challenges;
     }
 

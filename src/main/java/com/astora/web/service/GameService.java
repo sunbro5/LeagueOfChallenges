@@ -19,6 +19,6 @@ public interface GameService {
 
     List<GameTypeDto> getAllGameNames();
 
-    int getUsersGameCount(String gameName);
+    int getUsersGameCount(String gameName) throws ServiceException;
 
 }

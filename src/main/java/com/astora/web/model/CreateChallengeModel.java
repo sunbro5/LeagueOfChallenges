@@ -1,7 +1,5 @@
 package com.astora.web.model;
 
-import java.util.Date;
-
 public class CreateChallengeModel {
 
     private Integer challengerTeamId;

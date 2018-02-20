@@ -22,9 +22,10 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.Map;
 
 /**
- * @author <a href="mailto:mares.jan@o2.cz">Jan Mares</a>, 8.12.2017
+ * @author <a href="mailto:maresjan694@gmail.com">Jan Mares</a>, 8.12.2017
  */
 @Controller
+@RequestMapping("/user")
 public class UserTeamController extends BaseUserPage {
 
     private static final Logger logger = Logger.getLogger(UserTeamController.class);
@@ -44,52 +45,46 @@ public class UserTeamController extends BaseUserPage {
     private TeamService teamService;
 
     @RequestMapping("/userTeam")
-    public ModelAndView showUserTeam(@RequestParam(value = "gameName", required = false) String gameName) {
+    public ModelAndView showUserTeam(@RequestParam(value = "gameName", required = false) String gameName) throws ServiceException {
         return renderUserTeam(init(), gameName);
     }
 
-    private ModelAndView renderUserTeam() {
+    private ModelAndView renderUserTeam() throws ServiceException {
         return renderUserTeam(init(), null);
     }
 
-    private ModelAndView renderUserTeam(Map<String, Object> model, String gameName) {
+    private ModelAndView renderUserTeam(Map<String, Object> model, String gameName) throws ServiceException {
         if (!CustomValidationUtils.isEmpty(gameName)) {
-            try {
-                boolean noTeamGame = gameService.noTeamGame(gameName);
-                model.put("isNoTeamGame", noTeamGame);
-                if (noTeamGame) {
-                    model.put("userNoTeamGameInformation", gameService.getLeagueForNoTeamGame(getUserId(), gameName));
-                } else {
-                    model.put("userTeamInformationList", teamService.getTeamsByGameName(getUserId(), gameName));
-                }
-                model.put("gameName", gameName);
-            } catch (ServiceException e) {
-                logger.error(e);
+
+            boolean noTeamGame = gameService.noTeamGame(gameName);
+            model.put("isNoTeamGame", noTeamGame);
+            if (noTeamGame) {
+                model.put("userNoTeamGameInformation", gameService.getLeagueForNoTeamGame(getUserId(), gameName));
+            } else {
+                model.put("userTeamInformationList", teamService.getTeamsByGameName(getUserId(), gameName));
             }
+            model.put("gameName", gameName);
+
         }
         model.put("userGamesInformationList", gameService.getGamesInformation());
         return new ModelAndView("userTeam", model);
     }
 
     @RequestMapping("/createDefaultTeam")
-    public ModelAndView createDefaultTeam(@RequestParam(value = "gameName") String gameName) {
+    public ModelAndView createDefaultTeam(@RequestParam(value = "gameName") String gameName) throws ServiceException {
         teamService.createDefaultTeam(getUserId(), gameName);
         return renderUserTeam(init(), gameName);
     }
 
     @RequestMapping("/newTeam")
-    public ModelAndView newTeam(@RequestParam("gameName") String gameName) {
+    public ModelAndView newTeam(@RequestParam("gameName") String gameName) throws ServiceException {
         if (CustomValidationUtils.isEmpty(gameName)) {
             renderUserTeam(init(), null);
         }
-        try {
-            if (gameService.noTeamGame(gameName)) {
-                return renderUserTeam();
-            }
-        } catch (ServiceException e) {
-            logger.error(e);
+        if (gameService.noTeamGame(gameName)) {
             return renderUserTeam();
         }
+
         Map<String, Object> model = init();
 
         model.put("teamUsersCount", gameService.getUsersGameCount(gameName));
@@ -104,7 +99,7 @@ public class UserTeamController extends BaseUserPage {
     }
 
     @RequestMapping("/createTeam")
-    public ModelAndView createTeam(@ModelAttribute(NewTeamModel.MODEL_NAME) @Validated NewTeamModel newTeamModel, BindingResult result) {
+    public ModelAndView createTeam(@ModelAttribute(NewTeamModel.MODEL_NAME) @Validated NewTeamModel newTeamModel, BindingResult result) throws ServiceException {
         if (result.hasErrors()) {
             return renderNewTeam(init());
         }

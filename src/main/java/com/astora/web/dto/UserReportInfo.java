@@ -5,9 +5,9 @@ import com.astora.web.enums.ReportReason;
 import java.io.Serializable;
 
 /**
- * @author <a href="mailto:mares.jan@o2.cz">Jan Mares</a>, 6.12.2017
+ * @author <a href="mailto:maresjan694@gmail.com">Jan Mares</a>, 6.12.2017
  */
-public class UserReportInfo implements Serializable {
+public class UserReportInfo {
 
     private String nickname;
     private ReportReason reason;

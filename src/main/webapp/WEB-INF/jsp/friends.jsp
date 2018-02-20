@@ -75,15 +75,15 @@
                         <c:forEach items="${userFriendList}" var="userFriend">
                             <tr>
                                 <th>${userFriend.nickname}</th>
-                                <c:url value="/messages" var="friendMessageUrl">
+                                <c:url value="/user/messages" var="friendMessageUrl">
                                     <c:param name="friendMessages" value="${userFriend.nickname}"/>
                                 </c:url>
                                 <th><a href="${friendMessageUrl}"><spring:message code="friends.list.sendMessage.label"/></a></th>
-                                <c:url value="/userProfile" var="userProfileUrl">
+                                <c:url value="/user/userProfile" var="userProfileUrl">
                                     <c:param name="userNickname" value="${userFriend.nickname}"/>
                                 </c:url>
                                 <th><a href="${userProfileUrl}"><spring:message code="friends.list.userProfile.label"/></a></th>
-                                <c:url value="/deleteFriend" var="deleteFriendUrl">
+                                <c:url value="/user/deleteFriend" var="deleteFriendUrl">
                                     <c:param name="nickname" value="${userFriend.nickname}"/>
                                 </c:url>
                                 <th><a href="${deleteFriendUrl}"><spring:message code="friends.list.removeFriend.label"/></a></th>
@@ -93,7 +93,7 @@
                 </div>
                 <div class="span6">
                     <h2><spring:message code="friends.search.title.label"/></h2>
-                    <c:url value="/findFriendUser" var="findFriendUserUrl"/>
+                    <c:url value="/user/findFriendUser" var="findFriendUserUrl"/>
                     <form action="${findFriendUserUrl}" method="get">
                         <div class="form-group">
                             <input type="text" name="nickname"/>
@@ -110,11 +110,11 @@
                             <c:forEach items="${foundUsersList}" var="foundUser">
                                 <tr>
                                     <th>${foundUser}</th>
-                                    <c:url value="/userProfile" var="userProfileUrl">
+                                    <c:url value="/user/userProfile" var="userProfileUrl">
                                         <c:param name="userNickname" value="${foundUser}"/>
                                     </c:url>
                                     <th><a href="${userProfileUrl}"><spring:message code="friends.list.userProfile.label"/></a></th>
-                                    <c:url value="/createFriend" var="createFriendUrl">
+                                    <c:url value="/user/createFriend" var="createFriendUrl">
                                         <c:param name="nickname" value="${foundUser}"/>
                                     </c:url>
                                     <th><a href="${createFriendUrl}"><spring:message code="friends.list.createFriend.link"/></a></th>

@@ -1,5 +1,6 @@
 package com.astora.web.controller;
 
+import com.astora.web.exception.ServiceException;
 import com.astora.web.session.UserSessionManager;
 import com.astora.web.model.UserSecuredModel;
 import com.astora.web.utils.CustomValidationUtils;
@@ -34,10 +35,11 @@ public class BaseUserPage {
         return model;
     }
 
+    @SuppressWarnings("unchecked")
     public void pushInfo(Map<String, Object> model, String info){
         List<String> userInfos = (List<String>) model.get(USER_INFO_MESSAGE);
         if(userInfos == null){
-            userInfos = new ArrayList<String>();
+            userInfos = new ArrayList<>();
         }
         userInfos.add(info);
         model.put(USER_INFO_MESSAGE, userInfos);
@@ -47,7 +49,7 @@ public class BaseUserPage {
         return init(new HashMap<String, Object>());
     }
 
-    public int getUserId(){
+    public int getUserId() throws ServiceException {
         return userSessionManager.getUserId();
     }
 

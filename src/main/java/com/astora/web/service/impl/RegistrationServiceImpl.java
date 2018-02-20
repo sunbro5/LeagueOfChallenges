@@ -9,8 +9,10 @@ import com.astora.web.dao.model.User;
 import com.astora.web.enums.RoleType;
 import com.astora.web.exception.ServiceException;
 import com.astora.web.exception.UserAlreadyExistsException;
+import com.astora.web.mapper.UserMapper;
 import com.astora.web.model.RegistrationModel;
 import com.astora.web.service.RegistrationService;
+import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class RegistrationServiceImpl implements RegistrationService {
 
     private static final String DEFAULT_AVATAR_NAME = "avatar_1";
+    private UserMapper userMapper = Mappers.getMapper(UserMapper.class);
 
     @Autowired
     private UserDao userDao;
@@ -39,12 +42,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (alreadyCreated != null) {
             throw new UserAlreadyExistsException("User name: " + registration.getNickname() + "already exists.");
         }
-        User user = new User();
-        user.setNickname(registration.getNickname());
-        user.setFirstName(registration.getFirstName());
-        user.setLastName(registration.getLastName());
-        user.setPassword(registration.getPassword());
-        user.setEmail(registration.getEmail());
+        User user = userMapper.registrationModelToUser(registration);
 
         Role role = roleDao.getRoleByRoleType(RoleType.USER);
         if(role == null){

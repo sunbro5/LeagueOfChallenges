@@ -13,7 +13,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 /**
- * @author <a href="mailto:mares.jan@o2.cz">Jan Mares</a>, 10.12.2017
+ * @author <a href="mailto:maresjan694@gmail.com">Jan Mares</a>, 10.12.2017
  */
 @Component("gameCache")
 public class GameCacheImpl implements GameCache {
@@ -29,9 +29,7 @@ public class GameCacheImpl implements GameCache {
     @Transactional
     public List<Game> getAllGames() {
         List<Game> gameList = gameDao.findAll();
-        for (Game game : gameList) {
-            Hibernate.initialize(game.getLeaguesByGameId());
-        }
+        gameList.stream().forEach(Hibernate::initialize);
         return gameList;
     }
 

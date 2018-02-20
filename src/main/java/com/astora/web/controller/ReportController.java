@@ -3,6 +3,7 @@ package com.astora.web.controller;
 import com.astora.web.dto.UserReportInfo;
 import com.astora.web.enums.ReportReason;
 import com.astora.web.exception.ServiceException;
+import com.astora.web.exception.UserConflictException;
 import com.astora.web.exception.UserDoesntExists;
 import com.astora.web.model.UserReportModel;
 import com.astora.web.model.validator.UserReportModelValidator;
@@ -28,6 +29,7 @@ import java.util.Map;
  * @author <a href="mailto:maresjan694@gmail.com">Jan Mares</a>, 16.11.2017
  */
 @Controller
+@RequestMapping("/user")
 public class ReportController extends BaseUserPage {
 
     private static final Logger logger = Logger.getLogger(ReportController.class);
@@ -73,7 +75,7 @@ public class ReportController extends BaseUserPage {
     }
 
     @RequestMapping("/sendReport")
-    public ModelAndView sendReport(@Validated @ModelAttribute(UserReportModel.MODEL_NAME) UserReportModel reportModel, BindingResult result) {
+    public ModelAndView sendReport(@Validated @ModelAttribute(UserReportModel.MODEL_NAME) UserReportModel reportModel, BindingResult result) throws ServiceException {
         Map<String, Object> model = init();
         if (result.hasErrors()) {
             renderReport();
@@ -83,8 +85,9 @@ public class ReportController extends BaseUserPage {
         } catch (UserDoesntExists e) {
             userSessionManager.putUserInfo("message.report.userDoesntExists");
             return renderReport();
-        } catch (ServiceException e) {
-            logger.error(e);
+        } catch (UserConflictException e){
+            logger.warn(e);
+            return renderReport();
         }
         pushInfo(model, "message.report.successfullyCreated");
         return renderReport(model,null);

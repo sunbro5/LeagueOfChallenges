@@ -64,7 +64,7 @@
             <h1><spring:message code="newTeam.form.title.label"/></h1>
             <jsp:include page="infoMessage.jsp"/>
             <p>${registrationMessage}</p>
-            <c:url value="/createTeam" var="createTeamUrl"/>
+            <c:url value="/user/createTeam" var="createTeamUrl"/>
             <form:form modelAttribute="newTeamModel" action="${createTeamUrl}" method="post">
                 <form:hidden path="gameName"/>
                 <div class="form-group">

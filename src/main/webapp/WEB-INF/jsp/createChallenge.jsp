@@ -67,7 +67,7 @@
                 <div class="span6">
                     <h1><spring:message code="page.menu.createChallenge.label"/></h1>
                     <jsp:include page="infoMessage.jsp"/>
-                    <c:url value="/createChallengeForm" var="createChallengeFormUrl"/>
+                    <c:url value="/user/createChallengeForm" var="createChallengeFormUrl"/>
                     <form:form modelAttribute="createChallengeModel" action="${createChallengeFormUrl}">
                         <form:input type="hidden" id="coordsLat" path="coordsLat"/>
                         <form:input type="hidden" id="coordsLng" path="coordsLng"/>

@@ -1,5 +1,6 @@
 package com.astora.web.session;
 
+import com.astora.web.exception.ServiceException;
 import com.astora.web.model.UserSecuredModel;
 
 import java.util.Date;
@@ -27,7 +28,7 @@ public interface UserSessionManager {
      * @param
      * @return
      */
-    int getUserId();
+    int getUserId() throws ServiceException;
 
     void setLastMessageTime(Date date);
 

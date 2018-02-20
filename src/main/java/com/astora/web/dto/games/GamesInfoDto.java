@@ -5,9 +5,9 @@ import com.astora.web.dao.model.Game;
 import java.io.Serializable;
 
 /**
- * @author <a href="mailto:mares.jan@o2.cz">Jan Mares</a>, 8.12.2017
+ * @author <a href="mailto:maresjan694@gmail.com">Jan Mares</a>, 8.12.2017
  */
-public class GamesInfoDto implements Serializable{
+public class GamesInfoDto {
 
     private String gameName;
     private String gameDescription;

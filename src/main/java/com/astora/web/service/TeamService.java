@@ -15,11 +15,11 @@ public interface TeamService {
 
     List<TeamInfoDto> getTeamsByGameName(int userId, String gameName) throws ServiceException;
 
-    void createDefaultTeam(int userId, String gameName);
+    void createDefaultTeam(int userId, String gameName) throws ServiceException;
 
-    void createTeamFromModel(int userId, NewTeamModel model) throws UserDoesntExists;
+    void createTeamFromModel(int userId, NewTeamModel model) throws ServiceException;
 
-    List<TeamPickDto> getAllUserTeams(int userId);
+    List<TeamPickDto> getAllUserTeams(int userId) throws ServiceException;
 
     Team getTeamById(int id) throws ServiceException;
 

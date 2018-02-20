@@ -44,54 +44,36 @@ public class MessageServiceImpl implements MessageService {
     private UserSessionManager userSessionManager;
 
     @Transactional
-    public List<MessageDto> getUserMessagesWithUser(int userId, String friendNickname) {
+    public List<MessageDto> getUserMessagesWithUser(int userId, String friendNickname) throws ServiceException {
         List<MessageDto> messageDto = new ArrayList<MessageDto>();
-        User user;
-        User userFriend;
-        try {
-            userFriend = userService.getUserByNickname(friendNickname);
-            user = userService.getUserById(userId);
-        } catch (ServiceException e) {
-            logger.error(e);
-            return messageDto;
-        }
+        User user = userService.getUserById(userId);
+        User userFriend = userService.getUserByNickname(friendNickname);
 
         List<Message> messageList = messageDao.getMessageWithUsers(user, userFriend);
-        markAsReaded(messageList);
+        markAsRead(messageList);
         messageDto.addAll(mapMessagesDto(messageList, true));
         messageDto.addAll(mapMessagesDto(messageDao.getMessageWithUsers(userFriend, user), false));
         if (CustomValidationUtils.isEmpty(messageDto)) {
             return messageDto;
         }
-        Comparator<MessageDto> comparator = new Comparator<MessageDto>() {
-            public int compare(MessageDto o1, MessageDto o2) {
-                return o1.getSentDate().compareTo(o2.getSentDate());
-            }
-        };
-        Collections.sort(messageDto,comparator);
+        messageDto.sort((o1, o2) -> o1.getSentDate().compareTo(o2.getSentDate()));
         return messageDto;
     }
-
-    public List<UserMessagesDto> getNotificationMessagesPreview(int userId){
-        return getNewestMessagesPreview(userId, MESSAGE_NOTIFICATION_COUNT,true);
-    }
-
-    public List<UserMessagesDto> getNewestMessagesPreview(int userId) {
-        return getNewestMessagesPreview(userId, MESSAGE_INBOX_COUNT,false);
+    @Transactional(readOnly = true)
+    public List<UserMessagesDto> getNotificationMessagesPreview(int userId) throws ServiceException {
+        return getNewestMessagesPreview(userId, MESSAGE_NOTIFICATION_COUNT, true);
     }
 
     @Transactional(readOnly = true)
-    public List<UserMessagesDto> getNewestMessagesPreview(int userId, int rowsCount, boolean onlyNotRead) {
+    public List<UserMessagesDto> getNewestMessagesPreview(int userId) throws ServiceException {
+        return getNewestMessagesPreview(userId, MESSAGE_INBOX_COUNT, false);
+    }
+
+    private List<UserMessagesDto> getNewestMessagesPreview(int userId, int rowsCount, boolean onlyNotRead) throws ServiceException {
         List<UserMessagesDto> messagesDto = new ArrayList<UserMessagesDto>();
-        User user;
-        try {
-            user = userService.getUserById(userId);
-        } catch (ServiceException e) {
-            logger.error(e);
-            return messagesDto;
-        }
+        User user = userService.getUserById(userId);
         List<Integer> friendsId;
-        if(onlyNotRead){
+        if (onlyNotRead) {
             friendsId = messageDao.getNotReadNewestMessagesUserId(userId, rowsCount);
         } else {
             friendsId = messageDao.getNewestMessagesUserId(userId, rowsCount);
@@ -99,13 +81,7 @@ public class MessageServiceImpl implements MessageService {
 
         Message message;
         for (Integer friendId : friendsId) {
-            User friend;
-            try {
-                friend = userService.getUserById(friendId);
-            } catch (ServiceException e) {
-                logger.error(e);
-                continue;
-            }
+            User friend = userService.getUserById(friendId);
             message = messageDao.getNewestMessageWithUsers(user, friend);
             if (message != null) {
                 UserMessagesDto userMessage = new UserMessagesDto(message.getUserByFromUserId().getNickname());
@@ -156,13 +132,10 @@ public class MessageServiceImpl implements MessageService {
         userSessionManager.setLastMessageTime(now);
     }
 
-    @Transactional
-    public void markAsReaded(List<Message> messageList) {
-        for (Message message : messageList) {
-            if (message.getAlreadyRead() == 0) {
-                message.setAlreadyRead(1);
-                messageDao.update(message);
-            }
-        }
+    public void markAsRead(List<Message> messageList) {
+        messageList.stream().filter(message -> message.getAlreadyRead() == 0).forEach(message -> {
+            message.setAlreadyRead(1);
+            messageDao.update(message);
+        });
     }
 }

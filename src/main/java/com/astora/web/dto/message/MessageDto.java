@@ -6,7 +6,7 @@ import java.util.Date;
 /**
  * @author <a href="mailto:maresjan694@gmail.com">Jan Mares</a>, 9.11.2017
  */
-public class MessageDto implements Serializable {
+public class MessageDto {
 
     boolean received;
     private String text;

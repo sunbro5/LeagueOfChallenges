@@ -3,7 +3,8 @@ package com.astora.web.exception;
 /**
  * @author <a href="mailto:maresjan694@gmail.com">Jan Mares</a>, 08.11.2017
  */
-public class FriendAlreadyExistsException extends ServiceException {
+public class FriendAlreadyExistsException extends UserConflictException {
+
     public FriendAlreadyExistsException(String message) {
         super(message);
     }

@@ -81,7 +81,7 @@
                         '${challenge.challengeEnd}',
                         '${challenge.coordsLat}',
                         '${challenge.coordsLng}',
-                        '${challenge.oponnentTeamId}',
+                        '${challenge.opponentTeamId}',
                         '${challenge.challengerTeamId}',
                         '${challenge.challengeId}',
                         '${challenge.gameName}'

@@ -14,9 +14,10 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.Map;
 
 /**
- * @author <a href="mailto:mares.jan@o2.cz">Jan Mares</a>, 21.11.2017
+ * @author <a href="mailto:maresjan694@gmail.com">Jan Mares</a>, 21.11.2017
  */
 @Controller
+@RequestMapping("/user")
 public class ProfileController extends BaseUserPage {
 
     private static final Logger logger = Logger.getLogger(ProfileController.class);
@@ -25,17 +26,13 @@ public class ProfileController extends BaseUserPage {
     private UserService userService;
 
     @RequestMapping("/userProfile")
-    public ModelAndView showProfile(@RequestParam(value = "userNickname", required = false) String nickname) {
+    public ModelAndView showProfile(@RequestParam(value = "userNickname", required = false) String nickname) throws ServiceException {
         return renderProfile(init(), nickname);
     }
 
-    private ModelAndView renderProfile(Map<String, Object> model, String nickname) {
+    private ModelAndView renderProfile(Map<String, Object> model, String nickname) throws ServiceException {
         if (CustomValidationUtils.isEmpty(nickname)) {
-            try {
-                nickname = userService.getUserById(getUserId()).getNickname();
-            } catch (ServiceException e) {
-                logger.error(e);
-            }
+            nickname = userService.getUserById(getUserId()).getNickname();
         }
         try {
             model.put("userByNicknameInfo",userService.getUserInfoByNickname(nickname));

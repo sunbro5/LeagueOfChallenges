@@ -3,9 +3,9 @@ package com.astora.web.enums;
 import java.io.Serializable;
 
 /**
- * @author <a href="mailto:mares.jan@o2.cz">Jan Mares</a>, 16.11.2017
+ * @author <a href="mailto:maresjan694@gmail.com">Jan Mares</a>, 16.11.2017
  */
-public enum ReportReason implements Serializable {
+public enum ReportReason {
 
     //bad player
     USER_INSERT_INVALID_DATA("enums.reportReason.invalidData",-2),

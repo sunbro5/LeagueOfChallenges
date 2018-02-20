@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * @author <a href="mailto:maresjan694@gmail.com">Jan Mares</a>, 26.12.2017
  */
-public class TeamPickDto implements Serializable{
+public class TeamPickDto {
 
     private int teamId;
     private String teamName;

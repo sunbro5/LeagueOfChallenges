@@ -11,9 +11,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * @author <a href="mailto:mares.jan@o2.cz">Jan Mares</a>, 30.11.2017
+ * @author <a href="mailto:maresjan694@gmail.com">Jan Mares</a>, 30.11.2017
  */
 @RestController
+@RequestMapping("/user")
 public class UserNotificationRestController extends BaseUserPage {
 
     private static final Logger logger = Logger.getLogger(UserNotificationRestController.class);
@@ -23,7 +24,7 @@ public class UserNotificationRestController extends BaseUserPage {
 
     @RequestMapping("/refreshMessageNotifications")
     public @ResponseBody
-    UserNotificationsDto getMessageNotifications() {
+    UserNotificationsDto getMessageNotifications() throws ServiceException {
         UserNotificationsDto notification = new UserNotificationsDto();
         notification.setUserMessages(messageService.getNotificationMessagesPreview(getUserId()));
         return notification;

@@ -77,7 +77,7 @@
                         <c:forEach items="${userGamesInformationList}" var="userGameInformation">
                             <tr>
                                 <%--TODO texty pridat pres klice --%>
-                                <c:url value="/userTeam" var="userTeamUrl">
+                                <c:url value="/user/userTeam" var="userTeamUrl">
                                     <c:param name="gameName" value="${userGameInformation.gameName}"/>
                                 </c:url>
                                 <th><a href="${userTeamUrl}">${userGameInformation.gameName}</a></th>
@@ -97,7 +97,7 @@
                                     <p><spring:message code="${userNoTeamGameInformation.code}"/></p>
                                 </c:when>
                                 <c:otherwise>
-                                    <c:url value="/createDefaultTeam" var="createDefaultTeamUrl">
+                                    <c:url value="/user/createDefaultTeam" var="createDefaultTeamUrl">
                                         <c:param name="gameName" value="${gameName}"/>
                                     </c:url>
                                     <a href="${createDefaultTeamUrl}"><spring:message code="userTeam.table.team.newGame"/></a>
@@ -129,7 +129,7 @@
                                     </tr>
                                 </c:forEach>
                             </table>
-                            <c:url value="/newTeam" var="newTeamUrl">
+                            <c:url value="/user/newTeam" var="newTeamUrl">
                                 <c:param name="gameName" value="${gameName}"/>
                             </c:url>
                             <a href="${newTeamUrl}"><spring:message code="userTeam.table.team.newTeam"/></a>

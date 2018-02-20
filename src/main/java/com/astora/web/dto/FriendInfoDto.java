@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * @author <a href="mailto:maresjan694@gmail.com">Jan Mares</a>, 06.11.2017
  */
-public class FriendInfoDto implements Serializable{
+public class FriendInfoDto {
 
     private String nickname;
 

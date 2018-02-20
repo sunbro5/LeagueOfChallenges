@@ -4,14 +4,14 @@
 <!-- start: Left SideBar -->
 <c:url value="/login" var="loginUrl"/>
 <c:url value="/showMap" var="showMapUrl"/>
-<c:url value="/createChallenge" var="createChallengeUrl"/>
+<c:url value="/user/createChallenge" var="createChallengeUrl"/>
 <c:url value="/registration" var="registrationUrl"/>
-<c:url value="/friends" var="friendsUrl"/>
-<c:url value="/messages" var="messagesUrl"/>
-<c:url value="/userChallenges" var="userChallengesUrl"/>
-<c:url value="/report" var="reportUrl"/>
-<c:url value="/userProfile" var="userProfileUrl"/>
-<c:url value="/userTeam" var="userTeamUrl"/>
+<c:url value="/user/friends" var="friendsUrl"/>
+<c:url value="/user/messages" var="messagesUrl"/>
+<c:url value="/user/userChallenges" var="userChallengesUrl"/>
+<c:url value="/user/report" var="reportUrl"/>
+<c:url value="/user/userProfile" var="userProfileUrl"/>
+<c:url value="/user/userTeam" var="userTeamUrl"/>
 <div id="sidebar-left" class="span2">
     <div class="nav-collapse sidebar-nav">
         <ul class="nav nav-tabs nav-stacked main-menu">

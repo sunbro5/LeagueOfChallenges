@@ -6,6 +6,7 @@ import com.astora.web.dao.model.User;
 import com.astora.web.dto.FriendInfoDto;
 import com.astora.web.exception.FriendAlreadyExistsException;
 import com.astora.web.exception.ServiceException;
+import com.astora.web.exception.UserConflictException;
 import com.astora.web.service.FriendService;
 import com.astora.web.service.UserService;
 import org.apache.log4j.Logger;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,8 +25,6 @@ import java.util.List;
 @Service("friendService")
 public class FriendServiceImpl implements FriendService {
 
-    private static final Logger logger = Logger.getLogger(FriendServiceImpl.class);
-
     @Autowired
     private FriendDao friendDao;
 
@@ -32,16 +32,10 @@ public class FriendServiceImpl implements FriendService {
     private UserService userService;
 
     @Transactional
-    public boolean removeFriendByNickname(int userId, String friendNickname) {
-        User user;
-        try {
-            user = userService.getUserById(userId);
-        } catch (ServiceException e) {
-            logger.error(e);
-            return false;
-        }
+    public boolean removeFriendByNickname(int userId, String friendNickname) throws ServiceException {
+        User user = userService.getUserById(userId);
         for (Friend friend : user.getFriendsByUserId()) {
-            if(friend.getUserByUserFriendId().getNickname().equals(friendNickname)){
+            if (friend.getUserByUserFriendId().getNickname().equals(friendNickname)) {
                 friendDao.delete(friend.getFriendId());
                 return true;
             }
@@ -53,14 +47,14 @@ public class FriendServiceImpl implements FriendService {
     public void createFriend(int userId, String friendNickname) throws ServiceException {
         User user = userService.getUserById(userId);
         User userFriend = userService.getUserByNickname(friendNickname);
-        if(user.equals(userFriend)){
-            throw new ServiceException("Cant add myself to friend list");
+        if (user.equals(userFriend)) {
+            throw new UserConflictException("Cant add myself to friend list");
         }
-        for (Friend friend : user.getFriendsByUserId()) {
-            if (friend.getUserByUserFriendId().getNickname().equals(friendNickname)) {
-                throw new FriendAlreadyExistsException("Friend with nickname:" + friendNickname + "already exists");
-            }
+        List<Friend> friendList = new ArrayList<>(user.getFriendsByUserId());
+        if (friendList.stream().anyMatch(friend -> friend.getUserByUserFriendId().getNickname().equals(friendNickname))) {
+            throw new FriendAlreadyExistsException("Friend with nickname:" + friendNickname + "already exists");
         }
+
         Friend friend = new Friend();
         friend.setUserByUserId(user);
         friend.setUserByUserFriendId(userFriend);
@@ -68,20 +62,16 @@ public class FriendServiceImpl implements FriendService {
     }
 
     @Transactional(readOnly = true)
-    public List<FriendInfoDto> getFriendList(int userId) {
+    public List<FriendInfoDto> getFriendList(int userId) throws ServiceException {
         List<FriendInfoDto> list = new ArrayList<FriendInfoDto>();
-        User user;
-        try {
-            user = userService.getUserById(userId);
-        } catch (ServiceException e) {
-            logger.error(e);
-            return list;
-        }
-        for (Friend friend : user.getFriendsByUserId()) {
+        User user = userService.getUserById(userId);
+        user.getFriendsByUserId().stream().forEach(friend ->
+        {
             FriendInfoDto friendInfo = new FriendInfoDto();
             friendInfo.setNickname(friend.getUserByUserFriendId().getNickname());
             list.add(friendInfo);
-        }
+        });
+
         return list;
     }
 }

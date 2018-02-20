@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service("userService")
 public class UserServiceImpl implements UserService {
@@ -40,11 +41,7 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public List<String> getUsersNicknameLike(String nickname) {
         List<User> users = userDao.getUserLikeNickname(nickname);
-        List<String> nicknameList = new ArrayList<String>();
-        for (User user : users) {
-            nicknameList.add(user.getNickname());
-        }
-        return nicknameList;
+        return users.stream().map(User::getNickname).collect(Collectors.toList());
     }
 
     @Transactional
@@ -72,7 +69,6 @@ public class UserServiceImpl implements UserService {
         return userInfo;
     }
 
-    @Transactional(readOnly = true)
     public UserInfoDto mapUserInfo(User user) {
         UserInfoDto userInfo = new UserInfoDto(user);
         Map<ReportReason, Integer> reportList = new HashMap<ReportReason, Integer>();

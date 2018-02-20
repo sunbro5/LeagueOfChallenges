@@ -69,7 +69,7 @@
                     <jsp:include page="infoMessage.jsp"/>
                     <ul class="messagesList">
                         <c:forEach items="${userMessagesPreview}" var="mesagePreview">
-                            <c:url value="/messages" var="showMessageUrl">
+                            <c:url value="/user/messages" var="showMessageUrl">
                                 <c:param name="friendMessages" value="${mesagePreview.userNickname}"/>
                             </c:url>
                             <a href="${showMessageUrl}">
@@ -98,7 +98,7 @@
                     </div>
                 </div>
                 <div class="span6 chat-form noMarginLeft">
-                    <c:url value="/sendMessage" var="sendMessageUrl"/>
+                    <c:url value="/user/sendMessage" var="sendMessageUrl"/>
                     <form:form cssClass="dark" modelAttribute="sendMessageModel" action="${sendMessageUrl}" method="post">
                     <div>
                         <p><spring:message code="message.form.toNickname.label" /></p>

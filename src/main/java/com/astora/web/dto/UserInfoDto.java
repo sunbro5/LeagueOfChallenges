@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * @author <a href="mailto:maresjan694@gmail.com">Jan Mares</a>, 06.11.2017
  */
-public class UserInfoDto implements Serializable{
+public class UserInfoDto {
 
     private String firstName;
     private String nickname;

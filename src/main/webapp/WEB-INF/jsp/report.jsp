@@ -66,7 +66,7 @@
             <div class="row-fluid">
                 <div class="span6">
                     <h2><spring:message code="page.menu.reportSend.label"/></h2>
-                    <c:url value="/sendReport" var="sendReportUrl"/>
+                    <c:url value="/user/sendReport" var="sendReportUrl"/>
                     <form:form modelAttribute="userReportModel" action="${sendReportUrl}" method="post">
                         <div class="form-group">
                             <p><spring:message code="report.form.nickname.label"/></p>
@@ -102,7 +102,7 @@
                         <tr>
                             <th>${reportedUser.nickname}</th>
                             <th><spring:message code="${reportedUser.reason.code}"/></th>
-                            <c:url var="reportChangeUrl" value="/report">
+                            <c:url var="reportChangeUrl" value="/user/report">
                                 <c:param name="userNickname" value="${reportedUser.nickname}"/>
                             </c:url>
                             <th><a href="${reportChangeUrl}"><spring:message code="reports.table.report.change"/></a></th>

@@ -27,41 +27,16 @@ public class GameServiceImpl implements GameService {
 
     private static final Logger logger = Logger.getLogger(GameServiceImpl.class);
 
-    private UserService userService;
-
+    @Autowired
     private TeamDao teamDao;
 
+    @Autowired
     private GameCache gameCache;
 
-    private TeamUserDao teamUserDao;
-
+    @Autowired
     private TeamService teamService;
 
-    @Autowired
-    public void setTeamService(TeamService teamService) {
-        this.teamService = teamService;
-    }
-
-    @Autowired
-    public void setGameCache(GameCache gameCache) {
-        this.gameCache = gameCache;
-    }
-
-    @Autowired
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
-
-    @Autowired
-    public void setTeamDao(TeamDao teamDao) {
-        this.teamDao = teamDao;
-    }
-
-    @Autowired
-    public void setTeamUserDao(TeamUserDao teamUserDao) {
-        this.teamUserDao = teamUserDao;
-    }
-
+    @Transactional(readOnly = true)
     public boolean noTeamGame(String gameName) throws ServiceException {
         return gameCache.getGame(gameName).noTeam();
     }
@@ -96,7 +71,7 @@ public class GameServiceImpl implements GameService {
         return gameTypes;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Leagues getLeagueForNoTeamGame(int userId, String gameName) throws ServiceException {
         Game game = gameCache.getGame(gameName);
         if (!game.noTeam()) {
@@ -111,13 +86,9 @@ public class GameServiceImpl implements GameService {
     }
 
     @Transactional(readOnly = true)
-    public int getUsersGameCount(String gameName) {
-        try {
-            return gameCache.getGame(gameName).getTeamMemberCount();
-        } catch (ServiceException e) {
-            logger.error(e);
-            return 0;
-        }
+    public int getUsersGameCount(String gameName) throws ServiceException {
+        return gameCache.getGame(gameName).getTeamMemberCount();
+
     }
 
 }

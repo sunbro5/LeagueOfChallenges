@@ -51,7 +51,7 @@ public class RegistrationController extends BaseUserPage {
 
 
     @RequestMapping("/createUser")
-    public ModelAndView registerUser(@ModelAttribute(RegistrationModel.MODEL_NAME) @Validated RegistrationModel registerModel, BindingResult result) {
+    public ModelAndView registerUser(@ModelAttribute(RegistrationModel.MODEL_NAME) @Validated RegistrationModel registerModel, BindingResult result) throws ServiceException {
         Map<String, Object> model = init();
         if (result.hasErrors()) {
             return renderRegisterPage(model);
@@ -60,9 +60,6 @@ public class RegistrationController extends BaseUserPage {
             registrationService.createUser(registerModel);
         } catch (UserAlreadyExistsException e) {
             result.rejectValue("nickname", "registration.form.error.user.alreadyExists");
-            return renderRegisterPage(model);
-        } catch (ServiceException e) {
-            logger.error("Service exception while creating new user " + registerModel, e);
             return renderRegisterPage(model);
         }
         userSessionManager.putUserInfo("message.user.successfullyCreated");
