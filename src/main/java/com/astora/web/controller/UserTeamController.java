@@ -84,31 +84,28 @@ public class UserTeamController extends BaseUserPage {
         if (gameService.noTeamGame(gameName)) {
             return renderUserTeam();
         }
+        return renderNewTeam(init(), gameName);
+    }
 
-        Map<String, Object> model = init();
-
-        model.put("teamUsersCount", gameService.getUsersGameCount(gameName));
+    private ModelAndView renderNewTeam(Map<String, Object> model, String gameName) throws ServiceException {
+        model.put("teamUsersCount", gameService.getUsersGameCount(gameName)-1);
         NewTeamModel newTeamModel = new NewTeamModel();
         newTeamModel.setGameName(gameName);
         model.put(NewTeamModel.MODEL_NAME, newTeamModel);
-        return renderNewTeam(model);
-    }
-
-    private ModelAndView renderNewTeam(Map<String, Object> model) {
         return new ModelAndView("newTeam", model);
     }
 
     @RequestMapping("/createTeam")
     public ModelAndView createTeam(@ModelAttribute(NewTeamModel.MODEL_NAME) @Validated NewTeamModel newTeamModel, BindingResult result) throws ServiceException {
         if (result.hasErrors()) {
-            return renderNewTeam(init());
+            return renderNewTeam(init(), newTeamModel.getGameName());
         }
         try {
             teamService.createTeamFromModel(getUserId(), newTeamModel);
         } catch (UserDoesntExists e) {
             logger.error(e);
             userSessionManager.putUserInfo("newTeam.form.error.userName.doesntExist");
-            return renderNewTeam(init());
+            return renderNewTeam(init(),newTeamModel.getGameName());
         }
         userSessionManager.putUserInfo("createTeam.successfully.created");
         return renderUserTeam(init(), newTeamModel.getGameName());

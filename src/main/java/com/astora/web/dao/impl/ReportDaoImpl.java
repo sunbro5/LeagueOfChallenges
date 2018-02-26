@@ -4,10 +4,9 @@ package com.astora.web.dao.impl;
 import com.astora.web.dao.ReportDao;
 import com.astora.web.dao.model.Report;
 import com.astora.web.dao.model.User;
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.Session;
+import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,9 +21,11 @@ public class ReportDaoImpl extends EntityDaoImpl<Report> implements ReportDao {
     }
 
     public List<Report> getReportWithUsers(User user1, User user2){
-        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Report.class);
-        criteria.add(Restrictions.eq("userByReportingUserId", user1));
-        criteria.add(Restrictions.eq("userByReportedUserId",user2));
-        return criteria.list();
+        Session session =  sessionFactory.getCurrentSession();
+        Query query = session.createQuery("FROM Report WHERE userByReportingUserId = :user1Id AND " +
+                "userByReportedUserId = :user2Id",Report.class);
+        query.setParameter("user1Id", user1);
+        query.setParameter("user2Id", user2);
+        return query.getResultList();
     }
 }

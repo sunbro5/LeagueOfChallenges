@@ -12,12 +12,12 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author <a href="mailto:maresjan694@gmail.com">Jan Mares</a>, 12.2.2018
  */
-@ControllerAdvice
+//@ControllerAdvice
 public class ExceptionHandlingController {
 
     private static final Logger logger = Logger.getLogger(ExceptionHandlingController.class);
 
-    @ExceptionHandler(Exception.class)
+    //@ExceptionHandler(Exception.class)
     public String handleError(HttpServletRequest request, Exception ex){
         logger.error("Request: " + request.getRequestURL() + " raised " + ex,ex);
         return "home";

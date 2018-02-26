@@ -29,7 +29,7 @@ public class GameCacheImpl implements GameCache {
     @Transactional
     public List<Game> getAllGames() {
         List<Game> gameList = gameDao.findAll();
-        gameList.stream().forEach(Hibernate::initialize);
+        gameList.forEach(Hibernate::initialize);
         return gameList;
     }
 

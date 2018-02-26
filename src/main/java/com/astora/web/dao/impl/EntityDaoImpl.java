@@ -1,6 +1,7 @@
 package com.astora.web.dao.impl;
 
 import com.astora.web.dao.EntityDao;
+import com.astora.web.utils.CustomValidationUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -9,22 +10,24 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
 import java.util.Collection;
 import java.util.List;
 
 public class EntityDaoImpl<T> implements EntityDao<T> {
 
+    @Autowired
     protected SessionFactory sessionFactory;
+
     private Class<T> type;
 
     protected EntityDaoImpl(Class<T> type) {
         this.type = type;
     }
 
-    @Autowired
-    public void setSessionFactory(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
 
     public void create(T object) {
         Session session = this.sessionFactory.getCurrentSession();
@@ -42,9 +45,10 @@ public class EntityDaoImpl<T> implements EntityDao<T> {
         return (T) session.get(type, id);
     }
 
+    @SuppressWarnings("unchecked")
     public List<T> findAll() {
         Session session = this.sessionFactory.getCurrentSession();
-        return (List<T>) session.createCriteria(type).list();
+        return session.createQuery("FROM " + type.getName()).getResultList();
     }
 
     public void delete(int id) {
@@ -55,28 +59,24 @@ public class EntityDaoImpl<T> implements EntityDao<T> {
         }
     }
 
-    public T getByUniqueColumnValue(String columnName, Object value){
-        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(type);
-        criteria.add(Restrictions.eq(columnName, value));
-        return (T) criteria.uniqueResult();
+    @SuppressWarnings("unchecked")
+    public T getByUniqueColumnValue(String columnName, Object value) {
+        Session session = this.sessionFactory.getCurrentSession();
+        Query query = session.createQuery(String.format("FROM %s WHERE %s = :value", type.getName(), columnName));
+        query.setParameter("value", value);
+        List<T> list = query.getResultList();
+        if(CustomValidationUtils.isEmpty(list)){
+            return null;
+        }
+        return list.get(0);
     }
 
-    public List<T> getListLikeColumnValue(String columnName, String value){
-        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(type);
-        criteria.add(Restrictions.like(columnName, value, MatchMode.ANYWHERE));
-        return criteria.list();
-    }
-
-    public List<T> getListEqColumnValue(String columnName, Object value){
-        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(type);
-        criteria.add(Restrictions.eq(columnName, value));
-        return criteria.list();
-    }
-
-    public List<T> getListInColumnValue(String columnName,Collection collection){
-        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(type);
-        criteria.add(Restrictions.in(columnName, collection));
-        return criteria.list();
+    @SuppressWarnings("unchecked")
+    public List<T> getListLikeColumnValue(String columnName, String value) {
+        Session session = this.sessionFactory.getCurrentSession();
+        Query query = session.createQuery(String.format("FROM %s WHERE %s LIKE :value", type.getName(), columnName));
+        query.setParameter("value", "%" + value + "%");
+        return query.getResultList();
     }
 
 }

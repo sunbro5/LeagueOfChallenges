@@ -5,7 +5,7 @@
 <c:url value="/login" var="loginUrl"/>
 <c:url value="/j_spring_security_logout" var="logoutUrl"/>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
-<script src="<c:url value="resources/js/notificationAngular.js"/>"></script>
+<script src="<c:url value="/resources/js/notificationAngular.js"/>"></script>
 
 <c:url var="messageUrl" value="/user/messages"/>
 

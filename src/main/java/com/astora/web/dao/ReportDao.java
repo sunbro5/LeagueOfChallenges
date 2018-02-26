@@ -10,5 +10,5 @@ import java.util.List;
  */
 public interface ReportDao extends EntityDao<Report> {
 
-    List<Report> getReportWithUsers(User user1, User user2);
+    List<Report> getReportWithUsers(User user1Id, User user2Id);
 }

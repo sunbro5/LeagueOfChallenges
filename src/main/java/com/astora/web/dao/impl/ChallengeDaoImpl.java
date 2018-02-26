@@ -3,7 +3,9 @@ package com.astora.web.dao.impl;
 import com.astora.web.dao.ChallengeDao;
 import com.astora.web.dao.model.Challenge;
 import org.hibernate.Criteria;
+import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
 
@@ -18,8 +20,9 @@ public class ChallengeDaoImpl extends EntityDaoImpl<Challenge> implements Challe
     }
 
     public List<Challenge> getActiveChallenges(){
-        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Challenge.class);
-        criteria.add(Restrictions.ge("challengeStart", new Date()));
-        return criteria.list();
+        Session session = sessionFactory.getCurrentSession();
+        Query query = session.createQuery("FROM Challenge WHERE challengeStart = :start");
+        query.setParameter("start", new Date());
+        return query.getResultList();
     }
 }

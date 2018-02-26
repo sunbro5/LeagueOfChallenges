@@ -19,5 +19,4 @@ public interface EntityDao<T> {
 
     List<T> getListLikeColumnValue(String columnName, String value);
 
-    List<T> getListInColumnValue(String columnName,Collection collection);
 }

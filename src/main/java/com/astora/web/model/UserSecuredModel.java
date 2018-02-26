@@ -72,4 +72,8 @@ public class UserSecuredModel implements UserDetails {
     public void setUserId(int userId) {
         this.userId = userId;
     }
+
+    public String getName(){
+        return username;
+    }
 }

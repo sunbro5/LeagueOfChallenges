@@ -12,17 +12,10 @@ import java.util.List;
 @Repository("teamUserDao")
 public class TeamUserDaoImpl extends EntityDaoImpl<TeamUser> implements TeamUserDao {
 
-    protected TeamUserDaoImpl() {
+    public TeamUserDaoImpl() {
         super(TeamUser.class);
     }
 
-    public List<Team> getAllTeamsForUser(int userId) {
-        List<TeamUser> teamUsers = getListEqColumnValue("teamUserId", userId);
-        List<Team> teams = new ArrayList<Team>();
-        for (TeamUser teamUser : teamUsers) {
-            teams.add(teamUser.getTeamByTeamTeamId());
-        }
-        return teams;
-    }
+
 
 }

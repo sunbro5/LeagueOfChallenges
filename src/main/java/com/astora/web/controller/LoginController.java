@@ -28,7 +28,7 @@ public class LoginController extends BaseUserPage{
 
     @RequestMapping("/logout")
     public ModelAndView logout(Map<String,Object> model){
-        userSessionManager.putUserInfo("message.login.successful");
+        userSessionManager.putUserInfo("message.logout.successful");
         return renderLogin(model);
     }
 
