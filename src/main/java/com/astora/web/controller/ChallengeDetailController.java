@@ -10,27 +10,16 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.Map;
 
 @Controller
+@RequestMapping("/user")
 public class ChallengeDetailController {
 
-    private static final String CHALLENGE_MAPPING = "/challenge";
-
-    private static final String CHALLENGE_ID_PARAM = "challengeId";
-
-    private static final String CHALLENGE_MODEL_KEY = "challenge";
-
-    private static final String CHALLENGE_VIEW_NAME = "challengeDetail";
-
+    @Autowired
     private ChallengeService challengeService;
 
-    @Autowired
-    public void setChallengeService(ChallengeService challengeService) {
-        this.challengeService = challengeService;
-    }
-
-    @RequestMapping(CHALLENGE_MAPPING)
-    public ModelAndView challengeDetail(@RequestParam(CHALLENGE_ID_PARAM) int challengeId, Map<String, Object> map) {
+    @RequestMapping("/challengeDetail")
+    public ModelAndView challengeDetail(@RequestParam("challengeId") int challengeId, Map<String, Object> map) {
         //map.put(CHALLENGE_MODEL_KEY, challengeService.findById(challengeId));
-        return new ModelAndView(CHALLENGE_VIEW_NAME, map);
+        return new ModelAndView("challengeDetail", map);
     }
 
 }

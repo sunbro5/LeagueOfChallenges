@@ -6,6 +6,7 @@
 <div id="content" class="span10 text-center">
 
     <h1><spring:message code="page.menu.userChallenges.label"/></h1>
+    <jsp:include page="infoMessage.jsp"/>
     <table class="table">
         <thead>
         <tr>

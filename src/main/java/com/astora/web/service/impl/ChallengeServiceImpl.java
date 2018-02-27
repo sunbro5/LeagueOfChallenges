@@ -1,10 +1,7 @@
 package com.astora.web.service.impl;
 
 import com.astora.web.dao.ChallengeDao;
-import com.astora.web.dao.model.Challenge;
-import com.astora.web.dao.model.Game;
-import com.astora.web.dao.model.Team;
-import com.astora.web.dao.model.User;
+import com.astora.web.dao.model.*;
 import com.astora.web.dto.ChallengeDto;
 import com.astora.web.exception.ServiceException;
 import com.astora.web.mapper.ChallengeMapper;
@@ -21,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Service("challengeService")
@@ -95,9 +93,37 @@ public class ChallengeServiceImpl implements ChallengeService {
         return challenges;
     }
 
-    @Transactional
-    public void cancelChallenge(int userId) throws ServiceException {
+    @Transactional(readOnly = true)
+    public List<ChallengeDto> getUserChallenges(int userId) throws ServiceException {
         User user = userService.getUserById(userId);
+        List<ChallengeDto> challenges = new ArrayList<>();
+        user.getTeamUsersByUserId().stream()
+                .map(TeamUser::getTeamByTeamTeamId)
+                .map(challengeDao::getChallengeForTeam)
+                .forEach(challenges1 -> challenges1
+                        .forEach(challenge -> challenges.add(challengeMapper.challengeToChallengeDto(challenge,
+                                challenge.getTeamByChallengerTeamId().getLeagueByLeagueLeaguId().getGameByGameGameId(),
+                                challenge.getTeamByChallengerTeamId(), challenge.getTeamByOponnentTeamId()))));
+
+        challenges.sort((o1, o2) -> o1.getChallengeStart().compareTo(o2.getChallengeStart()));
+        return challenges;
     }
+
+    @Transactional
+    public void cancelChallenge(int userId, int challengeId) throws ServiceException {
+        User user = userService.getUserById(userId);
+        Challenge challenge = challengeDao.findById(challengeId);
+        if(challenge == null){
+            throw new ServiceException("Challenge does not exists. Id: " + challengeId);
+        }
+        Collection<TeamUser> list = challenge.getTeamByChallengerTeamId().getTeamUsersByTeamId();
+        if(!list.stream().map(TeamUser::getUserByUserUserId).anyMatch(user1 -> user.getUserId() == user1.getUserId())){
+            throw new ServiceException(String.format("Challenge id: %s is not defined for User nickname: %s",
+                    challengeId,user.getNickname()));
+        }
+        challengeDao.delete(challengeId);
+    }
+
+    //private void isChallengeFromUser()
 
 }

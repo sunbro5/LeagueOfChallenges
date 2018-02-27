@@ -13,4 +13,8 @@ public interface ChallengeService {
     void createChallenge(CreateChallengeModel createChallengeModel) throws ServiceException;
 
     List<ChallengeDto> getAllActiveChallenges();
+
+    List<ChallengeDto> getUserChallenges(int userId) throws ServiceException;
+
+    void cancelChallenge(int userId, int challengeId) throws ServiceException;
 }

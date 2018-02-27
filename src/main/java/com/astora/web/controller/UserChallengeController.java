@@ -1,5 +1,6 @@
 package com.astora.web.controller;
 
+import com.astora.web.exception.ServiceException;
 import com.astora.web.service.ChallengeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,23 +21,25 @@ public class UserChallengeController extends BaseUserPage {
     private ChallengeService challengeService;
 
     @RequestMapping("/userChallenges")
-    public ModelAndView showUserChallenges(){
+    public ModelAndView showUserChallenges() throws ServiceException {
         return renderUserChallenges();
     }
 
-    private ModelAndView renderUserChallenges(){
+    private ModelAndView renderUserChallenges() throws ServiceException {
         return renderUserChallenges(init());
     }
 
-    private ModelAndView renderUserChallenges(Map<String, Object> model){
-        model.put("allActiveChallengesList", challengeService.getAllActiveChallenges());
-        return new ModelAndView("userChallenges",model);
+    private ModelAndView renderUserChallenges(Map<String, Object> model) throws ServiceException {
+        model.put("allActiveChallengesList", challengeService.getUserChallenges(getUserId()));
+        return new ModelAndView("userChallenges", model);
     }
 
     @RequestMapping("/cancelChallenge")
-    public ModelAndView cancelChallenge(@RequestParam("challengeId")int challengeId){
-
-        return renderUserChallenges();
+    public ModelAndView cancelChallenge(@RequestParam("challengeId") int challengeId) throws ServiceException {
+        challengeService.cancelChallenge(getUserId(), challengeId);
+        Map<String, Object> model = init();
+        pushInfo(model, "userChallenge.canceled");
+        return renderUserChallenges(model);
     }
 
 }
