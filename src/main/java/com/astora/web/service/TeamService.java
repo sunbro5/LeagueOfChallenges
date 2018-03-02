@@ -1,6 +1,7 @@
 package com.astora.web.service;
 
 import com.astora.web.dao.model.Team;
+import com.astora.web.dao.model.User;
 import com.astora.web.dto.games.GameTypeDto;
 import com.astora.web.dto.games.TeamInfoDto;
 import com.astora.web.dto.games.TeamPickDto;
@@ -22,5 +23,7 @@ public interface TeamService {
     List<TeamPickDto> getAllUserTeams(int userId) throws ServiceException;
 
     Team getTeamById(int id) throws ServiceException;
+
+    boolean isUserInTeam(User user, Team team);
 
 }

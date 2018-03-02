@@ -4,6 +4,7 @@ import com.astora.web.dao.model.Challenge;
 import com.astora.web.dao.model.Game;
 import com.astora.web.dao.model.Team;
 import com.astora.web.dto.ChallengeDto;
+import com.astora.web.dto.ChallengeInfoDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -24,4 +25,11 @@ public interface ChallengeMapper {
     })
     ChallengeDto challengeToChallengeDto(Challenge challenge, Game game, Team team, Team opponent);
 
+    @Mappings({
+            @Mapping(source = "team.name", target = "challengerTeamName"),
+            @Mapping(source = "team.teamId", target = "challengerTeamId"),
+            @Mapping(source = "opponent.teamId", target = "opponentTeamId")
+
+    })
+    ChallengeInfoDto challengeToChallengeInfoDto(Challenge challenge, Game game, Team team, Team opponent);
 }

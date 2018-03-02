@@ -29,7 +29,8 @@ public class GameCacheImpl implements GameCache {
     @Transactional
     public List<Game> getAllGames() {
         List<Game> gameList = gameDao.findAll();
-        gameList.forEach(Hibernate::initialize);
+        gameList.stream().map(Game::getLeaguesByGameId).forEach(Hibernate::initialize);
+        gameList.stream().map(Game::getGameParamsByGameId).forEach(Hibernate::initialize);
         return gameList;
     }
 

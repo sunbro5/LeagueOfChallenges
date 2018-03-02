@@ -54,18 +54,19 @@ public class CreateChallengeController extends BaseUserPage {
     }
 
     @RequestMapping(value = "/createChallenge")
-    public ModelAndView createChallenge() throws IOException, ServiceException {
+    public ModelAndView createChallenge() throws ServiceException {
         return renderCreateChallenge(init());
     }
 
 
     @RequestMapping(value = "/createChallengeForm", method = RequestMethod.POST)
     public ModelAndView createChallengeForm(@ModelAttribute("createChallengeModel") @Validated CreateChallengeModel createChallengeModel, BindingResult result) throws ServiceException {
+        Map<String, Object> model = init();
         if(result.hasErrors()){
-            return renderCreateChallenge(init());
+            return renderCreateChallenge(model);
         }
         challengeService.createChallenge(createChallengeModel);
-        userSessionManager.putUserInfo("createChallenge.successfully.created");
-        return renderCreateChallenge(init());
+        pushInfo(model, "createChallenge.successfully.created");
+        return renderCreateChallenge(model);
     }
 }

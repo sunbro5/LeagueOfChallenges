@@ -19,6 +19,7 @@ public class Challenge {
     private Timestamp challengeStart;
     private Timestamp challengeEnd;
     private String text;
+    private String state;
     private Team teamByChallengerTeamId;
     private Team teamByOponnentTeamId;
     private Collection<ChallengeResult> challengeResultsByChallengeId;
@@ -73,6 +74,16 @@ public class Challenge {
 
     public void setCoordsLat(String coordsLat) {
         this.coordsLat = coordsLat;
+    }
+
+    @Basic
+    @Column(name = "State")
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 
     @Basic

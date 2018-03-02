@@ -5,8 +5,15 @@ package com.astora.web.exception;
  */
 public class UserConflictException extends ServiceException {
 
+    private String nickname;
+
     public UserConflictException(String message) {
         super(message);
+    }
+
+    public UserConflictException(String message, String nickname) {
+        super(message);
+        this.nickname = nickname;
     }
 
     public UserConflictException(String message, Throwable cause) {

@@ -159,6 +159,7 @@ public class TeamServiceImpl implements TeamService {
         }
     }
 
+    @Transactional(readOnly = true)
     public Team getTeamById(int id) throws ServiceException {
         Team team =  teamDao.findById(id);
         if(team == null) {
@@ -166,4 +167,10 @@ public class TeamServiceImpl implements TeamService {
         }
         return team;
     }
+
+    public boolean isUserInTeam(User user, Team team){
+        return team.getTeamUsersByTeamId().stream().map(TeamUser::getUserByUserUserId)
+                .anyMatch(user1 -> user1.getUserId() == user.getUserId());
+    }
+
 }

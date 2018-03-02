@@ -1,5 +1,7 @@
 package com.astora.web.dto;
 
+import com.astora.web.enums.ChallengeState;
+
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -9,6 +11,7 @@ public class ChallengeDto {
     private int challengeId;
     private String coordsLat;
     private String coordsLng;
+    private ChallengeState state;
     private String text;
     private Date challengeStart;
     private Date challengeEnd;
@@ -105,5 +108,13 @@ public class ChallengeDto {
 
     public void setChallengeEnd(Date challengeEnd) {
         this.challengeEnd = challengeEnd;
+    }
+
+    public ChallengeState getState() {
+        return state;
+    }
+
+    public void setState(ChallengeState state) {
+        this.state = state;
     }
 }

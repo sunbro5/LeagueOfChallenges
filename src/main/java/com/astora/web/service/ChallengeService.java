@@ -1,6 +1,7 @@
 package com.astora.web.service;
 
 import com.astora.web.dto.ChallengeDto;
+import com.astora.web.dto.ChallengeInfoDto;
 import com.astora.web.exception.ServiceException;
 import com.astora.web.model.CreateChallengeModel;
 
@@ -17,4 +18,13 @@ public interface ChallengeService {
     List<ChallengeDto> getUserChallenges(int userId) throws ServiceException;
 
     void cancelChallenge(int userId, int challengeId) throws ServiceException;
+
+    ChallengeInfoDto getChallengeDetail(int challengeId) throws ServiceException;
+
+    void joinChallenge(int userId, int teamId, int challengeId) throws ServiceException;
+
+    void acceptChallenge(int userId, int challengeId) throws ServiceException;
+
+    void declineChallenge(int userId, int challengeId) throws ServiceException;
+
 }

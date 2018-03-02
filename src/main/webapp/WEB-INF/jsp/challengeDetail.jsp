@@ -4,35 +4,66 @@
 
 <!-- start: Content -->
 <div id="content" class="span10 text-center">
+    <div class="row-fluid">
+        <div class="span6">
+            <h1><spring:message code="page.menu.userChallenges.label"/></h1>
+            <jsp:include page="infoMessage.jsp"/>
+            <div class="profil-box">
+                <div class="row-fluid">
+                    <strong>
+                        <p class="profil-50 text-right"><spring:message code="challenge.detail.game"/></p>
+                    </strong>
+                    <p class="profil-50 text-left">${challengeDetail.gameName}</p>
+                </div>
+                <div class="row-fluid">
+                    <strong>
+                        <p class="profil-50 text-right"><spring:message code="challenge.detail.team"/></p>
+                    </strong>
+                    <p class="profil-50 text-left">${challengeDetail.challengerTeamName}</p>
+                </div>
+                <div class="row-fluid">
+                    <strong>
+                        <p class="profil-50 text-right"><spring:message code="challenge.detail.start"/></p>
+                    </strong>
+                    <p class="profil-50 text-left">${challengeDetail.challengeStart}</p>
+                </div>
+                <div class="row-fluid">
+                    <strong>
+                        <p class="profil-50 text-right"><spring:message code="challenge.detail.end"/></p>
+                    </strong>
+                    <p class="profil-50 text-left">${challengeDetail.challengeEnd}</p>
+                </div>
+                <div class="row-fluid">
+                    <strong>
+                        <p class="profil-50 text-right"><spring:message code="challenge.detail.description"/></p>
+                    </strong>
+                    <p class="profil-50 text-left">${challengeDetail.text}</p>
+                </div>
+                <div class="row-fluid">
+                    <strong>
+                        <p class="profil-50 text-right"><spring:message code="challenge.detail.challengers"/></p>
+                    </strong>
+                    <div class="profil-50 text-left">
+                        <c:forEach items="${challengeDetail.challengers}" var="users">
+                            <p>${users}</p>
+                        </c:forEach>
+                    </div>
+                </div>
+                <div class="row-fluid">
+                    <strong>
+                        <p class="profil-50 text-right"><spring:message code="challenge.detail.opponents"/></p>
+                    </strong>
+                    <div class="profil-50 text-left">
+                        <c:forEach items="${challengeDetail.opponents}" var="users">
+                            <p>${users}</p>
+                        </c:forEach>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="span6">
 
-    <h1><spring:message code="page.menu.userChallenges.label"/></h1>
-    <jsp:include page="infoMessage.jsp"/>
-    <table class="table">
-        <thead>
-        <tr>
-            <th><spring:message code="userChallenges.form.game.label"/></th>
-            <th><spring:message code="userChallenges.form.team.label"/></th>
-            <th><spring:message code="userChallenges.form.start.label"/></th>
-            <th><spring:message code="userChallenges.form.end.label"/></th>
-            <th><spring:message code="userChallenges.form.description.label"/></th>
-        </tr>
-        </thead>
-        <c:forEach items="${allActiveChallengesList}" var="activeChallenge">
-            <tr>
-                <th>${activeChallenge.gameName}</th>
-                <th>${activeChallenge.challengerTeamName}</th>
-                <th>${activeChallenge.challengeStart}</th>
-                <th>${activeChallenge.challengeEnd}</th>
-                <th>${activeChallenge.text}</th>
-                <c:url value="/user/cancelChallenge" var="cancelChallengeUrl">
-                    <c:param name="challengeId" value="${activeChallenge.challengeId}"/>
-                </c:url>
-                <th><a href="${cancelChallengeUrl}"><spring:message code="userChallenges.form.delete.label"/></a></th>
-                <th><spring:message code="userChallenges.form.team.label"/></th>
-            </tr>
-        </c:forEach>
-    </table>
+        </div>
+    </div>
 </div>
-
-
 <jsp:include page="mainFooter.jsp"/>

@@ -15,6 +15,7 @@
             <th><spring:message code="userChallenges.form.start.label"/></th>
             <th><spring:message code="userChallenges.form.end.label"/></th>
             <th><spring:message code="userChallenges.form.description.label"/></th>
+            <th><spring:message code="userChallenges.form.state.label"/></th>
         </tr>
         </thead>
         <c:forEach items="${allActiveChallengesList}" var="activeChallenge">
@@ -24,11 +25,22 @@
                 <th>${activeChallenge.challengeStart}</th>
                 <th>${activeChallenge.challengeEnd}</th>
                 <th>${activeChallenge.text}</th>
-                <c:url value="/user/cancelChallenge" var="cancelChallengeUrl">
+                <th><spring:message code="${activeChallenge.state.code}"/></th>
+                <c:choose>
+                    <c:when test="${activeChallenge.state == 'CREATED'}">
+                        <c:url value="/user/cancelChallenge" var="cancelChallengeUrl">
+                            <c:param name="challengeId" value="${activeChallenge.challengeId}"/>
+                        </c:url>
+                        <th><a href="${cancelChallengeUrl}"><spring:message code="userChallenges.form.delete.label"/></a></th>
+                    </c:when>
+                    <c:otherwise>
+                        <th></th>
+                    </c:otherwise>
+                </c:choose>
+                <c:url value="/user/challengeDetail" var="challengeDetailUrl">
                     <c:param name="challengeId" value="${activeChallenge.challengeId}"/>
                 </c:url>
-                <th><a href="${cancelChallengeUrl}"><spring:message code="userChallenges.form.delete.label"/></a></th>
-                <th><spring:message code="userChallenges.form.team.label"/></th>
+                <th><a href="${challengeDetailUrl}"><spring:message code="userChallenges.form.detail.label"/></a></th>
             </tr>
         </c:forEach>
     </table>

@@ -225,6 +225,7 @@ CREATE TABLE IF NOT EXISTS `LeagueOfChallenges`.`Challenge` (
   `oponnent_team_id` INT UNSIGNED NULL,
   `Challenge_start` DATETIME NOT NULL,
   `Challenge_end` DATETIME NOT NULL,
+  `State` VARCHAR(45) NOT NULL,
   `Text` VARCHAR(45) NULL,
   `CoordsLat` VARCHAR(255) NOT NULL,
   `CoordsLng` VARCHAR(255) NOT NULL,

@@ -3,7 +3,10 @@ package com.astora.web.service.impl;
 import com.astora.web.dao.ChallengeDao;
 import com.astora.web.dao.model.*;
 import com.astora.web.dto.ChallengeDto;
+import com.astora.web.dto.ChallengeInfoDto;
+import com.astora.web.enums.ChallengeState;
 import com.astora.web.exception.ServiceException;
+import com.astora.web.exception.UserConflictException;
 import com.astora.web.mapper.ChallengeMapper;
 import com.astora.web.model.CreateChallengeModel;
 import com.astora.web.service.ChallengeService;
@@ -20,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service("challengeService")
 public class ChallengeServiceImpl implements ChallengeService {
@@ -64,11 +68,12 @@ public class ChallengeServiceImpl implements ChallengeService {
 
     @Transactional
     public void createChallenge(CreateChallengeModel createChallengeModel) throws ServiceException {
-        if(CustomValidationUtils.isEmpty(createChallengeModel.getCoordsLat()) || CustomValidationUtils.isEmpty(createChallengeModel.getCoordsLng())){
+        if (CustomValidationUtils.isEmpty(createChallengeModel.getCoordsLat()) || CustomValidationUtils.isEmpty(createChallengeModel.getCoordsLng())) {
             throw new ServiceException("Challenge coords are empty. Something is wrong !!!!");
         }
         Team team = teamService.getTeamById(createChallengeModel.getChallengerTeamId());
         Challenge challenge = new Challenge();
+        challenge.setState(ChallengeState.CREATED.name());
         challenge.setText(createChallengeModel.getText());
         challenge.setCoordsLat(createChallengeModel.getCoordsLat());
         challenge.setCoordsLng(createChallengeModel.getCoordsLng());
@@ -80,7 +85,7 @@ public class ChallengeServiceImpl implements ChallengeService {
 
 
     @Transactional(readOnly = true)
-    public List<ChallengeDto> getAllActiveChallenges(){
+    public List<ChallengeDto> getAllActiveChallenges() {
         List<ChallengeDto> challenges = new ArrayList<ChallengeDto>();
         List<Challenge> activeChallenges = challengeDao.getActiveChallenges();
         activeChallenges.stream().forEach(challenge -> {
@@ -91,6 +96,21 @@ public class ChallengeServiceImpl implements ChallengeService {
             challenges.add(challengeDto);
         });
         return challenges;
+    }
+
+    @Transactional(readOnly = true)
+    public ChallengeInfoDto getChallengeDetail(int challengeId) throws ServiceException {
+        Challenge challenge = challengeDao.findById(challengeId);
+        if (challenge == null) {
+            throw new ServiceException("Challenge with id: " + challengeId + " does not exists.");
+        }
+        ChallengeInfoDto challengeInfoDto = challengeMapper.challengeToChallengeInfoDto(challenge,
+                challenge.getTeamByChallengerTeamId().getLeagueByLeagueLeaguId().getGameByGameGameId(),
+                challenge.getTeamByChallengerTeamId(), challenge.getTeamByOponnentTeamId());
+
+        challengeInfoDto.setChallengers(mapTeamUsersToNicknames(challenge.getTeamByChallengerTeamId().getTeamUsersByTeamId()));
+        challengeInfoDto.setOpponents(mapTeamUsersToNicknames(challenge.getTeamByOponnentTeamId().getTeamUsersByTeamId()));
+        return challengeInfoDto;
     }
 
     @Transactional(readOnly = true)
@@ -113,17 +133,87 @@ public class ChallengeServiceImpl implements ChallengeService {
     public void cancelChallenge(int userId, int challengeId) throws ServiceException {
         User user = userService.getUserById(userId);
         Challenge challenge = challengeDao.findById(challengeId);
-        if(challenge == null){
-            throw new ServiceException("Challenge does not exists. Id: " + challengeId);
-        }
-        Collection<TeamUser> list = challenge.getTeamByChallengerTeamId().getTeamUsersByTeamId();
-        if(!list.stream().map(TeamUser::getUserByUserUserId).anyMatch(user1 -> user.getUserId() == user1.getUserId())){
-            throw new ServiceException(String.format("Challenge id: %s is not defined for User nickname: %s",
-                    challengeId,user.getNickname()));
-        }
+        validateChallenge(challenge, ChallengeState.CREATED, challengeId);
+        validateTeamUser(challenge, user, true);
         challengeDao.delete(challengeId);
     }
 
-    //private void isChallengeFromUser()
+    @Transactional
+    public void joinChallenge(int userId, int teamId, int challengeId) throws ServiceException {
+        User user = userService.getUserById(userId);
+        Team team = teamService.getTeamById(teamId);
+        if (teamService.isUserInTeam(user, team)) {
+            throw new ServiceException(String.format("User nickname: %s is not in team teamName: %s", user.getNickname(), team.getName()));
+        }
+        Challenge challenge = challengeDao.findById(challengeId);
+        validateChallenge(challenge, ChallengeState.CREATED, challengeId);
+        validateOpponent(challenge,team);
+        challenge.setTeamByOponnentTeamId(team);
+        challenge.setState(ChallengeState.CHALLENGED.name());
+        challengeDao.update(challenge);
+    }
 
+    @Transactional
+    public void acceptChallenge(int userId, int challengeId) throws ServiceException {
+        setChallengeState(userId, challengeId, ChallengeState.CHALLENGED, ChallengeState.ACCEPTED);
+    }
+
+    @Transactional
+    public void declineChallenge(int userId, int challengeId) throws ServiceException {
+        setChallengeState(userId,challengeId,ChallengeState.CHALLENGED,ChallengeState.CREATED);
+    }
+
+    private void setChallengeState(int userId, int challengeId, ChallengeState oldState, ChallengeState newState) throws ServiceException {
+        User user = userService.getUserById(userId);
+        Challenge challenge = challengeDao.findById(challengeId);
+        validateChallenge(challenge, oldState, challengeId);
+        validateTeamUser(challenge,user,true);
+        challenge.setState(newState.name());
+        challengeDao.update(challenge);
+    }
+
+    private void validateChallenge(Challenge challenge, ChallengeState challengeState, int challengeId) throws ServiceException {
+        if (challenge == null || !challenge.getState().equals(challengeState.name())) {
+            throw new ServiceException("Challenge does not exists or is in wrong state. Id: " + challengeId);
+        }
+    }
+
+    /**
+     * validate challenge that user is challenger or opponent
+     *
+     * @param challenge
+     * @param user
+     */
+    private void validateTeamUser(Challenge challenge, User user, boolean isChallenger) throws ServiceException {
+        Collection<TeamUser> list;
+        if (isChallenger) {
+            list = challenge.getTeamByChallengerTeamId().getTeamUsersByTeamId();
+        } else {
+            list = challenge.getTeamByOponnentTeamId().getTeamUsersByTeamId();
+        }
+        if (!isUserInTeam(list, user)) {
+            throw new ServiceException(String.format("Challenge id: %s is not defined for User nickname: %s",
+                    challenge.getChallengeId(), user.getNickname()));
+        }
+    }
+
+    private void validateOpponent(Challenge challenge, Team team) throws ServiceException {
+        for (TeamUser userOpponent: team.getTeamUsersByTeamId()){
+            for (TeamUser userChallenger: challenge.getTeamByChallengerTeamId().getTeamUsersByTeamId()){
+                if(userOpponent.getUserByUserUserId().getUserId() == userChallenger.getUserByUserUserId().getUserId()){
+                    throw new UserConflictException("User from team is already in challenger team",
+                            userOpponent.getUserByUserUserId().getNickname());
+                }
+            }
+        }
+    }
+
+    private boolean isUserInTeam(Collection<TeamUser> list, User user) {
+        return list.stream().map(TeamUser::getUserByUserUserId)
+                .anyMatch(user1 -> user.getUserId() == user1.getUserId());
+    }
+
+    private List<String> mapTeamUsersToNicknames(Collection<TeamUser> list){
+        return list.stream().map(TeamUser::getUserByUserUserId).map(User::getNickname).collect(Collectors.toList());
+    }
 }
