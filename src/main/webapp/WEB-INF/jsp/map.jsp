@@ -163,7 +163,7 @@
                                 // Vyskakovaci okno vyzvy(markeru), kdyz na ni klikneme.
                                 google.maps.event.addListener(marker, 'click', (function (marker, i) {
                                     return function () {
-                                        var linkToChallenge = "<b><a href='/challenge?challengeId=" + challenges[i][8] + "'><spring:message code="map.linkToChallenge"/></a></b>";
+                                        var linkToChallenge = "<b><a href='/user/challengeDetail?challengeId=" + challenges[i][8] + "'><spring:message code="map.linkToChallenge"/></a></b>";
                                         infowindow.setContent(
                                                 '<b><spring:message code="map.team"/></b> ' + challenges[i][0] + "<br/>" +
                                                 '<b><spring:message code="map.startTime"/></b> ' + challenges[i][2] + "<br/>" +

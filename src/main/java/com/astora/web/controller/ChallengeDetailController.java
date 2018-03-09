@@ -1,8 +1,11 @@
 package com.astora.web.controller;
 
+import com.astora.web.dto.ChallengeInfoDto;
 import com.astora.web.exception.ServiceException;
 import com.astora.web.exception.UserConflictException;
 import com.astora.web.service.ChallengeService;
+import com.astora.web.service.GameService;
+import com.astora.web.service.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +20,12 @@ public class ChallengeDetailController extends BaseUserPage {
 
     @Autowired
     private ChallengeService challengeService;
+
+    @Autowired
+    private TeamService teamService;
+
+    @Autowired
+    private GameService gameService;
 
     @RequestMapping("/challengeDetail")
     public ModelAndView challengeDetail(@RequestParam("challengeId") int challengeId, Map<String, Object> map) throws ServiceException {
@@ -39,9 +48,9 @@ public class ChallengeDetailController extends BaseUserPage {
     @RequestMapping("/acceptChallenge")
     public ModelAndView acceptChallenge(@RequestParam("challengeId") int challengeId) throws ServiceException {
         Map<String, Object> model = init();
-        challengeService.acceptChallenge(getUserId(),challengeId);
+        challengeService.acceptChallenge(getUserId(), challengeId);
         pushInfo(model, "joinChallenge.successfully");
-        return renderChallengeDetail(challengeId,model);
+        return renderChallengeDetail(challengeId, model);
     }
 
     @RequestMapping("/declineChallenge")
@@ -49,11 +58,17 @@ public class ChallengeDetailController extends BaseUserPage {
         Map<String, Object> model = init();
         challengeService.declineChallenge(getUserId(), challengeId);
         pushInfo(model, "joinChallenge.successfully");
-        return renderChallengeDetail(challengeId,model);
+        return renderChallengeDetail(challengeId, model);
     }
 
     public ModelAndView renderChallengeDetail(int challengeId, Map<String, Object> model) throws ServiceException {
-        model.put("challengeDetail", challengeService.getChallengeDetail(challengeId));
+        ChallengeInfoDto challengeInfoDto = challengeService.getChallengeDetail(challengeId);
+        model.put("challengeDetail", challengeInfoDto);
+        boolean isUserChallenge = challengeService.isUserChallenge(getUserId(), challengeId);
+        if (!isUserChallenge) {
+            model.put("userTeamInformationList", teamService.getTeamsByGameName(getUserId(), challengeInfoDto.getGameName()));
+        }
+        model.put("isUserChallenge", isUserChallenge);
         return new ModelAndView("challengeDetail", model);
     }
 

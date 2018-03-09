@@ -27,4 +27,6 @@ public interface ChallengeService {
 
     void declineChallenge(int userId, int challengeId) throws ServiceException;
 
+    boolean isUserChallenge(int userId, int challengeId) throws ServiceException;
+
 }

@@ -109,7 +109,9 @@ public class ChallengeServiceImpl implements ChallengeService {
                 challenge.getTeamByChallengerTeamId(), challenge.getTeamByOponnentTeamId());
 
         challengeInfoDto.setChallengers(mapTeamUsersToNicknames(challenge.getTeamByChallengerTeamId().getTeamUsersByTeamId()));
-        challengeInfoDto.setOpponents(mapTeamUsersToNicknames(challenge.getTeamByOponnentTeamId().getTeamUsersByTeamId()));
+        if (challenge.getTeamByOponnentTeamId() != null) {
+            challengeInfoDto.setOpponents(mapTeamUsersToNicknames(challenge.getTeamByOponnentTeamId().getTeamUsersByTeamId()));
+        }
         return challengeInfoDto;
     }
 
@@ -142,12 +144,12 @@ public class ChallengeServiceImpl implements ChallengeService {
     public void joinChallenge(int userId, int teamId, int challengeId) throws ServiceException {
         User user = userService.getUserById(userId);
         Team team = teamService.getTeamById(teamId);
-        if (teamService.isUserInTeam(user, team)) {
+        if (!teamService.isUserInTeam(user, team)) {
             throw new ServiceException(String.format("User nickname: %s is not in team teamName: %s", user.getNickname(), team.getName()));
         }
         Challenge challenge = challengeDao.findById(challengeId);
         validateChallenge(challenge, ChallengeState.CREATED, challengeId);
-        validateOpponent(challenge,team);
+        validateOpponent(challenge, team);
         challenge.setTeamByOponnentTeamId(team);
         challenge.setState(ChallengeState.CHALLENGED.name());
         challengeDao.update(challenge);
@@ -160,14 +162,14 @@ public class ChallengeServiceImpl implements ChallengeService {
 
     @Transactional
     public void declineChallenge(int userId, int challengeId) throws ServiceException {
-        setChallengeState(userId,challengeId,ChallengeState.CHALLENGED,ChallengeState.CREATED);
+        setChallengeState(userId, challengeId, ChallengeState.CHALLENGED, ChallengeState.CREATED);
     }
 
     private void setChallengeState(int userId, int challengeId, ChallengeState oldState, ChallengeState newState) throws ServiceException {
         User user = userService.getUserById(userId);
         Challenge challenge = challengeDao.findById(challengeId);
         validateChallenge(challenge, oldState, challengeId);
-        validateTeamUser(challenge,user,true);
+        validateTeamUser(challenge, user, true);
         challenge.setState(newState.name());
         challengeDao.update(challenge);
     }
@@ -198,9 +200,9 @@ public class ChallengeServiceImpl implements ChallengeService {
     }
 
     private void validateOpponent(Challenge challenge, Team team) throws ServiceException {
-        for (TeamUser userOpponent: team.getTeamUsersByTeamId()){
-            for (TeamUser userChallenger: challenge.getTeamByChallengerTeamId().getTeamUsersByTeamId()){
-                if(userOpponent.getUserByUserUserId().getUserId() == userChallenger.getUserByUserUserId().getUserId()){
+        for (TeamUser userOpponent : team.getTeamUsersByTeamId()) {
+            for (TeamUser userChallenger : challenge.getTeamByChallengerTeamId().getTeamUsersByTeamId()) {
+                if (userOpponent.getUserByUserUserId().getUserId() == userChallenger.getUserByUserUserId().getUserId()) {
                     throw new UserConflictException("User from team is already in challenger team",
                             userOpponent.getUserByUserUserId().getNickname());
                 }
@@ -213,7 +215,15 @@ public class ChallengeServiceImpl implements ChallengeService {
                 .anyMatch(user1 -> user.getUserId() == user1.getUserId());
     }
 
-    private List<String> mapTeamUsersToNicknames(Collection<TeamUser> list){
+    private List<String> mapTeamUsersToNicknames(Collection<TeamUser> list) {
         return list.stream().map(TeamUser::getUserByUserUserId).map(User::getNickname).collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public boolean isUserChallenge(int userId, int challengeId) throws ServiceException {
+        User user = userService.getUserById(userId);
+        Challenge challenge = challengeDao.findById(challengeId);
+        return challenge.getTeamByChallengerTeamId().getTeamUsersByTeamId().
+                stream().map(TeamUser::getUserByUserUserId).anyMatch(user1 -> user1.getUserId() == user.getUserId());
     }
 }

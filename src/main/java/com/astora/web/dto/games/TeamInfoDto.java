@@ -12,6 +12,7 @@ import java.util.List;
  */
 public class TeamInfoDto {
 
+    private int teamId;
     private String name;
     private String description;
     private Leagues league;
@@ -52,5 +53,13 @@ public class TeamInfoDto {
 
     public void setUsers(List<String> users) {
         this.users = users;
+    }
+
+    public int getTeamId() {
+        return teamId;
+    }
+
+    public void setTeamId(int teamId) {
+        this.teamId = teamId;
     }
 }

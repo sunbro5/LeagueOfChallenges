@@ -84,6 +84,7 @@ public class TeamServiceImpl implements TeamService {
     @Transactional
     public TeamInfoDto mapTeamInfo(Team team) {
         TeamInfoDto teamInfo = new TeamInfoDto(team);
+        teamInfo.setTeamId(team.getTeamId());
         List<String> users = team.getTeamUsersByTeamId().stream()
                 .map(teamUser -> teamUser.getUserByUserUserId().getNickname()).collect(Collectors.toList());
         teamInfo.setUsers(users);
