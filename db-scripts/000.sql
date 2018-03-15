@@ -253,17 +253,24 @@ DROP TABLE IF EXISTS `LeagueOfChallenges`.`Challenge_Result` ;
 CREATE TABLE IF NOT EXISTS `LeagueOfChallenges`.`Challenge_Result` (
   `challenge_result_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `Challenges_challenge_id` INT UNSIGNED NOT NULL,
-  `score` VARCHAR(45) NOT NULL,
-  `description` VARCHAR(45) NULL,
-  `created` DATETIME NULL,
+  `Team_team_id` INT UNSIGNED NOT NULL,
+  `scoreWinner` INT UNSIGNED NOT NULL,
+  `scoreLooser` INT UNSIGNED NOT NULL,
+  `state` VARCHAR(45) NULL,
+  `created` DATETIME NOT NULL default CURRENT_TIMESTAMP,
   `winner_team_id` INT UNSIGNED NOT NULL,
-  `draw` TINYINT(1) NULL,
+  `draw` INT UNSIGNED NULL,
   PRIMARY KEY (`challenge_result_id`),
   INDEX `fk_Challenge_results_Challenges1_idx` (`Challenges_challenge_id` ASC),
   INDEX `fk_Challenge_results_Teams1_idx` (`winner_team_id` ASC),
   CONSTRAINT `fk_Challenge_results_Challenges1`
     FOREIGN KEY (`Challenges_challenge_id`)
     REFERENCES `LeagueOfChallenges`.`Challenge` (`challenge_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Team_team_id1`
+    FOREIGN KEY (`Team_team_id`)
+    REFERENCES `LeagueOfChallenges`.`Team` (`team_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Challenge_results_Teams1`

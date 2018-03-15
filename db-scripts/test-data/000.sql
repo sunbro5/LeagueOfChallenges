@@ -67,9 +67,4 @@ INSERT INTO leagueofchallenges.challenge VALUES(8, 2, 1, '1970-01-01 00:00:01', 
 INSERT INTO leagueofchallenges.challenge VALUES(9, 2, 1, '1970-01-01 00:00:01', '2038-01-19 03:14:07', 'CREATED', 'challenge_text_2', '50.033852', '15.767514');
 INSERT INTO leagueofchallenges.challenge VALUES(10, 2, 1, '1970-01-01 00:00:01', '2038-01-19 03:14:07', 'CREATED', 'challenge_text_2', '50.034611', '15.770003');
 
--- TODO move created to upper column in challenge_result table
-TRUNCATE TABLE leagueofchallenges.challenge_result;
-INSERT INTO leagueofchallenges.challenge_result VALUES(1, 1, '2:1', 'challenge_result_description_1', '1970-01-01 00:00:01', 1, 0);
-INSERT INTO leagueofchallenges.challenge_result VALUES(2, 2, '2:3', 'challenge_result_description_2', '2038-01-19 03:14:07', 2, 1);
-
 SET FOREIGN_KEY_CHECKS = 1;

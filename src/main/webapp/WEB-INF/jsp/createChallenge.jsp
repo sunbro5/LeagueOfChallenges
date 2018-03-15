@@ -82,7 +82,7 @@
                         <div id="teamName-group" class="form-group">
                             <p><spring:message code="createChallenge.form.team.label"/></p>
                             <form:select id="teamName" path="challengerTeamId"/>
-                            </span>
+                            <form:errors path="challengerTeamId" cssClass="error" element="p"/>
                         </div>
                         <div class="form-group">
                             <p><spring:message code="createChallenge.form.dateStart.label"/></p>
@@ -109,73 +109,6 @@
                 </div>
                 <div class="span6">
                     <div id="createChallengeMap"></div>
-                    <script>
-                        function initMap() {
-                            map = new google.maps.Map(document.getElementById('createChallengeMap'), {
-                                center: {lat: -34.397, lng: 150.644},
-                                zoom: 16
-                            });
-
-                            // Try HTML5 geolocation.
-                            if (navigator.geolocation) {
-                                navigator.geolocation.getCurrentPosition(function (position) {
-                                    var pos = {
-                                        lat: position.coords.latitude,
-                                        lng: position.coords.longitude
-                                    };
-                                    yourAvatarIcon = {
-                                        url: "/resources/img/map/anonym.png", // url
-                                        scaledSize: new google.maps.Size(50, 50), // scaled size
-                                        origin: new google.maps.Point(0, 0), // origin
-                                        anchor: new google.maps.Point(0, 0) // anchor
-                                    };
-
-                                    selectedLocation = new google.maps.Marker({
-                                        position: new google.maps.LatLng(pos.lat, pos.lng),
-                                        map: map,
-                                        icon: yourAvatarIcon
-                                    });
-
-                                    document.getElementById('coordsLat').value = pos.lat;
-                                    document.getElementById('coordsLng').value = pos.lng;
-
-                                    map.setCenter(pos);
-
-                                    google.maps.event.addListener(map, "click", function (event) {
-                                        var lat = event.latLng.lat();
-                                        var lng = event.latLng.lng();
-                                        document.getElementById('coordsLat').value = lat;
-                                        document.getElementById('coordsLng').value = lng;
-                                        selectedLocation.setMap(null);
-                                        selectedLocation = new google.maps.Marker({
-                                            position: new google.maps.LatLng(lat, lng),
-                                            map: map,
-                                            icon: yourAvatarIcon
-                                        });
-
-                                    });
-
-                                }, function () {
-                                    // Geolocation is not available
-                                    handleLocationError(true, infoWindow, map.getCenter());
-                                });
-                            } else {
-                                // Browser doesn't support Geolocation
-                                handleLocationError(false, infoWindow, map.getCenter());
-                            }
-                        }
-
-                        function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-                            infoWindow.setPosition(pos);
-                            infoWindow.setContent(browserHasGeolocation ?
-                                'Error: The Geolocation service failed.' :
-                                'Error: Your browser doesn\'t support geolocation.');
-                            infoWindow.open(map);
-                        }
-                    </script>
-                    <script async defer
-                            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDM3hLUh10lPdC4qzzQ24HMuVldsSja0yk&callback=initMap">
-                    </script>
                 </div>
             </div>
             <!--/.fluid-container-->
@@ -281,8 +214,8 @@
 <script src="/resources/js/custom.js"></script>
 
 <script>
-    flatpickr("#datePickerStart", { enableTime: true, dateFormat: "d.m.Y H:i"});
-    flatpickr("#datePickerEnd", { enableTime: true, dateFormat: "d.m.Y H:i"});
+    flatpickr("#datePickerStart", { enableTime: true, time_24hr: true, dateFormat: "d.m.Y H:i"});
+    flatpickr("#datePickerEnd", { enableTime: true, time_24hr: true, dateFormat: "d.m.Y H:i"});
 
     teams = [
         <c:forEach items="${userTeamsList}" var="team" varStatus="status">
@@ -340,6 +273,78 @@
             }
         }
     });
+
+    function initMap() {
+        map = new google.maps.Map(document.getElementById('createChallengeMap'), {
+            center: {lat: -34.397, lng: 150.644},
+            zoom: 16
+        });
+
+        // Try HTML5 geolocation.
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                var pos = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+                var challengeIcon = {
+                    url: "/resources/img/map/anonym.png", // url
+                    scaledSize: new google.maps.Size(50, 50), // scaled size
+                    origin: new google.maps.Point(0, 0), // origin
+                    anchor: new google.maps.Point(0, 0) // anchor
+                };
+
+                selectedLocation = new google.maps.Marker({
+                    position: new google.maps.LatLng(pos.lat, pos.lng),
+                    map: map,
+                    icon: challengeIcon
+                });
+
+                document.getElementById('coordsLat').value = pos.lat;
+                document.getElementById('coordsLng').value = pos.lng;
+
+                map.setCenter(pos);
+
+                google.maps.event.addListener(map, "click", function (event) {
+                    var lat = event.latLng.lat();
+                    var lng = event.latLng.lng();
+                    document.getElementById('coordsLat').value = lat;
+                    document.getElementById('coordsLng').value = lng;
+                    selectedLocation.setMap(null);
+                    var challengeIcon = {
+                        url: "/resources/img/map/" + $('#gameName').find('option:selected').text() + ".png", // url
+                        scaledSize: new google.maps.Size(50, 50), // scaled size
+                        origin: new google.maps.Point(0, 0), // origin
+                        anchor: new google.maps.Point(0, 0) // anchor
+                    };
+                    selectedLocation = new google.maps.Marker({
+                        position: new google.maps.LatLng(lat, lng),
+                        map: map,
+                        icon: challengeIcon
+                    });
+
+                });
+
+            }, function () {
+                // Geolocation is not available
+                handleLocationError(true, infoWindow, map.getCenter());
+            });
+        } else {
+            // Browser doesn't support Geolocation
+            handleLocationError(false, infoWindow, map.getCenter());
+        }
+    }
+
+    function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+        infoWindow.setPosition(pos);
+        infoWindow.setContent(browserHasGeolocation ?
+                'Error: The Geolocation service failed.' :
+                'Error: Your browser doesn\'t support geolocation.');
+        infoWindow.open(map);
+    }
+</script>
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDM3hLUh10lPdC4qzzQ24HMuVldsSja0yk&callback=initMap">
 </script>
 
 </body>

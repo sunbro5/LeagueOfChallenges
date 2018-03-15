@@ -11,7 +11,7 @@
         <thead>
         <tr>
             <th><spring:message code="userChallenges.form.game.label"/></th>
-            <th><spring:message code="userChallenges.form.team.label"/></th>
+            <th><spring:message code="userChallenges.form.team.label"/+></th>
             <th><spring:message code="userChallenges.form.start.label"/></th>
             <th><spring:message code="userChallenges.form.end.label"/></th>
             <th><spring:message code="userChallenges.form.description.label"/></th>
@@ -37,6 +37,33 @@
                         <th></th>
                     </c:otherwise>
                 </c:choose>
+                <c:url value="/user/challengeDetail" var="challengeDetailUrl">
+                    <c:param name="challengeId" value="${activeChallenge.challengeId}"/>
+                </c:url>
+                <th><a href="${challengeDetailUrl}"><spring:message code="userChallenges.form.detail.label"/></a></th>
+            </tr>
+        </c:forEach>
+    </table>
+    <h1><spring:message code="page.menu.userJoinedChallenges.label"/></h1>
+    <table class="table">
+        <thead>
+        <tr>
+            <th><spring:message code="userChallenges.form.game.label"/></th>
+            <th><spring:message code="userChallenges.form.team.label"/></th>
+            <th><spring:message code="userChallenges.form.start.label"/></th>
+            <th><spring:message code="userChallenges.form.end.label"/></th>
+            <th><spring:message code="userChallenges.form.description.label"/></th>
+            <th><spring:message code="userChallenges.form.state.label"/></th>
+        </tr>
+        </thead>
+        <c:forEach items="${allActiveChallengesList}" var="activeChallenge">
+            <tr>
+                <th>${activeChallenge.gameName}</th>
+                <th>${activeChallenge.challengerTeamName}</th>
+                <th>${activeChallenge.challengeStart}</th>
+                <th>${activeChallenge.challengeEnd}</th>
+                <th>${activeChallenge.text}</th>
+                <th><spring:message code="${activeChallenge.state.code}"/></th>
                 <c:url value="/user/challengeDetail" var="challengeDetailUrl">
                     <c:param name="challengeId" value="${activeChallenge.challengeId}"/>
                 </c:url>

@@ -26,9 +26,6 @@ import java.util.Map;
 public class CreateChallengeController extends BaseUserPage {
 
     @Autowired
-    private GameService gameService;
-
-    @Autowired
     private TeamService teamService;
 
     @Autowired
@@ -48,7 +45,7 @@ public class CreateChallengeController extends BaseUserPage {
     }
 
     private ModelAndView renderCreateChallenge(Map<String, Object> model) throws ServiceException {
-        model.put("gameTypes", gameService.getAllGameNames());
+        model.put("gameTypes", teamService.getAllUserGames(getUserId()));
         model.put("userTeamsList",teamService.getAllUserTeams(getUserId()));
         return new ModelAndView("createChallenge", model);
     }

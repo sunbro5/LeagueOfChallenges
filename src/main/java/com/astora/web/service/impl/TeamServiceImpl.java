@@ -4,12 +4,14 @@ import com.astora.web.cache.GameCache;
 import com.astora.web.dao.TeamDao;
 import com.astora.web.dao.TeamUserDao;
 import com.astora.web.dao.model.*;
+import com.astora.web.dto.games.GameTypeDto;
 import com.astora.web.dto.games.TeamInfoDto;
 import com.astora.web.dto.games.TeamPickDto;
 import com.astora.web.enums.Leagues;
 import com.astora.web.exception.ServiceException;
 import com.astora.web.exception.UserDoesntExists;
 import com.astora.web.model.NewTeamModel;
+import com.astora.web.service.PropertyService;
 import com.astora.web.service.TeamService;
 import com.astora.web.service.UserService;
 import com.astora.web.utils.TeamUtils;
@@ -106,7 +108,7 @@ public class TeamServiceImpl implements TeamService {
         List<TeamPickDto> teamList = new ArrayList<TeamPickDto>();
         User user = userService.getUserById(userId);
 
-        for (TeamUser teamUser: user.getTeamUsersByUserId()){
+        for (TeamUser teamUser : user.getTeamUsersByUserId()) {
             Team team = teamUser.getTeamByTeamTeamId();
             Game game = team.getLeagueByLeagueLeaguId().getGameByGameGameId();
             TeamPickDto teamPick = new TeamPickDto(team);
@@ -162,16 +164,52 @@ public class TeamServiceImpl implements TeamService {
 
     @Transactional(readOnly = true)
     public Team getTeamById(int id) throws ServiceException {
-        Team team =  teamDao.findById(id);
-        if(team == null) {
+        Team team = teamDao.findById(id);
+        if (team == null) {
             throw new ServiceException("Cannot find team with id: " + id);
         }
         return team;
     }
 
-    public boolean isUserInTeam(User user, Team team){
+    public boolean isUserInTeam(User user, Team team) {
         return team.getTeamUsersByTeamId().stream().map(TeamUser::getUserByUserUserId)
                 .anyMatch(user1 -> user1.getUserId() == user.getUserId());
+    }
+
+
+    @Transactional(readOnly = true)
+    public List<GameTypeDto> getAllUserGames(int userId) throws ServiceException {
+        List<GameTypeDto> teamList = new ArrayList<GameTypeDto>();
+        User user = userService.getUserById(userId);
+
+        for (TeamUser teamUser : user.getTeamUsersByUserId()) {
+            Team team = teamUser.getTeamByTeamTeamId();
+            Game game = team.getLeagueByLeagueLeaguId().getGameByGameGameId();
+            GameTypeDto gameTypeDto = new GameTypeDto();
+            gameTypeDto.setGameName(game.getGameName());
+            gameTypeDto.setNoTeamGame(game.noTeam());
+            teamList.add(gameTypeDto);
+        }
+        return teamList;
+    }
+
+    @Transactional
+    public int usersTrustWorthValue(int teamId) throws ServiceException {
+        int teamTrustValue = 0;
+        Team team = getTeamById(teamId);
+        for (TeamUser teamUser : team.getTeamUsersByTeamId()) {
+            User user = teamUser.getUserByUserUserId();
+            if (!user.isTrustWorth()) {
+                teamTrustValue += user.getUserRating();
+            }
+        }
+        return teamTrustValue;
+    }
+
+    @Override
+    public void punishAllCheatersMethod(Team team, int value) throws ServiceException {
+        team.getTeamUsersByTeamId().stream().map(TeamUser::getUserByUserUserId)
+                .forEach(user -> user.addUserRating(value));
     }
 
 }

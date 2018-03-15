@@ -8,8 +8,9 @@ import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
+
 import java.util.List;
 
 /**
@@ -26,7 +27,7 @@ public class GameCacheImpl implements GameCache {
     }
 
     @Cacheable(value = "cacheGames")
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Game> getAllGames() {
         List<Game> gameList = gameDao.findAll();
         gameList.stream().map(Game::getLeaguesByGameId).forEach(Hibernate::initialize);
@@ -35,7 +36,7 @@ public class GameCacheImpl implements GameCache {
     }
 
     @Cacheable(value = "cacheGames")
-    @Transactional
+    @Transactional(readOnly = true)
     public Game getGame(String gameName) throws ServiceException {
         Game game = gameDao.getByUniqueColumnValue("gameName", gameName);
         if (game == null) {

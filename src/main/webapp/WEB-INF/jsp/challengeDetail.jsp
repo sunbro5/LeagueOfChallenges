@@ -6,7 +6,7 @@
 <div id="content" class="span10 text-center">
     <div class="row-fluid">
         <div class="span6">
-            <h1><spring:message code="page.menu.userChallenges.label"/></h1>
+            <h1><spring:message code="challenge.detail.title"/></h1>
             <jsp:include page="infoMessage.jsp"/>
             <div class="profil-box">
                 <div class="row-fluid">
@@ -14,59 +14,72 @@
                         <p><spring:message code="challenge.detail.game"/></p>
                     </strong>
 
-                    <p class="profil-50 text-left">${challengeDetail.gameName}</p>
+                    <p>${challengeDetail.gameName}</p>
                 </div>
                 <div class="row-fluid">
                     <strong>
                         <p><spring:message code="challenge.detail.team"/></p>
                     </strong>
 
-                    <p class="profil-50 text-left">${challengeDetail.challengerTeamName}</p>
+                    <p>${challengeDetail.challengerTeamName}</p>
                 </div>
                 <div class="row-fluid">
                     <strong>
                         <p><spring:message code="challenge.detail.start"/></p>
                     </strong>
 
-                    <p class="profil-50 text-left">${challengeDetail.challengeStart}</p>
+                    <p>${challengeDetail.challengeStart}</p>
                 </div>
                 <div class="row-fluid">
                     <strong>
                         <p><spring:message code="challenge.detail.end"/></p>
                     </strong>
 
-                    <p class="profil-50 text-left">${challengeDetail.challengeEnd}</p>
+                    <p>${challengeDetail.challengeEnd}</p>
                 </div>
                 <div class="row-fluid">
                     <strong>
                         <p><spring:message code="challenge.detail.description"/></p>
                     </strong>
 
-                    <p class="profil-50 text-left">${challengeDetail.text}</p>
+                    <p>${challengeDetail.text}</p>
                 </div>
                 <div class="row-fluid">
                     <strong>
                         <p><spring:message code="challenge.detail.challengers"/></p>
                     </strong>
 
-                    <div class="profil-50 text-left">
+                    <div>
                         <c:forEach items="${challengeDetail.challengers}" var="users">
                             <p>${users}</p>
                         </c:forEach>
                     </div>
                 </div>
-                <div class="row-fluid">
-                    <strong>
-                        <p><spring:message code="challenge.detail.opponents"/></p>
-                    </strong>
+                <c:if test="${not empty challengeDetail.opponents}">
+                    <div class="row-fluid">
+                        <strong>
+                            <p><spring:message code="challenge.detail.opponents"/></p>
+                        </strong>
 
-                    <div class="profil-50 text-left">
-                        <c:forEach items="${challengeDetail.opponents}" var="users">
-                            <p>${users}</p>
-                        </c:forEach>
+                        <div>
+                            <c:forEach items="${challengeDetail.opponents}" var="users">
+                                <p>${users}</p>
+                            </c:forEach>
+                        </div>
                     </div>
-                </div>
+                </c:if>
                 <c:choose>
+                    <c:when test="${isUserChallenge && challengeDetail.state == 'CREATED'}">
+                        <div class="row-fluid">
+                            <c:url value="/user/cancelChallenge" var="cancelChallengeUrl">
+                                <c:param name="challengeId" value="${challengeDetail.challengeId}"/>
+                            </c:url>
+                            <strong>
+                                <a href="${cancelChallengeUrl}"><spring:message
+                                        code="userChallenges.form.delete.label"/></a>
+                            </strong>
+                        </div>
+                    </c:when>
                     <c:when test="${isUserChallenge && challengeDetail.state == 'CHALLENGED'}">
                         <div class="row-fluid">
                             <c:url var="acceptUrl" value="/user/acceptChallenge">
@@ -86,7 +99,7 @@
                             </strong>
                         </div>
                     </c:when>
-                    <c:when test="${not isUserChallenge && challengeDetail.state == 'CREATED'}">
+                    <c:when test="${not isUserChallenge && challengeDetail.state == 'CREATED' && not empty userTeamInformationList}">
                         <form id="joinChallenge-form" action="/user/joinChallenge" method="get">
                             <input type="hidden" name="challengeId" value="${challengeDetail.challengeId}">
                             <select name="teamId">
@@ -104,11 +117,45 @@
                             </div>
                         </form>
                     </c:when>
+                    <c:when test="${(isUserChallenge ||isOpponentChallenge) && canUserSetResult && challengeDetail.state == 'ACCEPTED'}">
+                        <div class="row-fluid">
+                            <c:url value="/user/challengeResult" var="challengeResultUrl">
+                                <c:param name="challengeId" value="${challengeDetail.challengeId}"/>
+                            </c:url>
+                            <strong>
+                                <a href="${challengeResultUrl}"><spring:message
+                                        code="userChallenges.form.setChallengeResult.label"/></a>
+                            </strong>
+                        </div>
+                    </c:when>
                 </c:choose>
-
             </div>
         </div>
         <div class="span6">
+            <div id="createChallengeMap"></div>
+            <script>
+                var challengePosition = {lat: ${challengeDetail.coordsLat}, lng: ${challengeDetail.coordsLng}};
+                function initMap() {
+                    var map = new google.maps.Map(document.getElementById('createChallengeMap'), {
+                        zoom: 16,
+                        center: challengePosition
+                    });
+                    var challengeIcon = {
+                        url: "/resources/img/map/${challengeDetail.gameName}.png", // url
+                        scaledSize: new google.maps.Size(50, 50), // scaled size
+                        origin: new google.maps.Point(0, 0), // origin
+                        anchor: new google.maps.Point(0, 0) // anchor
+                    };
+                    var marker = new google.maps.Marker({
+                        position: challengePosition,
+                        map: map,
+                        icon: challengeIcon
+                    });
+                }
+            </script>
+            <script async defer
+                    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDM3hLUh10lPdC4qzzQ24HMuVldsSja0yk&callback=initMap">
+            </script>
 
         </div>
     </div>

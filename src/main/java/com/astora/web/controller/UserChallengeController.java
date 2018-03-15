@@ -31,6 +31,7 @@ public class UserChallengeController extends BaseUserPage {
 
     private ModelAndView renderUserChallenges(Map<String, Object> model) throws ServiceException {
         model.put("allActiveChallengesList", challengeService.getUserChallenges(getUserId()));
+        model.put("allActiveJoinedChallengesList", challengeService.getOpponentChallenges(getUserId()));
         return new ModelAndView("userChallenges", model);
     }
 

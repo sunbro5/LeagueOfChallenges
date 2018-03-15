@@ -21,7 +21,6 @@ public interface ChallengeMapper {
             @Mapping(source = "team.name", target = "challengerTeamName"),
             @Mapping(source = "team.teamId", target = "challengerTeamId"),
             @Mapping(source = "opponent.teamId", target = "opponentTeamId")
-
     })
     ChallengeDto challengeToChallengeDto(Challenge challenge, Game game, Team team, Team opponent);
 

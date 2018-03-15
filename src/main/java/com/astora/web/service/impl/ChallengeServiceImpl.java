@@ -1,15 +1,21 @@
 package com.astora.web.service.impl;
 
 import com.astora.web.dao.ChallengeDao;
+import com.astora.web.dao.ChallengeResultDao;
+import com.astora.web.dao.TeamDao;
 import com.astora.web.dao.model.*;
 import com.astora.web.dto.ChallengeDto;
 import com.astora.web.dto.ChallengeInfoDto;
+import com.astora.web.enums.ChallengeResultState;
 import com.astora.web.enums.ChallengeState;
 import com.astora.web.exception.ServiceException;
 import com.astora.web.exception.UserConflictException;
 import com.astora.web.mapper.ChallengeMapper;
+import com.astora.web.mapper.ChallengeResultMapper;
+import com.astora.web.model.ChallengeResultModel;
 import com.astora.web.model.CreateChallengeModel;
 import com.astora.web.service.ChallengeService;
+import com.astora.web.service.PropertyService;
 import com.astora.web.service.TeamService;
 import com.astora.web.service.UserService;
 import com.astora.web.utils.CustomValidationUtils;
@@ -30,6 +36,7 @@ public class ChallengeServiceImpl implements ChallengeService {
 
     private static final Logger logger = Logger.getLogger(ChallengeServiceImpl.class);
     private ChallengeMapper challengeMapper = Mappers.getMapper(ChallengeMapper.class);
+    private ChallengeResultMapper challengeResultMapper = Mappers.getMapper(ChallengeResultMapper.class);
 
     @Autowired
     private ChallengeDao challengeDao;
@@ -39,6 +46,12 @@ public class ChallengeServiceImpl implements ChallengeService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private TeamDao teamDao;
+
+    @Autowired
+    private ChallengeResultDao challengeResultDao;
 
     @Transactional
     public List<ChallengeDto> prepareChallenges() {
@@ -68,9 +81,6 @@ public class ChallengeServiceImpl implements ChallengeService {
 
     @Transactional
     public void createChallenge(CreateChallengeModel createChallengeModel) throws ServiceException {
-        if (CustomValidationUtils.isEmpty(createChallengeModel.getCoordsLat()) || CustomValidationUtils.isEmpty(createChallengeModel.getCoordsLng())) {
-            throw new ServiceException("Challenge coords are empty. Something is wrong !!!!");
-        }
         Team team = teamService.getTeamById(createChallengeModel.getChallengerTeamId());
         Challenge challenge = new Challenge();
         challenge.setState(ChallengeState.CREATED.name());
@@ -127,6 +137,21 @@ public class ChallengeServiceImpl implements ChallengeService {
                                 challenge.getTeamByChallengerTeamId().getLeagueByLeagueLeaguId().getGameByGameGameId(),
                                 challenge.getTeamByChallengerTeamId(), challenge.getTeamByOponnentTeamId()))));
 
+        challenges.sort((o1, o2) -> o1.getChallengeStart().compareTo(o2.getChallengeStart()));
+        return challenges;
+    }
+
+    @Transactional(readOnly = true)
+    public List<ChallengeDto> getOpponentChallenges(int userId) throws ServiceException {
+        User user = userService.getUserById(userId);
+        List<ChallengeDto> challenges = new ArrayList<>();
+        user.getTeamUsersByUserId().stream()
+                .map(TeamUser::getTeamByTeamTeamId)
+                .map(challengeDao::getChallengeOpponentTeam)
+                .forEach(challenges1 -> challenges1
+                        .forEach(challenge -> challenges.add(challengeMapper.challengeToChallengeDto(challenge,
+                                challenge.getTeamByChallengerTeamId().getLeagueByLeagueLeaguId().getGameByGameGameId(),
+                                challenge.getTeamByChallengerTeamId(), challenge.getTeamByOponnentTeamId()))));
         challenges.sort((o1, o2) -> o1.getChallengeStart().compareTo(o2.getChallengeStart()));
         return challenges;
     }
@@ -226,4 +251,219 @@ public class ChallengeServiceImpl implements ChallengeService {
         return challenge.getTeamByChallengerTeamId().getTeamUsersByTeamId().
                 stream().map(TeamUser::getUserByUserUserId).anyMatch(user1 -> user1.getUserId() == user.getUserId());
     }
+
+    @Transactional(readOnly = true)
+    public boolean isOpponentChallenge(int userId, int challengeId) throws ServiceException {
+        User user = userService.getUserById(userId);
+        Challenge challenge = challengeDao.findById(challengeId);
+        return challenge.getTeamByOponnentTeamId().getTeamUsersByTeamId().
+                stream().map(TeamUser::getUserByUserUserId).anyMatch(user1 -> user1.getUserId() == user.getUserId());
+    }
+
+    @Transactional(readOnly = true)
+    public boolean canUserSetResult(int userId, int challengeId) throws ServiceException {
+        User user = userService.getUserById(userId);
+        Challenge challenge = challengeDao.findById(challengeId);
+        if (challenge == null) {
+            throw new ServiceException("There is no challenge for challenge id: " + challengeId);
+        }
+        Team team = getTeamFromChallenge(user, challenge);
+        return !challenge.getChallengeResultsByChallengeId().stream().map(ChallengeResult::getCreator).
+                anyMatch(team1 -> team1.getTeamId() == team.getTeamId());
+
+    }
+
+    /**
+     * Some magic for process challenge to FINISHED or not
+     *
+     * @param challenge
+     * @throws ServiceException
+     */
+    public void processChallengeSave(Challenge challenge) throws ServiceException {
+
+        validateProcessChallenge(challenge);
+        List<ChallengeResult> results = new ArrayList<>(challenge.getChallengeResultsByChallengeId());
+        //check if results are same
+        if (checkResultValidity(results)) {
+            if (checkScoreValidity(results)) {
+                //different score but its ok people make mistakes
+                setChallengesState(results, ChallengeResultState.DIFFERENT_SCORE);
+            } else {
+                //score and winners are same lets Accept this
+                setChallengesState(results, ChallengeResultState.ACCEPTED);
+            }
+        } else {
+            //some fucker set false score !!!! lets decide who will get rekt
+            processFalseScore(challenge, results);
+        }
+        challenge.setState(ChallengeState.FINISHED.name());
+        challengeDao.update(challenge);
+    }
+
+    public void processFalseScore(Challenge challenge, List<ChallengeResult> results) throws ServiceException {
+
+        Team challenger = challenge.getTeamByChallengerTeamId();
+        Team opponent = challenge.getTeamByOponnentTeamId();
+
+        int challengerTrustValue = teamService.usersTrustWorthValue(challenger.getTeamId());
+        int opponentTrustValue = teamService.usersTrustWorthValue(opponent.getTeamId());
+
+        if (challengerTrustValue == opponentTrustValue) {
+            //cant decide who is cheater
+            setFalseChallengeAndRating(challenge, results);
+        } else if (challengerTrustValue > opponentTrustValue) {
+            if (challengerTrustValue > opponentTrustValue + PropertyService.TRUST_DECIDER_KOEFICIENT) {
+                setChallengeByTrustedTeam(challenger, challenge);
+            } else {
+                // well too little difference between team users ratings
+                setFalseChallengeAndRating(challenge, results);
+            }
+        } else {
+            if (opponentTrustValue > challengerTrustValue + PropertyService.TRUST_DECIDER_KOEFICIENT) {
+                setChallengeByTrustedTeam(opponent, challenge);
+            } else {
+                // well too little difference between team users ratings
+                setFalseChallengeAndRating(challenge, results);
+            }
+        }
+    }
+
+    private void setChallengeByTrustedTeam(Team trustedTeam, Challenge challenge) {
+        for (ChallengeResult result : challenge.getChallengeResultsByChallengeId()) {
+            if (result.getCreator().getTeamId() == trustedTeam.getTeamId()) {
+                result.setState(ChallengeResultState.ACCEPTED.name());
+            } else {
+                result.setState(ChallengeResultState.FALSE.name());
+            }
+        }
+    }
+
+
+    private void setFalseChallengeAndRating(Challenge challenge, List<ChallengeResult> results) throws ServiceException {
+        setChallengesState(results, ChallengeResultState.FALSE);
+        // give them bad rating -1, its not fair but someone must get it
+        teamService.punishAllCheatersMethod(challenge.getTeamByChallengerTeamId(), -1);
+        teamService.punishAllCheatersMethod(challenge.getTeamByOponnentTeamId(), -1);
+    }
+
+    private boolean validateProcessChallenge(Challenge challenge) throws ServiceException {
+        Collection<ChallengeResult> results = challenge.getChallengeResultsByChallengeId();
+        if (CustomValidationUtils.isEmpty(results)) {
+            logger.warn("There is no need for processChallenge, not even one result for challenge id:" + challenge.getChallengeId());
+            return false;
+        }
+        if (results.size() == 1) {
+            return false;
+        }
+        if (results.size() > 2) {
+            throw new ServiceException("Something is wrong there are tooo many results !!!!! Challenge id: "
+                    + challenge.getChallengeId());
+        }
+        return true;
+    }
+
+    private void setChallengesState(List<ChallengeResult> results, ChallengeResultState state) {
+        results.forEach(challengeResult -> challengeResult.setState(state.name()));
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void saveChallengeResult(int userId, ChallengeResultModel challengeResultModel) throws ServiceException {
+        User user = userService.getUserById(userId);
+        Challenge challenge = challengeDao.findById(challengeResultModel.getChallengeId());
+        validateChallenge(challenge, ChallengeState.ACCEPTED, challengeResultModel.getChallengeId());
+
+        Team team = getTeamFromChallenge(user, challenge);
+
+        List<ChallengeResult> challengeResults = new ArrayList<>();
+        challengeResults.addAll(challenge.getChallengeResultsByChallengeId());
+        if (CustomValidationUtils.isEmpty(challengeResults)) {
+            //add first result
+            createChallengeResult(challengeResultModel, challenge, team);
+        } else {
+            //add other team result
+            ChallengeResult firstResult = getFirstChallengeResult(challengeResults);
+            checkFirstTeamValidity(firstResult, team);
+            createChallengeResult(challengeResultModel, challenge, team);
+            processChallengeSave(challenge);
+        }
+    }
+
+    private void createChallengeResult(ChallengeResultModel challengeResultModel, Challenge challenge, Team team) {
+        if (challenge.getChallengeResultsByChallengeId() == null) {
+            challenge.setChallengeResultsByChallengeId(new ArrayList<>());
+        }
+        Team winnerTeam = teamDao.findById(challengeResultModel.getWinnerTeamId());
+        ChallengeResult result = challengeResultMapper.challengeResultModelToChallengeResult(challengeResultModel, challenge, winnerTeam, team);
+        challenge.getChallengeResultsByChallengeId().add(result);
+        challengeResultDao.create(result);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void updateChallengeResult(int userId, ChallengeResultModel challengeResultModel) throws ServiceException {
+        User user = userService.getUserById(userId);
+        Challenge challenge = challengeDao.findById(challengeResultModel.getChallengeId());
+        validateChallenge(challenge, ChallengeState.ACCEPTED, challengeResultModel.getChallengeId());
+
+        Team team = getTeamFromChallenge(user, challenge);
+        ChallengeResult teamResult = getChallengeResultForTeam(challenge, team);
+        Team winner = teamDao.findById(challengeResultModel.getWinnerTeamId());
+
+        teamResult.setDraw(challengeResultModel.getDraw());
+        teamResult.setTeamByWinnerTeamId(winner);
+        teamResult.setScoreLooser(challengeResultModel.getScoreLooser());
+        teamResult.setScoreWinner(challengeResultModel.getScoreWinner());
+
+        challengeResultDao.update(teamResult);
+        processChallengeSave(challenge);
+    }
+
+    private ChallengeResult getChallengeResultForTeam(Challenge challenge, Team team) throws ServiceException {
+        for (ChallengeResult result : challenge.getChallengeResultsByChallengeId()) {
+            if (result.getCreator().getTeamId() == team.getTeamId()) {
+                return result;
+            }
+        }
+        throw new ServiceException(String.format("Team id: %s doesnt have ChallengeResult for Challenge id: %s",
+                team.getTeamId(), challenge.getChallengeId()));
+    }
+
+    private ChallengeResult getFirstChallengeResult(List<ChallengeResult> challengeResult) throws ServiceException {
+        if (challengeResult.size() > 1) {
+            throw new ServiceException("Trying to add more than 2 challenge results for ChallengeResult id: "
+                    + challengeResult.get(0).getChallengeByChallengesChallengeId().getChallengeId());
+        }
+        return challengeResult.get(0);
+    }
+
+    private boolean checkResultValidity(List<ChallengeResult> results) throws ServiceException {
+        return results.get(0).getTeamByWinnerTeamId().getTeamId() == results.get(1).getTeamByWinnerTeamId().getTeamId()
+                || (results.get(0).getDraw() == 1 && results.get(1).getDraw() == 1);
+    }
+
+    private boolean checkScoreValidity(List<ChallengeResult> results) throws ServiceException {
+        return results.get(0).getScoreLooser() == results.get(1).getScoreLooser()
+                && results.get(0).getScoreWinner() == results.get(1).getScoreWinner();
+    }
+
+    private Team getTeamFromChallenge(User user, Challenge challenge) throws ServiceException {
+        Team team = challenge.getTeamByChallengerTeamId();
+        if (isUserInTeam(team.getTeamUsersByTeamId(), user)) {
+            return team;
+        }
+        team = challenge.getTeamByOponnentTeamId();
+        if (isUserInTeam(team.getTeamUsersByTeamId(), user)) {
+            return team;
+        }
+        throw new ServiceException(String.format("User id: %s is not from challenge id: %s",
+                user.getUserId(), challenge.getChallengeId()));
+    }
+
+    private void checkFirstTeamValidity(ChallengeResult firstResult, Team team) throws ServiceException {
+        if (firstResult.getCreator().getTeamId() == team.getTeamId()) {
+            throw new ServiceException(String.format("Team id: %s already set ChallengeResult id: %s ",
+                    team.getTeamId(), firstResult.getChallengeResultId()));
+        }
+    }
+
+
 }

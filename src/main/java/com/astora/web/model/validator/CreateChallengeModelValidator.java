@@ -5,6 +5,7 @@ import com.astora.web.model.CreateChallengeModel;
 import com.astora.web.utils.DateUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
+import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 import java.sql.Timestamp;
@@ -21,6 +22,7 @@ public class CreateChallengeModelValidator implements Validator {
     }
 
     public void validate(Object target, Errors errors) {
+        ValidationUtils.rejectIfEmpty(errors,"challengerTeamId","createChallenge.form.challengerTeamId.empty");
         CreateChallengeModel createChallengeModel = (CreateChallengeModel) target;
         Timestamp start = null;
         Timestamp end = null;

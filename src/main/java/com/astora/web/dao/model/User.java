@@ -1,5 +1,8 @@
 package com.astora.web.dao.model;
 
+import com.astora.web.enums.ReportReason;
+import com.astora.web.service.PropertyService;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Collection;
@@ -232,5 +235,21 @@ public class User {
 
     public void setRoleByRoleRoleId(Role roleByRoleRoleId) {
         this.roleByRoleRoleId = roleByRoleRoleId;
+    }
+
+    public boolean isTrustWorth(){
+        if(getUserRating() + PropertyService.NEW_PLAYER_KOEFICIENT < 0){
+            return true;
+        }
+        if(getReportsByUserId().stream().anyMatch(report -> report.getReason().equals(ReportReason.USER_INSERT_INVALID_DATA)
+                || report.getReason().equals(ReportReason.USER_CHEATER))){
+            return false;
+        }
+        //TODO think about it !!!!
+        return true;
+    }
+
+    public void addUserRating(int value){
+        setUserRating(getUserRating() + value);
     }
 }

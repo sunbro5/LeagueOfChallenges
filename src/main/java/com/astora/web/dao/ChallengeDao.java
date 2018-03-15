@@ -11,4 +11,6 @@ public interface ChallengeDao extends EntityDao<Challenge> {
 
     List<Challenge> getChallengeForTeam(Team team);
 
+    List<Challenge> getChallengeOpponentTeam(Team team);
+
 }

@@ -20,6 +20,7 @@ public class ChallengeDto {
     private int opponentTeamId;
     private int gameId;
     private String gameName;
+    private boolean challenger;
 
     public void setGameName(String gameName) {
         this.gameName = gameName;
@@ -116,5 +117,13 @@ public class ChallengeDto {
 
     public void setState(ChallengeState state) {
         this.state = state;
+    }
+
+    public boolean isChallenger() {
+        return challenger;
+    }
+
+    public void setChallenger(boolean challenger) {
+        this.challenger = challenger;
     }
 }

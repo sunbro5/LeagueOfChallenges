@@ -97,7 +97,7 @@
                         center: {lat: -34.397, lng: 150.644},
                         zoom: 16
                     });
-                    infoWindow = new google.maps.InfoWindow;
+
 
                     // Try HTML5 geolocation.
                     if (navigator.geolocation) {
@@ -115,9 +115,7 @@
                             a.href = "/hibernate?location=" + pos;
                             document.body.appendChild(a);
 
-                            infoWindow.setPosition(pos);
-                            infoWindow.setContent('Your location.');
-                            infoWindow.open(map);
+
 
                             var yourAvatarIcon = {
                                 url: "/resources/img/map/anonym.png", // url
@@ -270,7 +268,7 @@
 
 <script src="/resources/js/jquery.elfinder.min.js"></script>
 
-<script src="/esources/js/jquery.raty.min.js"></script>
+<script src="/resources/js/jquery.raty.min.js"></script>
 
 <script src="/resources/js/jquery.iphone.toggle.js"></script>
 

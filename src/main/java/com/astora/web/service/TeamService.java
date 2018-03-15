@@ -22,8 +22,20 @@ public interface TeamService {
 
     List<TeamPickDto> getAllUserTeams(int userId) throws ServiceException;
 
+    List<GameTypeDto> getAllUserGames(int userId) throws ServiceException;
+
     Team getTeamById(int id) throws ServiceException;
 
     boolean isUserInTeam(User user, Team team);
+
+    /**
+     * Return 0 if team is trustworth or return number count from users rating
+     * @param teamId
+     * @return
+     * @throws ServiceException
+     */
+    int usersTrustWorthValue(int teamId) throws ServiceException;
+
+    void punishAllCheatersMethod(Team team, int value) throws ServiceException;
 
 }

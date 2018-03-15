@@ -3,11 +3,13 @@ package com.astora.web.controller;
 import com.astora.web.dto.ChallengeInfoDto;
 import com.astora.web.exception.ServiceException;
 import com.astora.web.exception.UserConflictException;
+import com.astora.web.model.ChallengeResultModel;
 import com.astora.web.service.ChallengeService;
 import com.astora.web.service.GameService;
 import com.astora.web.service.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -61,15 +63,31 @@ public class ChallengeDetailController extends BaseUserPage {
         return renderChallengeDetail(challengeId, model);
     }
 
-    public ModelAndView renderChallengeDetail(int challengeId, Map<String, Object> model) throws ServiceException {
+    public ModelAndView renderChallengeDetail(int challengeId, Map<String, Object> map) throws ServiceException {
+        int userId = getUserId();
         ChallengeInfoDto challengeInfoDto = challengeService.getChallengeDetail(challengeId);
-        model.put("challengeDetail", challengeInfoDto);
-        boolean isUserChallenge = challengeService.isUserChallenge(getUserId(), challengeId);
+        map.put("challengeDetail", challengeInfoDto);
+        boolean isUserChallenge = challengeService.isUserChallenge(userId, challengeId);
         if (!isUserChallenge) {
-            model.put("userTeamInformationList", teamService.getTeamsByGameName(getUserId(), challengeInfoDto.getGameName()));
+            map.put("isOpponentChallenge", challengeService.isOpponentChallenge(userId, challengeId));
+            map.put("userTeamInformationList", teamService.getTeamsByGameName(userId, challengeInfoDto.getGameName()));
         }
-        model.put("isUserChallenge", isUserChallenge);
-        return new ModelAndView("challengeDetail", model);
+        map.put("isUserChallenge", isUserChallenge);
+        map.put("canUserSetResult", challengeService.canUserSetResult(userId, challengeId));
+        return new ModelAndView("challengeDetail", map);
     }
+
+    @RequestMapping("/challengeResult")
+    public ModelAndView showChallengeSetResult(@RequestParam("challengeId") int challengeId) {
+        return renderChallengeSetResult(challengeId, init());
+    }
+
+    public ModelAndView renderChallengeSetResult(int challengeId, Map<String, Object> map) {
+        ChallengeResultModel model = new ChallengeResultModel();
+        model.setChallengeId(challengeId);
+        map.put(ChallengeResultModel.MODEL_NAME, model);
+        return new ModelAndView("challengeSetResult", map);
+    }
+
 
 }

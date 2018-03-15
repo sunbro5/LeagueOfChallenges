@@ -9,7 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.Map;
 
 @Controller
-public class MapController {
+public class MapController extends BaseUserPage{
 
     private ChallengeService challengeService;
 
@@ -18,10 +18,15 @@ public class MapController {
         this.challengeService = challengeService;
     }
 
-    @RequestMapping("/showMap")
-    public ModelAndView showMap(Map<String, Object> map) {
-        map.put("challenges", challengeService.prepareChallenges());
+
+    public ModelAndView renderMap(Map<String, Object> map) {
+        map.put("challenges", challengeService.getAllActiveChallenges());
         return new ModelAndView("map", map);
+    }
+
+    @RequestMapping("/showMap")
+    public ModelAndView showMap(){
+        return renderMap(init());
     }
 
 }
