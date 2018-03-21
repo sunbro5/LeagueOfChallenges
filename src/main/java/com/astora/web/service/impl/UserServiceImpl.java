@@ -16,6 +16,7 @@ import com.astora.web.exception.FriendAlreadyExistsException;
 import com.astora.web.exception.ServiceException;
 import com.astora.web.exception.UserDoesntExists;
 import com.astora.web.model.SendMessageModel;
+import com.astora.web.service.PropertyService;
 import com.astora.web.service.UserService;
 import com.astora.web.utils.CustomValidationUtils;
 import org.apache.log4j.Logger;
@@ -91,5 +92,6 @@ public class UserServiceImpl implements UserService {
         userInfo.setReportList(reportList);
         return userInfo;
     }
+
 
 }

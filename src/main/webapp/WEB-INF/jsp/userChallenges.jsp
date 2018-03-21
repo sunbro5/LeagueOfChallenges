@@ -11,7 +11,7 @@
         <thead>
         <tr>
             <th><spring:message code="userChallenges.form.game.label"/></th>
-            <th><spring:message code="userChallenges.form.team.label"/+></th>
+            <th><spring:message code="userChallenges.form.team.label"/></th>
             <th><spring:message code="userChallenges.form.start.label"/></th>
             <th><spring:message code="userChallenges.form.end.label"/></th>
             <th><spring:message code="userChallenges.form.description.label"/></th>
@@ -56,7 +56,7 @@
             <th><spring:message code="userChallenges.form.state.label"/></th>
         </tr>
         </thead>
-        <c:forEach items="${allActiveChallengesList}" var="activeChallenge">
+        <c:forEach items="${allActiveJoinedChallengesList}" var="activeChallenge">
             <tr>
                 <th>${activeChallenge.gameName}</th>
                 <th>${activeChallenge.challengerTeamName}</th>

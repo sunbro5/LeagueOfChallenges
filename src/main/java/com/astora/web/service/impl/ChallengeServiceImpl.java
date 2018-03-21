@@ -256,6 +256,9 @@ public class ChallengeServiceImpl implements ChallengeService {
     public boolean isOpponentChallenge(int userId, int challengeId) throws ServiceException {
         User user = userService.getUserById(userId);
         Challenge challenge = challengeDao.findById(challengeId);
+        if (challenge.getTeamByOponnentTeamId() == null) {
+            return false;
+        }
         return challenge.getTeamByOponnentTeamId().getTeamUsersByTeamId().
                 stream().map(TeamUser::getUserByUserUserId).anyMatch(user1 -> user1.getUserId() == user.getUserId());
     }
@@ -267,6 +270,9 @@ public class ChallengeServiceImpl implements ChallengeService {
         if (challenge == null) {
             throw new ServiceException("There is no challenge for challenge id: " + challengeId);
         }
+        if (!challenge.getState().equals(ChallengeState.ACCEPTED.name())) {
+            return false;
+        }
         Team team = getTeamFromChallenge(user, challenge);
         return !challenge.getChallengeResultsByChallengeId().stream().map(ChallengeResult::getCreator).
                 anyMatch(team1 -> team1.getTeamId() == team.getTeamId());
@@ -274,7 +280,7 @@ public class ChallengeServiceImpl implements ChallengeService {
     }
 
     /**
-     * Some magic for process challenge to FINISHED or not
+     * Some magic for process challenge to FINISHED
      *
      * @param challenge
      * @throws ServiceException
@@ -287,17 +293,22 @@ public class ChallengeServiceImpl implements ChallengeService {
         if (checkResultValidity(results)) {
             if (checkScoreValidity(results)) {
                 //different score but its ok people make mistakes
-                setChallengesState(results, ChallengeResultState.DIFFERENT_SCORE);
+                setChallengeResultsState(results, ChallengeResultState.DIFFERENT_SCORE);
             } else {
                 //score and winners are same lets Accept this
-                setChallengesState(results, ChallengeResultState.ACCEPTED);
+                setChallengeResultsState(results, ChallengeResultState.ACCEPTED);
             }
         } else {
-            //some fucker set false score !!!! lets decide who will get rekt
+            //some fuc*** set false score !!!! lets decide who will get rekt
             processFalseScore(challenge, results);
         }
+        saveChallengeResults(results);
         challenge.setState(ChallengeState.FINISHED.name());
         challengeDao.update(challenge);
+    }
+
+    public void saveChallengeResults(List<ChallengeResult> results){
+        results.forEach(challengeResultDao::update);
     }
 
     public void processFalseScore(Challenge challenge, List<ChallengeResult> results) throws ServiceException {
@@ -313,14 +324,14 @@ public class ChallengeServiceImpl implements ChallengeService {
             setFalseChallengeAndRating(challenge, results);
         } else if (challengerTrustValue > opponentTrustValue) {
             if (challengerTrustValue > opponentTrustValue + PropertyService.TRUST_DECIDER_KOEFICIENT) {
-                setChallengeByTrustedTeam(challenger, challenge);
+                setChallengeByTrustedTeam(challenger, opponent, challenge);
             } else {
                 // well too little difference between team users ratings
                 setFalseChallengeAndRating(challenge, results);
             }
         } else {
             if (opponentTrustValue > challengerTrustValue + PropertyService.TRUST_DECIDER_KOEFICIENT) {
-                setChallengeByTrustedTeam(opponent, challenge);
+                setChallengeByTrustedTeam(opponent, challenger, challenge);
             } else {
                 // well too little difference between team users ratings
                 setFalseChallengeAndRating(challenge, results);
@@ -328,19 +339,20 @@ public class ChallengeServiceImpl implements ChallengeService {
         }
     }
 
-    private void setChallengeByTrustedTeam(Team trustedTeam, Challenge challenge) {
+    private void setChallengeByTrustedTeam(Team trustedTeam, Team falseTeam, Challenge challenge) throws ServiceException {
         for (ChallengeResult result : challenge.getChallengeResultsByChallengeId()) {
             if (result.getCreator().getTeamId() == trustedTeam.getTeamId()) {
                 result.setState(ChallengeResultState.ACCEPTED.name());
             } else {
                 result.setState(ChallengeResultState.FALSE.name());
+                teamService.punishAllCheatersMethod(falseTeam, -10);
             }
         }
     }
 
 
     private void setFalseChallengeAndRating(Challenge challenge, List<ChallengeResult> results) throws ServiceException {
-        setChallengesState(results, ChallengeResultState.FALSE);
+        setChallengeResultsState(results, ChallengeResultState.FALSE);
         // give them bad rating -1, its not fair but someone must get it
         teamService.punishAllCheatersMethod(challenge.getTeamByChallengerTeamId(), -1);
         teamService.punishAllCheatersMethod(challenge.getTeamByOponnentTeamId(), -1);
@@ -362,11 +374,11 @@ public class ChallengeServiceImpl implements ChallengeService {
         return true;
     }
 
-    private void setChallengesState(List<ChallengeResult> results, ChallengeResultState state) {
+    private void setChallengeResultsState(List<ChallengeResult> results, ChallengeResultState state) {
         results.forEach(challengeResult -> challengeResult.setState(state.name()));
     }
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     public void saveChallengeResult(int userId, ChallengeResultModel challengeResultModel) throws ServiceException {
         User user = userService.getUserById(userId);
         Challenge challenge = challengeDao.findById(challengeResultModel.getChallengeId());
@@ -388,12 +400,19 @@ public class ChallengeServiceImpl implements ChallengeService {
         }
     }
 
-    private void createChallengeResult(ChallengeResultModel challengeResultModel, Challenge challenge, Team team) {
+    private void createChallengeResult(ChallengeResultModel challengeResultModel, Challenge challenge, Team team) throws ServiceException {
         if (challenge.getChallengeResultsByChallengeId() == null) {
             challenge.setChallengeResultsByChallengeId(new ArrayList<>());
         }
-        Team winnerTeam = teamDao.findById(challengeResultModel.getWinnerTeamId());
+        Team winnerTeam = null;
+
+        if(challengeResultModel.getWinnerTeamId() != 0){
+            winnerTeam = getWinnerTeam(challenge, challengeResultModel.getWinnerTeamId());
+            challengeResultModel.setDraw(1);
+        }
+
         ChallengeResult result = challengeResultMapper.challengeResultModelToChallengeResult(challengeResultModel, challenge, winnerTeam, team);
+
         challenge.getChallengeResultsByChallengeId().add(result);
         challengeResultDao.create(result);
     }
@@ -410,8 +429,8 @@ public class ChallengeServiceImpl implements ChallengeService {
 
         teamResult.setDraw(challengeResultModel.getDraw());
         teamResult.setTeamByWinnerTeamId(winner);
-        teamResult.setScoreLooser(challengeResultModel.getScoreLooser());
-        teamResult.setScoreWinner(challengeResultModel.getScoreWinner());
+//        teamResult.setScoreChallenger(challengeResultModel.getScoreChallenger());
+//        teamResult.setScoreOpponent(challengeResultModel.getScoreOpponent());
 
         challengeResultDao.update(teamResult);
         processChallengeSave(challenge);
@@ -441,8 +460,8 @@ public class ChallengeServiceImpl implements ChallengeService {
     }
 
     private boolean checkScoreValidity(List<ChallengeResult> results) throws ServiceException {
-        return results.get(0).getScoreLooser() == results.get(1).getScoreLooser()
-                && results.get(0).getScoreWinner() == results.get(1).getScoreWinner();
+        return results.get(0).getScoreChallenger() == results.get(1).getScoreChallenger()
+                && results.get(0).getScoreOpponent() == results.get(1).getScoreOpponent();
     }
 
     private Team getTeamFromChallenge(User user, Challenge challenge) throws ServiceException {
@@ -463,6 +482,16 @@ public class ChallengeServiceImpl implements ChallengeService {
             throw new ServiceException(String.format("Team id: %s already set ChallengeResult id: %s ",
                     team.getTeamId(), firstResult.getChallengeResultId()));
         }
+    }
+
+    private Team getWinnerTeam(Challenge challenge, int winnerTeamId) throws ServiceException {
+        if (challenge.getTeamByChallengerTeamId().getTeamId() == winnerTeamId) {
+            return challenge.getTeamByChallengerTeamId();
+        }
+        if (challenge.getTeamByOponnentTeamId() != null && challenge.getTeamByOponnentTeamId().getTeamId() == winnerTeamId) {
+            return challenge.getTeamByOponnentTeamId();
+        }
+        throw new ServiceException("Cant find winner team for challenge id: " + challenge.getChallengeId());
     }
 
 

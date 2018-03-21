@@ -49,21 +49,21 @@ public class ReportController extends BaseUserPage {
 
     @RequestMapping("/report")
     public ModelAndView showReport(@RequestParam(value = "userNickname", required = false) String nickname) {
-        return renderReport(init(), nickname);
+        Map<String, Object> model = init();
+        UserReportModel reportModel = new UserReportModel();
+        if(!CustomValidationUtils.isEmpty(nickname)){
+            reportModel.setNickname(nickname);
+        }
+        model.put(UserReportModel.MODEL_NAME, reportModel);
+        return renderReport(model);
     }
 
     private ModelAndView renderReport() {
-        return renderReport(init(), null);
+        return renderReport(init());
     }
 
 
-    private ModelAndView renderReport(Map<String, Object> model, String nickname) {
-        UserReportModel reportModel = getUserReportModel();
-        if (!CustomValidationUtils.isEmpty(nickname)) {
-            reportModel.setNickname(nickname);
-            model.put(UserReportModel.MODEL_NAME, reportModel);
-        }
-        model.put(UserReportModel.MODEL_NAME, reportModel);
+    private ModelAndView renderReport(Map<String, Object> model) {
         model.put("reportReasonTypes", ReportReason.values());
         try {
             List<UserReportInfo> userReports = reportService.getUserReports(getUserId());
@@ -78,7 +78,7 @@ public class ReportController extends BaseUserPage {
     public ModelAndView sendReport(@Validated @ModelAttribute(UserReportModel.MODEL_NAME) UserReportModel reportModel, BindingResult result) throws ServiceException {
         Map<String, Object> model = init();
         if (result.hasErrors()) {
-            renderReport();
+            return renderReport();
         }
         try {
             reportService.createUpdateReport(getUserId(), reportModel);
@@ -90,12 +90,7 @@ public class ReportController extends BaseUserPage {
             return renderReport();
         }
         pushInfo(model, "message.report.successfullyCreated");
-        return renderReport(model,null);
-    }
-
-    @ModelAttribute(UserReportModel.MODEL_NAME)
-    public UserReportModel getUserReportModel() {
-        return new UserReportModel();
+        return renderReport(model);
     }
 
 }

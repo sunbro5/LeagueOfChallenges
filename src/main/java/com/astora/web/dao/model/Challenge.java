@@ -23,6 +23,7 @@ public class Challenge {
     private String coordsLng;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "challenge_id")
     public int getChallengeId() {
         return challengeId;
@@ -151,15 +152,6 @@ public class Challenge {
         this.challengeResultsByChallengeId = challengeResultsByChallengeId;
     }
 
-    public ChallengeResult getAcceptedChallengeResult() {
-        for (ChallengeResult challengeResult : getChallengeResultsByChallengeId()){
-            if(challengeResult.getState().equals(ChallengeResultState.ACCEPTED)
-                    || challengeResult.getState().equals(ChallengeResultState.ACCEPTED)){
-                return challengeResult;
-            }
-        }
-        return null;
-    }
 
 
     @Override

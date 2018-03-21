@@ -1,11 +1,6 @@
 package com.astora.web.dao.model;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.sql.Timestamp;
 
 /**
@@ -19,6 +14,7 @@ public class Friend {
     private User userByUserId;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "friend_id")
     public int getFriendId() {
         return friendId;

@@ -33,6 +33,7 @@ public class User {
 
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_id")
     public int getUserId() {
         return userId;
@@ -237,19 +238,5 @@ public class User {
         this.roleByRoleRoleId = roleByRoleRoleId;
     }
 
-    public boolean isTrustWorth(){
-        if(getUserRating() + PropertyService.NEW_PLAYER_KOEFICIENT < 0){
-            return true;
-        }
-        if(getReportsByUserId().stream().anyMatch(report -> report.getReason().equals(ReportReason.USER_INSERT_INVALID_DATA)
-                || report.getReason().equals(ReportReason.USER_CHEATER))){
-            return false;
-        }
-        //TODO think about it !!!!
-        return true;
-    }
 
-    public void addUserRating(int value){
-        setUserRating(getUserRating() + value);
-    }
 }

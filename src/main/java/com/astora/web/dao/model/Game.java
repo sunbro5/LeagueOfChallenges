@@ -1,10 +1,6 @@
 package com.astora.web.dao.model;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.Collection;
 
 /**
@@ -20,6 +16,7 @@ public class Game {
     private int teamMemberCount;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "game_id")
     public int getGameId() {
         return gameId;

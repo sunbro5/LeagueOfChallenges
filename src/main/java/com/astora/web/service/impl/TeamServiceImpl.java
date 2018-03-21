@@ -3,11 +3,13 @@ package com.astora.web.service.impl;
 import com.astora.web.cache.GameCache;
 import com.astora.web.dao.TeamDao;
 import com.astora.web.dao.TeamUserDao;
+import com.astora.web.dao.UserDao;
 import com.astora.web.dao.model.*;
 import com.astora.web.dto.games.GameTypeDto;
 import com.astora.web.dto.games.TeamInfoDto;
 import com.astora.web.dto.games.TeamPickDto;
 import com.astora.web.enums.Leagues;
+import com.astora.web.enums.ReportReason;
 import com.astora.web.exception.ServiceException;
 import com.astora.web.exception.UserDoesntExists;
 import com.astora.web.model.NewTeamModel;
@@ -41,6 +43,9 @@ public class TeamServiceImpl implements TeamService {
 
     @Autowired
     private TeamUserDao teamUserDao;
+
+    @Autowired
+    private UserDao userDao;
 
     @Transactional
     public void createDefaultTeam(int userId, String gameName) throws ServiceException {
@@ -199,17 +204,36 @@ public class TeamServiceImpl implements TeamService {
         Team team = getTeamById(teamId);
         for (TeamUser teamUser : team.getTeamUsersByTeamId()) {
             User user = teamUser.getUserByUserUserId();
-            if (!user.isTrustWorth()) {
+            if (!isTrustWorth(user)) {
                 teamTrustValue += user.getUserRating();
             }
         }
         return teamTrustValue;
     }
 
-    @Override
+    @Transactional
     public void punishAllCheatersMethod(Team team, int value) throws ServiceException {
         team.getTeamUsersByTeamId().stream().map(TeamUser::getUserByUserUserId)
-                .forEach(user -> user.addUserRating(value));
+                .forEach(user -> {
+                    addUserRating(user, value);
+                    userDao.update(user);
+                });
+    }
+
+    public boolean isTrustWorth(User user) {
+        if (user.getUserRating() + PropertyService.NEW_PLAYER_KOEFICIENT < 0) {
+            return true;
+        }
+        if (user.getReportsByUserId().stream().anyMatch(report -> report.getReason().equals(ReportReason.USER_INSERT_INVALID_DATA)
+                || report.getReason().equals(ReportReason.USER_CHEATER))) {
+            return false;
+        }
+        //TODO think about it !!!!
+        return true;
+    }
+
+    public void addUserRating(User user, int value) {
+        user.setUserRating(user.getUserRating() + value);
     }
 
 }

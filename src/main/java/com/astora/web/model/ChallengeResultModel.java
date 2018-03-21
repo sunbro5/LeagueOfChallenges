@@ -2,6 +2,7 @@ package com.astora.web.model;
 
 import com.astora.web.enums.ChallengeResultState;
 
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -13,10 +14,10 @@ public class ChallengeResultModel {
 
     private int challengeId;
     private int winnerTeamId;
-    @NotNull(message = "ChallengeResultModel.scoreWinner.empty")
-    private int scoreWinner;
-    @NotNull(message = "ChallengeResultModel.scoreLooser.empty")
-    private int scoreLooser;
+    @Digits(fraction = 0, integer = 10)
+    private String scoreChallenger;
+    @Digits(fraction = 0, integer = 10)
+    private String scoreOpponent;
     private int draw;
     private String state;
 
@@ -41,20 +42,20 @@ public class ChallengeResultModel {
         this.winnerTeamId = winnerTeamId;
     }
 
-    public int getScoreWinner() {
-        return scoreWinner;
+    public String getScoreChallenger() {
+        return scoreChallenger;
     }
 
-    public void setScoreWinner(int scoreWinner) {
-        this.scoreWinner = scoreWinner;
+    public void setScoreChallenger(String scoreChallenger) {
+        this.scoreChallenger = scoreChallenger;
     }
 
-    public int getScoreLooser() {
-        return scoreLooser;
+    public String getScoreOpponent() {
+        return scoreOpponent;
     }
 
-    public void setScoreLooser(int scoreLooser) {
-        this.scoreLooser = scoreLooser;
+    public void setScoreOpponent(String scoreOpponent) {
+        this.scoreOpponent = scoreOpponent;
     }
 
     public int getDraw() {

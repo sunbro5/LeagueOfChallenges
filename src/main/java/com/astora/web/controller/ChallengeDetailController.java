@@ -9,11 +9,13 @@ import com.astora.web.service.GameService;
 import com.astora.web.service.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.util.Map;
 
 @Controller
@@ -78,15 +80,32 @@ public class ChallengeDetailController extends BaseUserPage {
     }
 
     @RequestMapping("/challengeResult")
-    public ModelAndView showChallengeSetResult(@RequestParam("challengeId") int challengeId) {
-        return renderChallengeSetResult(challengeId, init());
+    public ModelAndView showChallengeResult(@RequestParam("challengeId") int challengeId) throws ServiceException {
+        Map<String, Object> map = init();
+        ChallengeResultModel challengeResultModel = new ChallengeResultModel();
+        challengeResultModel.setChallengeId(challengeId);
+        map.put(ChallengeResultModel.MODEL_NAME, challengeResultModel);
+        return renderChallengeResult(map, challengeId);
     }
 
-    public ModelAndView renderChallengeSetResult(int challengeId, Map<String, Object> map) {
-        ChallengeResultModel model = new ChallengeResultModel();
-        model.setChallengeId(challengeId);
-        map.put(ChallengeResultModel.MODEL_NAME, model);
-        return new ModelAndView("challengeSetResult", map);
+    public ModelAndView renderChallengeResult(Map<String, Object> map, int challengeId) throws ServiceException {
+        boolean isUserChallenge = challengeService.isUserChallenge(getUserId(), challengeId);
+        if (!isUserChallenge) {
+            map.put("isOpponentChallenge", challengeService.isOpponentChallenge(getUserId(), challengeId));
+        }
+        map.put("isUserChallenge", isUserChallenge);
+        ChallengeInfoDto challengeInfoDto = challengeService.getChallengeDetail(challengeId);
+        map.put("challengeDetail", challengeInfoDto);
+        return new ModelAndView("challengeResult", map);
+    }
+
+    @RequestMapping("/creteChallengeResult")
+    public ModelAndView createResult(@ModelAttribute(ChallengeResultModel.MODEL_NAME) @Valid ChallengeResultModel model, BindingResult result) throws ServiceException {
+        if(result.hasErrors()){
+            return renderChallengeResult(init(), model.getChallengeId());
+        }
+        challengeService.saveChallengeResult(getUserId(),model);
+        return renderChallengeDetail(model.getChallengeId(),init());
     }
 
 
