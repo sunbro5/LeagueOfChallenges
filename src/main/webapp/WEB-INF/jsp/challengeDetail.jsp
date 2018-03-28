@@ -83,7 +83,7 @@
                     <c:when test="${isUserChallenge && challengeDetail.state == 'CHALLENGED'}">
                         <div class="row-fluid">
                             <c:url var="acceptUrl" value="/user/acceptChallenge">
-                                <%--@elvariable id="challengeDetail" type="com.astora.web.dto.ChallengeInfoDto"--%>
+                                <%--@elvariable id="challengeDetail" type="com.astora.web.dto.challenge.ChallengeInfoDto"--%>
                                 <c:param name="challengeId" value="${challengeDetail.challengeId}"/>
                             </c:url>
                             <strong>

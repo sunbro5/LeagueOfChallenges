@@ -1,5 +1,7 @@
 package com.astora.web.dao.model;
 
+import com.astora.web.enums.ChallengeResultState;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 
@@ -13,7 +15,7 @@ public class ChallengeResult {
     private int challengeResultId;
     private int scoreChallenger;
     private int scoreOpponent;
-    private String state;
+    private ChallengeResultState state;
     private Timestamp created;
     private int draw;
     private Challenge challengeByChallengesChallengeId;
@@ -53,11 +55,12 @@ public class ChallengeResult {
 
     @Basic
     @Column(name = "state")
-    public String getState() {
+    @Enumerated(EnumType.STRING)
+    public ChallengeResultState getState() {
         return state;
     }
 
-    public void setState(String state) {
+    public void setState(ChallengeResultState state) {
         this.state = state;
     }
 

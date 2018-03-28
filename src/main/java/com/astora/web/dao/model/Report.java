@@ -1,5 +1,7 @@
 package com.astora.web.dao.model;
 
+import com.astora.web.enums.ReportReason;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 
@@ -10,7 +12,7 @@ import java.sql.Timestamp;
 public class Report {
     private int reportId;
     private Timestamp created;
-    private String reason;
+    private ReportReason reason;
     private String reasonText;
     private User userByReportingUserId;
     private User userByReportedUserId;
@@ -38,11 +40,12 @@ public class Report {
 
     @Basic
     @Column(name = "reason")
-    public String getReason() {
+    @Enumerated(EnumType.STRING)
+    public ReportReason getReason() {
         return reason;
     }
 
-    public void setReason(String reason) {
+    public void setReason(ReportReason reason) {
         this.reason = reason;
     }
 

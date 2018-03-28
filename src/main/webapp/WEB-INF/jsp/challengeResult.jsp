@@ -10,12 +10,12 @@
         <c:choose>
             <c:when test="${isUserChallenge}">
                 <div class="form-group">
-                    <p><spring:message code="challengeResult.form.scoreWinner.label"/></p>
+                    <p><spring:message code="challengeResult.form.yourScore.label"/></p>
                     <form:input cssClass="form-control" path="scoreChallenger"/>
                     <form:errors path="scoreChallenger" element="p" cssClass="error"/>
                 </div>
                 <div class="form-group">
-                    <p><spring:message code="challengeResult.form.scoreLooser.label"/></p>
+                    <p><spring:message code="challengeResult.form.opponentScore.label"/></p>
                     <form:input cssClass="form-control" path="scoreOpponent"/>
                     <form:errors path="scoreOpponent" element="p" cssClass="error"/>
                 </div>
@@ -27,27 +27,27 @@
                     <form:radiobutton path="winnerTeamId" value="${challengeDetail.opponentTeamId}"/><spring:message
                         code="registration.form.opponentWinner.label"/>
                 </div>
-                <input type="submit" value="<spring:message code="registration.form.confirmButton.label"/>"
+                <input type="submit" value="<spring:message code="challengeResult.form.confirmButton.label"/>"
                        class="btn btn-default">
             </c:when>
             <c:when test="${isOpponentChallenge}">
                 <div class="form-group">
-                    <p><spring:message code="challengeResult.form.scoreWinner.label"/></p>
+                    <p><spring:message code="challengeResult.form.opponentScore.label"/></p>
                     <form:input cssClass="form-control" path="scoreChallenger"/>
                     <form:errors path="scoreChallenger" element="p" cssClass="error"/>
                 </div>
                 <div class="form-group">
-                    <p><spring:message code="challengeResult.form.scoreLooser.label"/></p>
+                    <p><spring:message code="challengeResult.form.yourScore.label"/></p>
                     <form:input cssClass="form-control" path="scoreOpponent"/>
                     <p><form:errors path="scoreOpponent" cssClass="error"/></p>
                 </div>
                 <div class="form-group">
                     <p><spring:message code="challengeResult.form.winner.label"/></p>
                     <form:radiobutton path="winnerTeamId" value="${challengeDetail.challengerTeamId}"/><spring:message
-                        code="challengeResult.form.challengerWinner.label"/>
+                        code="registration.form.opponentWinner.label"/>
                     <form:radiobutton path="winnerTeamId" value="0"/><spring:message code="registration.form.draw.label"/>
                     <form:radiobutton path="winnerTeamId" value="${challengeDetail.opponentTeamId}"/><spring:message
-                        code="registration.form.opponentWinner.label"/>
+                        code="challengeResult.form.challengerWinner.label"/>
                 </div>
                 <input type="submit" value="<spring:message code="challengeResult.form.confirmButton.label"/>"
                        class="btn btn-default">

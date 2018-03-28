@@ -1,6 +1,6 @@
 package com.astora.web.controller;
 
-import com.astora.web.dto.ChallengeInfoDto;
+import com.astora.web.dto.challenge.ChallengeInfoDto;
 import com.astora.web.exception.ServiceException;
 import com.astora.web.exception.UserConflictException;
 import com.astora.web.model.ChallengeResultModel;

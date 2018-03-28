@@ -4,8 +4,8 @@ import com.astora.web.dao.ChallengeDao;
 import com.astora.web.dao.ChallengeResultDao;
 import com.astora.web.dao.TeamDao;
 import com.astora.web.dao.model.*;
-import com.astora.web.dto.ChallengeDto;
-import com.astora.web.dto.ChallengeInfoDto;
+import com.astora.web.dto.challenge.ChallengeDto;
+import com.astora.web.dto.challenge.ChallengeInfoDto;
 import com.astora.web.enums.ChallengeResultState;
 import com.astora.web.enums.ChallengeState;
 import com.astora.web.exception.ServiceException;
@@ -83,7 +83,7 @@ public class ChallengeServiceImpl implements ChallengeService {
     public void createChallenge(CreateChallengeModel createChallengeModel) throws ServiceException {
         Team team = teamService.getTeamById(createChallengeModel.getChallengerTeamId());
         Challenge challenge = new Challenge();
-        challenge.setState(ChallengeState.CREATED.name());
+        challenge.setState(ChallengeState.CREATED);
         challenge.setText(createChallengeModel.getText());
         challenge.setCoordsLat(createChallengeModel.getCoordsLat());
         challenge.setCoordsLng(createChallengeModel.getCoordsLng());
@@ -176,7 +176,7 @@ public class ChallengeServiceImpl implements ChallengeService {
         validateChallenge(challenge, ChallengeState.CREATED, challengeId);
         validateOpponent(challenge, team);
         challenge.setTeamByOponnentTeamId(team);
-        challenge.setState(ChallengeState.CHALLENGED.name());
+        challenge.setState(ChallengeState.CHALLENGED);
         challengeDao.update(challenge);
     }
 
@@ -195,12 +195,12 @@ public class ChallengeServiceImpl implements ChallengeService {
         Challenge challenge = challengeDao.findById(challengeId);
         validateChallenge(challenge, oldState, challengeId);
         validateTeamUser(challenge, user, true);
-        challenge.setState(newState.name());
+        challenge.setState(newState);
         challengeDao.update(challenge);
     }
 
     private void validateChallenge(Challenge challenge, ChallengeState challengeState, int challengeId) throws ServiceException {
-        if (challenge == null || !challenge.getState().equals(challengeState.name())) {
+        if (challenge == null || challenge.getState() != (challengeState)) {
             throw new ServiceException("Challenge does not exists or is in wrong state. Id: " + challengeId);
         }
     }
@@ -303,7 +303,7 @@ public class ChallengeServiceImpl implements ChallengeService {
             processFalseScore(challenge, results);
         }
         saveChallengeResults(results);
-        challenge.setState(ChallengeState.FINISHED.name());
+        challenge.setState(ChallengeState.FINISHED);
         challengeDao.update(challenge);
     }
 
@@ -342,9 +342,9 @@ public class ChallengeServiceImpl implements ChallengeService {
     private void setChallengeByTrustedTeam(Team trustedTeam, Team falseTeam, Challenge challenge) throws ServiceException {
         for (ChallengeResult result : challenge.getChallengeResultsByChallengeId()) {
             if (result.getCreator().getTeamId() == trustedTeam.getTeamId()) {
-                result.setState(ChallengeResultState.ACCEPTED.name());
+                result.setState(ChallengeResultState.ACCEPTED);
             } else {
-                result.setState(ChallengeResultState.FALSE.name());
+                result.setState(ChallengeResultState.FALSE);
                 teamService.punishAllCheatersMethod(falseTeam, -10);
             }
         }
@@ -375,7 +375,7 @@ public class ChallengeServiceImpl implements ChallengeService {
     }
 
     private void setChallengeResultsState(List<ChallengeResult> results, ChallengeResultState state) {
-        results.forEach(challengeResult -> challengeResult.setState(state.name()));
+        results.forEach(challengeResult -> challengeResult.setState(state));
     }
 
     @Transactional

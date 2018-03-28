@@ -2,8 +2,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<%--@elvariable id="challenge" type="com.astora.web.dto.ChallengeDto"--%>
-<%--@elvariable id="challenges" type="java.util.List<com.astora.web.dto.ChallengeDto>"--%>
+<%--@elvariable id="challenge" type="com.astora.web.dto.challenge.ChallengeDto"--%>
+<%--@elvariable id="challenges" type="java.util.List<com.astora.web.dto.challenge.ChallengeDto>"--%>
 
 <html lang="en">
 <head>

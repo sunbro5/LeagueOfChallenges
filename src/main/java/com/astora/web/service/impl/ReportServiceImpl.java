@@ -54,7 +54,7 @@ public class ReportServiceImpl implements ReportService {
                 logger.info("There should be just one report, userId: " + userId);
             }
             Report report = reports.get(0);
-            report.setReason(reportModel.getReason());
+            report.setReason(ReportReason.valueOf(reportModel.getReason()));
             report.setReasonText(reportModel.getReasonText());
             report.setUserByReportedUserId(reportedUser);
             report.setUserByReportingUserId(user);
@@ -63,7 +63,7 @@ public class ReportServiceImpl implements ReportService {
 
         } else {
             Report report = new Report();
-            report.setReason(reportModel.getReason());
+            report.setReason(ReportReason.valueOf(reportModel.getReason()));
             report.setReasonText(reportModel.getReasonText());
             report.setUserByReportedUserId(reportedUser);
             report.setUserByReportingUserId(user);
@@ -79,12 +79,7 @@ public class ReportServiceImpl implements ReportService {
         for (Report report : user.getReportsByUserId()) {
             UserReportInfo reportInfo = new UserReportInfo();
             reportInfo.setNickname(report.getUserByReportedUserId().getNickname());
-            try {
-                reportInfo.setReason(ReportReason.valueOf(report.getReason()));
-            } catch (IllegalArgumentException e) {
-                reportInfo.setReason(ReportReason.getDefault());
-                logger.error(e);
-            }
+            reportInfo.setReason(report.getReason());
             reportsInfo.add(reportInfo);
         }
         return reportsInfo;
@@ -103,13 +98,7 @@ public class ReportServiceImpl implements ReportService {
         if(oldReport == null){
             user.setUserRating(rating + reason.getValue());
         } else {
-            ReportReason oldReason;
-            try{
-                oldReason = ReportReason.valueOf(oldReport.getReason());
-            } catch (IllegalArgumentException e){
-                logger.error(e);
-                throw new ServiceException("Cannot parse report reason, reportId: " + oldReport.getReportId());
-            }
+            ReportReason oldReason = oldReport.getReason();
             rating = rating - oldReason.getValue();
             user.setUserRating(rating + reason.getValue());
         }

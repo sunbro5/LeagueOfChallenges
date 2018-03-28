@@ -1,6 +1,7 @@
 package com.astora.web.dao.model;
 
 import com.astora.web.enums.ChallengeResultState;
+import com.astora.web.enums.ChallengeState;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -11,11 +12,12 @@ import java.util.Collection;
  */
 @Entity
 public class Challenge {
+
     private int challengeId;
     private Timestamp challengeStart;
     private Timestamp challengeEnd;
     private String text;
-    private String state;
+    private ChallengeState state;
     private Team teamByChallengerTeamId;
     private Team teamByOponnentTeamId;
     private Collection<ChallengeResult> challengeResultsByChallengeId;
@@ -75,11 +77,12 @@ public class Challenge {
 
     @Basic
     @Column(name = "State")
-    public String getState() {
+    @Enumerated(EnumType.STRING)
+    public ChallengeState getState() {
         return state;
     }
 
-    public void setState(String state) {
+    public void setState(ChallengeState state) {
         this.state = state;
     }
 

@@ -1,4 +1,4 @@
-package com.astora.web.dto;
+package com.astora.web.dto.challenge;
 
 import com.astora.web.enums.ChallengeState;
 

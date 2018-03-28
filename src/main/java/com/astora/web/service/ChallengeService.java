@@ -1,7 +1,7 @@
 package com.astora.web.service;
 
-import com.astora.web.dto.ChallengeDto;
-import com.astora.web.dto.ChallengeInfoDto;
+import com.astora.web.dto.challenge.ChallengeDto;
+import com.astora.web.dto.challenge.ChallengeInfoDto;
 import com.astora.web.exception.ServiceException;
 import com.astora.web.model.ChallengeResultModel;
 import com.astora.web.model.CreateChallengeModel;

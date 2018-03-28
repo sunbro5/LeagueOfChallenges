@@ -1,4 +1,6 @@
-package com.astora.web.dto;
+package com.astora.web.dto.challenge;
+
+import com.astora.web.dto.challenge.ChallengeDto;
 
 import java.util.List;
 

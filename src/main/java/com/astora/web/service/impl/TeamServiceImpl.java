@@ -224,8 +224,8 @@ public class TeamServiceImpl implements TeamService {
         if (user.getUserRating() + PropertyService.NEW_PLAYER_KOEFICIENT < 0) {
             return true;
         }
-        if (user.getReportsByUserId().stream().anyMatch(report -> report.getReason().equals(ReportReason.USER_INSERT_INVALID_DATA)
-                || report.getReason().equals(ReportReason.USER_CHEATER))) {
+        if (user.getReportsByUserId().stream().anyMatch(report -> report.getReason() == ReportReason.USER_INSERT_INVALID_DATA
+                || report.getReason() == ReportReason.USER_CHEATER)) {
             return false;
         }
         //TODO think about it !!!!

@@ -258,7 +258,7 @@ CREATE TABLE IF NOT EXISTS `LeagueOfChallenges`.`Challenge_Result` (
   `scoreOpponent` INT UNSIGNED NOT NULL,
   `state` VARCHAR(45) NULL,
   `created` DATETIME NOT NULL default CURRENT_TIMESTAMP,
-  `winner_team_id` INT UNSIGNED NOT NULL,
+  `winner_team_id` INT UNSIGNED NULL,
   `draw` INT UNSIGNED NULL,
   PRIMARY KEY (`challenge_result_id`),
   INDEX `fk_Challenge_results_Challenges1_idx` (`Challenges_challenge_id` ASC),

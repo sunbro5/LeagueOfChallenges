@@ -37,19 +37,19 @@ public class UserServiceImplTest {
         user.setEmail(email);
         List<Report> reportList = new ArrayList<Report>();
         Report report = new Report();
-        report.setReason(ReportReason.USER_CHEATER.name());
+        report.setReason(ReportReason.USER_CHEATER);
         reportList.add(report);
         report = new Report();
-        report.setReason(ReportReason.USER_FAIR_PLAY.name());
+        report.setReason(ReportReason.USER_FAIR_PLAY);
         reportList.add(report);
         report = new Report();
-        report.setReason(ReportReason.USER_CHEATER.name());
+        report.setReason(ReportReason.USER_CHEATER);
         reportList.add(report);
         report = new Report();
-        report.setReason(ReportReason.USER_GOOD_TO_PLAY_WITH.name());
+        report.setReason(ReportReason.USER_GOOD_TO_PLAY_WITH);
         reportList.add(report);
         report = new Report();
-        report.setReason(ReportReason.USER_CHEATER.name());
+        report.setReason(ReportReason.USER_CHEATER);
         reportList.add(report);
         user.setReportsByUserId(reportList);
 
