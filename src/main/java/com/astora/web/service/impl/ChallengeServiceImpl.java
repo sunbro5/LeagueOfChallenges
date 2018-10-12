@@ -299,7 +299,7 @@ public class ChallengeServiceImpl implements ChallengeService {
                 setChallengeResultsState(results, ChallengeResultState.ACCEPTED);
             }
         } else {
-            //some fuc*** set false score !!!! lets decide who will get rekt
+            //false score
             processFalseScore(challenge, results);
         }
         saveChallengeResults(results);
